@@ -222,7 +222,7 @@
     </style>
 </head>
 <body>
-    <div class="background" id="background"></div>
+    <div class="background"></div>
     <div class="chatbot-container">
         <div class="settings" onclick="openSettings()">⚙️</div>
         
@@ -288,7 +288,6 @@
 
     <audio id="backgroundMusic" loop></audio>
 
-    <script src="https://js.puter.com/v2/"></script>
     <script>
         let chatbotName = "Mikasa";
         let voiceEnabled = true;
@@ -309,6 +308,7 @@
             const savedMusic = localStorage.getItem('music');
             const savedVolume = localStorage.getItem('volume');
             const savedVoiceToggle = localStorage.getItem('voiceToggle');
+            const savedMusicEnabled = localStorage.getItem('musicEnabled');
 
             if (savedLang) {
                 document.getElementById("language").value = savedLang;
@@ -326,8 +326,12 @@
             if (savedMusic) {
                 musicPlayer.src = savedMusic;
                 musicPlayer.volume = savedVolume ? savedVolume : 0.5;
-                if (musicEnabled) {
+                if (savedMusicEnabled === 'true') {
                     musicPlayer.play();
+                    document.getElementById("musicToggle").checked = true;
+                } else {
+                    musicPlayer.pause();
+                    document.getElementById("musicToggle").checked = false;
                 }
             }
 
@@ -445,7 +449,6 @@
                 musicPlayer.pause();
             }
             localStorage.setItem('musicEnabled', musicEnabled);
-            alert("Music is now " + (musicEnabled ? "enabled" : "disabled") + ".");
         }
 
         function changeVolume() {
@@ -465,7 +468,6 @@
         function toggleTextReader() {
             voiceToggle = document.getElementById("textReaderToggle").checked;
             localStorage.setItem('voiceToggle', voiceToggle);
-            alert("Text reader is now " + (voiceToggle ? "enabled" : "disabled") + ".");
         }
 
         function resetChat() {
