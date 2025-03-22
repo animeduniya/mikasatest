@@ -147,13 +147,13 @@
             right: 10px;
             padding: 10px;
             cursor: pointer;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.7); /* Set to black */
             border-radius: 5px;
         }
 
         .settings-menu {
             display: none;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(0, 0, 0, 0.8); /* Default background color */
             position: absolute;
             top: 45px; 
             right: 10px;
@@ -274,6 +274,7 @@
             if (savedTheme) {
                 document.body.className = savedTheme;
                 document.getElementById("theme").value = savedTheme;
+                updateSettingsBackground(savedTheme);
             }
 
             if (savedBackground) {
@@ -290,6 +291,15 @@
             if (savedVoice === "false") {
                 voiceEnabled = false;
                 document.getElementById("voiceToggle").checked = false;
+            }
+        }
+
+        function updateSettingsBackground(theme) {
+            const settingsMenu = document.getElementById("settingsMenu");
+            if (theme === "default") {
+                settingsMenu.style.background = "rgba(0, 0, 0, 0.8)";
+            } else {
+                settingsMenu.style.background = theme.includes("theme-color-") ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.7)";
             }
         }
 
@@ -359,6 +369,9 @@
             const selectedTheme = document.getElementById("theme").value;
             document.body.className = selectedTheme;
             localStorage.setItem('theme', selectedTheme);
+            updateSettingsBackground(selectedTheme);
+            // Update the music toggle button text
+            document.getElementById("musicToggle").innerText = "Toggle Music";
         }
 
         function changeBackground() {
