@@ -1,122 +1,412 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Mikasa Chatbot</title>
     <style>
-        /* Basic styles for the chatbot interface */
+        /* General Styles */
         body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #282c34;
-            color: white;
-            font-family: Arial, sans-serif;
-            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            transition: background 0.5s ease;
+        }
+
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: -1;
+            background: url('https://wallpaperaccess.com/full/47587.jpg') no-repeat center center fixed;
+            background-size: cover;
+            animation: backgroundEffect 20s infinite linear;
+        }
+
+        @keyframes backgroundEffect {
+            0% { background-image: url('https://wallpapercave.com/wp/wp9388551.jpg'); }
+            33% { background-image: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg'); }
+            66% { background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg'); }
+            100% { background-image: url('https://wallpaperaccess.com/full/8583147.jpg'); }
         }
 
         .chatbot-container {
+            width: 90%;
+            max-width: 600px;
             background: rgba(0, 0, 0, 0.85);
-            border-radius: 10px;
+            border-radius: 20px;
             padding: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
             text-align: center;
-            width: 300px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            z-index: 2;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .header {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #00fff0;
+            text-shadow: 0 0 15px #00fff0, 0 0 30px #00fff0;
+            animation: pulse 2s infinite;
+        }
+
+        .sub-header {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #ffffff;
+        }
+
+        .messages {
+            flex: 1;
+            height: 300px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+            padding: 10px;
+            border: 2px solid #00fff0;
+            border-radius: 10px;
+            animation: fadeIn 1s;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .message {
+            font-size: 1.1em;
+            line-height: 1.5;
+            position: relative;
+            padding: 10px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            max-width: 70%;
+        }
+
+        .message.user {
+            background-color: #00ccff;
+            align-self: flex-end;
+            color: #000;
+        }
+
+        .message.bot {
+            background-color: #3f51b5;
+            color: #fff;
+        }
+
+        .typing-indicator {
+            font-size: 0.9em;
+            color: #ffffffa0;
+            animation: typingBlink 1s infinite alternate;
+        }
+
+        .user-input {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .user-input input {
+            flex: 1;
+            padding: 15px;
+            font-size: 1em;
+            border: 2px solid #00fff0;
+            border-radius: 10px;
+            margin-right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .user-input button {
+            background: linear-gradient(135deg, #00fff0, #00ccff);
+            border: none;
+            color: #0f3460;
+            font-size: 1.2em;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            margin-left: 5px;
+        }
+
+        .user-input input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-input button:hover {
+            transform: scale(1.05);
+        }
+
+        .settings {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
         }
 
         .settings-menu {
             display: none;
+            background: rgba(255, 255, 255, 0.1);
+            position: absolute;
+            top: 45px;
+            right: 10px;
+            z-index: 2;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
         }
 
-        .message {
-            margin: 10px;
-            padding: 10px;
-            border-radius: 5px;
+        .settings-menu label {
+            display: block;
+            margin: 10px 0 5px;
+            color: #fff;
         }
 
-        .user {
-            background-color: #007bff;
-            color: white;
-            text-align: right;
+        .message-count {
+            font-size: 1em;
+            margin-top: 10px;
         }
 
-        .bot {
-            background-color: #28a745;
-            color: white;
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .typing-indicator {
-            display: none;
+        @keyframes typingBlink {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
         }
     </style>
 </head>
-
 <body>
+    <div class="background" id="background"></div>
     <div class="chatbot-container">
-        <div id="chatbox"></div>
-        <div id="typingIndicator" class="typing-indicator">🤖 Mikasa is typing...</div>
+        <div class="settings" onclick="openSettings()">⚙️</div>
 
-        <input type="text" id="userInput" placeholder="Type your message..." />
-        <button onclick="sendMessage()">Send</button>
+        <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
+        <div class="sub-header">Made by Rishab, Ansh and Abhi</div>
 
-        <button onclick="playDefaultMusic()">Play Default Music</button>
-        <button onclick="document.getElementById('settingsWindow').style.display = 'block';">Settings</button>
+        <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
+        <div id="typingIndicator" class="typing-indicator" style="display: none;">🤖 Mikasa is typing...</div>
+        <div class="message-count" id="messageCount">Messages: 0</div>
 
-        <div id="settingsWindow" class="settings-menu">
-            <h3>Audio Settings</h3>
-            <label for="musicSource">Background Music:</label>
-            <input type="file" id="musicSource" accept="audio/*" onchange="changeMusic()" />
-            <br />
-            <label for="musicToggle">Enable Music:</label>
-            <input type="checkbox" id="musicToggle" checked onchange="toggleMusic()" />
-            <br />
+        <div class="user-input">
+            <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
+            <button onclick="sendMessage()">Send</button>
         </div>
     </div>
 
+    <div id="settingsWindow" class="settings-menu" style="display: none;">
+        <h3>Settings</h3>
+        <label for="language">Language:</label>
+        <select id="language" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="it">Italian</option>
+        </select>
+
+        <label for="theme">Text Color Theme:</label>
+        <select id="theme" onchange="changeTheme()">
+            <option value="default">Default</option>
+            <option value="theme-color-1">Deep Orange</option>
+            <option value="theme-color-2">Green</option>
+            <option value="theme-color-3">Blue</option>
+            <option value="theme-color-4">Yellow</option>
+            <option value="theme-color-5">Purple</option>
+            <option value="theme-color-6">Orange</option>
+            <option value="theme-color-7">Cyan</option>
+            <option value="theme-color-8">Indigo</option>
+            <option value="theme-color-9">Pink</option>
+            <option value="theme-color-10">Brown</option>
+        </select>
+
+        <label for="backgroundSource">Background Image:</label>
+        <input type="file" id="backgroundSource" accept="image/*" onchange="changeBackground()" />
+
+        <label for="musicSource">Background Music:</label>
+        <input type="file" id="musicSource" accept="audio/*" onchange="changeMusic()" />
+
+        <label for="musicToggle">Enable Music:</label>
+        <input type="checkbox" id="musicToggle" checked onchange="toggleMusic()"> Enable
+
+        <label for="volume">Music Volume:</label>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume()"/>
+
+        <button onclick="resetChat()">Reset Chat</button>
+
+        <button onclick="closeSettings()">Close Settings</button>
+    </div>
+
     <audio id="backgroundMusic" loop>
-        <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg">
+        <source id="audioSource" src="https://raw.githubusercontent.com/animeduniya/mikasatest/main/default-background-music.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
+    <script src="https://js.puter.com/v2/"></script>
     <script>
+        let chatbotName = "Mikasa";
+        let voiceEnabled = true;
+        let messageCount = 0;
         let musicEnabled = true;
         let musicPlayer = document.getElementById("backgroundMusic");
+        let audioSource = document.getElementById("audioSource");
+        let currentBackgroundImage = '';
 
-        // Play default music when called
-        function playDefaultMusic() {
+        // On window load, set up initial settings and music
+        window.onload = function () {
+            loadPreferences();
+            if (musicEnabled) {
+                playMusic(); // Play music if enabled
+            }
+        }
+
+        function loadPreferences() {
+            const savedLang = localStorage.getItem('language');
+            const savedTheme = localStorage.getItem('theme');
+            const savedBackground = localStorage.getItem('background');
+            const savedMusic = localStorage.getItem('music');
+
+            // Set language
+            if (savedLang) {
+                document.getElementById("language").value = savedLang;
+            }
+
+            // Set theme
+            if (savedTheme) {
+                document.body.className = savedTheme;
+                document.getElementById("theme").value = savedTheme;
+            }
+
+            // Set background image
+            if (savedBackground) {
+                currentBackgroundImage = savedBackground;
+                document.querySelector('.background').style.backgroundImage = `url(${savedBackground})`;
+            }
+
+            // Set music source
+            if (savedMusic) {
+                audioSource.src = savedMusic; // Use uploaded music if available
+            } else {
+                audioSource.src = "https://www.bensound.com/bensound-music/bensound-sunny.mp3"; // Default music
+            }
+            musicPlayer.volume = document.getElementById("volume").value;
+            musicPlayer.load(); // Load the audio source
+        }
+
+        function playMusic() {
             if (musicEnabled) {
                 musicPlayer.play().catch(error => {
-                    console.error("Error playing default music: ", error);
+                    console.error("Error playing music: ", error);
                 });
             }
         }
 
-        function sendMessage() {
+        function speakResponse(response) {
+            if (voiceEnabled) {
+                const utterance = new SpeechSynthesisUtterance(response);
+                utterance.lang = "en-US";
+                window.speechSynthesis.speak(utterance);
+            }
+        }
+
+        async function sendMessage() {
             const userInput = document.getElementById("userInput");
             const chatbox = document.getElementById("chatbox");
             const typingIndicator = document.getElementById("typingIndicator");
 
-            if (userInput.value.trim() !== "") {
-                // User message
+            if (userInput.value.trim()) {
                 const userMessage = document.createElement("div");
                 userMessage.className = "message user";
-                userMessage.textContent = "You: " + userInput.value;
+                userMessage.textContent = "🧑: " + userInput.value.trim();
                 chatbox.appendChild(userMessage);
+                chatbox.scrollTop = chatbox.scrollHeight;
 
-                // Simulate bot response
                 typingIndicator.style.display = "block";
-                setTimeout(() => {
+
+                try {
+                    let response;
+                    const query = userInput.value.trim();
+
+                    // Basic question handling for responses
+                    if (/what's your name|who are you/i.test(userInput.value)) {
+                        response = `My name is ${chatbotName}.`;
+                    } else if (/who made you|your creator/i.test(userInput.value)) {
+                        response = "I was made by Rishab.";
+                    } else {
+                        response = await puter.ai.chat(query);
+                    }
+
                     typingIndicator.style.display = "none";
+
                     const botMessage = document.createElement("div");
                     botMessage.className = "message bot";
-                    botMessage.textContent = "🤖: I'm a simple bot. You said: " + userInput.value;
+                    botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm evolving to understand you better!"}`;
                     chatbox.appendChild(botMessage);
-                    chatbox.scrollTop = chatbox.scrollHeight; // Scroll to bottom
-                }, 1000);
 
-                userInput.value = ""; // Clear input
+                    speakResponse(response);
+                    messageCount++;
+                    document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
+                } catch (error) {
+                    typingIndicator.style.display = "none";
+                    const errorMessage = document.createElement("div");
+                    errorMessage.className = "message bot";
+                    errorMessage.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
+                    chatbox.appendChild(errorMessage);
+                }
+
+                chatbox.scrollTop = chatbox.scrollHeight;
+                userInput.value = "";
+            }
+        }
+
+        function openSettings() {
+            document.getElementById("settingsWindow").style.display = "block";
+        }
+
+        function closeSettings() {
+            document.getElementById("settingsWindow").style.display = "none";
+        }
+
+        function changeLanguage() {
+            const selectedLanguage = document.getElementById("language").value;
+            localStorage.setItem('language', selectedLanguage);
+            alert("Language changed to: " + selectedLanguage);
+        }
+
+        function changeTheme() {
+            const selectedTheme = document.getElementById("theme").value;
+            document.body.className = selectedTheme;
+            localStorage.setItem('theme', selectedTheme);
+        }
+
+        function changeBackground() {
+            const fileInput = document.getElementById("backgroundSource");
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    currentBackgroundImage = reader.result; 
+                    document.querySelector('.background').style.backgroundImage = `url(${currentBackgroundImage})`;
+                    localStorage.setItem('background', currentBackgroundImage);
+                }
+                reader.readAsDataURL(file);
             }
         }
 
@@ -127,8 +417,10 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onloadend = function () {
-                    musicPlayer.src = reader.result; // Set new audio source
-                    musicPlayer.play(); // Automatically play uploaded music
+                    audioSource.src = reader.result; 
+                    localStorage.setItem('music', reader.result); 
+                    musicPlayer.load(); // Load new music
+                    playMusic(); // Automatically play uploaded music
                 }
                 reader.readAsDataURL(file);
             }
@@ -137,12 +429,23 @@
         function toggleMusic() {
             musicEnabled = document.getElementById("musicToggle").checked;
             if (musicEnabled) {
-                playDefaultMusic();
+                playMusic();
             } else {
-                musicPlayer.pause(); // Pause if music is disabled
+                musicPlayer.pause();
             }
+            alert("Music is now " + (musicEnabled ? "enabled" : "disabled") + ".");
+        }
+
+        function changeVolume() {
+            musicPlayer.volume = document.getElementById("volume").value;
+        }
+
+        function resetChat() {
+            const chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML = "";
+            messageCount = 0;
+            document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
         }
     </script>
 </body>
-
 </html>
