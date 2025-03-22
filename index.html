@@ -204,7 +204,7 @@
     <div class="background" id="background"></div>
     
     <audio id="backgroundMusic" loop>
-        <source src="https://raw.githubusercontent.com/animeduniya/mikasatest/main/daylight.mp3" type="audio/mpeg">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">  <!-- Sample audio file -->
         Your browser does not support the audio element.
     </audio>
 
@@ -244,7 +244,7 @@
         </div>
 
         <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
-        <div class="sub-header">Made by Rishab, Ansh and Abhi</div>
+        <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
         
         <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
         <div id="typingIndicator" class="typing-indicator" style="display: none;">🤖 Mikasa is typing...</div>
@@ -262,6 +262,20 @@
         let voiceEnabled = true; // Default voice enabled
         let messageCount = 0; // Tracks number of messages
         const backgroundMusic = document.getElementById("backgroundMusic");
+
+        // Function to play default music
+        function playDefaultMusic() {
+            backgroundMusic.volume = 0.5; // Set initial volume if needed
+            const musicPromise = backgroundMusic.play();
+            if (musicPromise !== undefined) {
+                musicPromise.then(_ => {
+                    // Music started playing
+                }).catch(error => {
+                    console.warn("Default music failed to play:", error);
+                    alert("Please allow audio to play from this site.");
+                });
+            }
+        }
 
         // Load user preferences from local storage
         window.onload = function () {
@@ -310,13 +324,6 @@
                 backgroundMusic.src = savedMusicSource;
                 backgroundMusic.load();
             }
-        }
-
-        function playDefaultMusic() {
-            backgroundMusic.play().catch((error) => {
-                console.warn("Default music failed to play:", error);
-                alert("Please allow audio to play from this site.");
-            });
         }
 
         function changeBackground() {
@@ -383,11 +390,15 @@
         function toggleMusic() {
             const musicToggleButton = document.getElementById("musicToggle");
             if (backgroundMusic.paused) {
-                backgroundMusic.play().catch((error) => {
-                    console.error("Error playing music:", error);
-                    alert("Please allow audio to play.");
-                });
-                musicToggleButton.innerText = "Pause Music";
+                const musicPromise = backgroundMusic.play();
+                if (musicPromise !== undefined) {
+                    musicPromise.then(_ => {
+                        musicToggleButton.innerText = "Pause Music";
+                    }).catch((error) => {
+                        console.error("Error playing music:", error);
+                        alert("Please allow audio to play.");
+                    });
+                }
             } else {
                 backgroundMusic.pause();
                 musicToggleButton.innerText = "Play Music";
