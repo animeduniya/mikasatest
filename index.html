@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mikasa Chatbot</title>
     <style>
-        /* Add basic styles */
+        /* Basic styles for the chatbot interface */
         body {
             display: flex;
             justify-content: center;
@@ -61,6 +61,7 @@
         <input type="text" id="userInput" placeholder="Type your message..." />
         <button onclick="sendMessage()">Send</button>
 
+        <button onclick="playDefaultMusic()">Play Default Music</button>
         <button onclick="document.getElementById('settingsWindow').style.display = 'block';">Settings</button>
 
         <div id="settingsWindow" class="settings-menu">
@@ -83,17 +84,11 @@
         let musicEnabled = true;
         let musicPlayer = document.getElementById("backgroundMusic");
 
-        // Play default music on load
-        window.onload = function () {
-            if (musicEnabled) {
-                playMusic();
-            }
-        }
-
-        function playMusic() {
+        // Play default music when called
+        function playDefaultMusic() {
             if (musicEnabled) {
                 musicPlayer.play().catch(error => {
-                    console.error("Error playing music: ", error);
+                    console.error("Error playing default music: ", error);
                 });
             }
         }
@@ -133,7 +128,7 @@
                 const reader = new FileReader();
                 reader.onloadend = function () {
                     musicPlayer.src = reader.result; // Set new audio source
-                    playMusic(); // Automatically play uploaded music
+                    musicPlayer.play(); // Automatically play uploaded music
                 }
                 reader.readAsDataURL(file);
             }
@@ -142,9 +137,9 @@
         function toggleMusic() {
             musicEnabled = document.getElementById("musicToggle").checked;
             if (musicEnabled) {
-                playMusic();
+                playDefaultMusic();
             } else {
-                musicPlayer.pause();
+                musicPlayer.pause(); // Pause if music is disabled
             }
         }
     </script>
