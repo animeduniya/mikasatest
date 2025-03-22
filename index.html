@@ -17,9 +17,9 @@
             overflow: hidden;
             position: relative;
             transition: background 0.5s ease;
-            background-color: #000; /* Default background color */
         }
 
+        /* Slider Background Styles */
         .background {
             position: absolute;
             top: 0;
@@ -54,105 +54,44 @@
             animation: fadeIn 1.5s ease-in-out;
         }
 
+        /* Header Styles */
         .header {
             font-size: 2.5em;
             font-weight: bold;
             color: #00fff0;
             text-shadow: 0 0 15px #00fff0, 0 0 30px #00fff0;
+            animation: pulse 2s infinite;
             margin: 0;
         }
 
-        .settings {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 10px;
-            cursor: pointer;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-            display: inline-block;
-            transition: background 0.3s;
+        .sub-header {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #ffffff;
         }
 
-        .settings:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .settings-menu {
-            display: none;
-            position: absolute;
-            top: 45px;
-            right: 10px;
-            z-index: 2;
-            background: rgba(0, 0, 0, 0.8);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            width: 250px;
-            animation: fadeIn 0.5s ease-in-out;
-            text-align: left;
-            max-height: 400px;
-            overflow-y: auto;
-        }
-
-        .settings-menu label {
-            display: block;
-            margin: 10px 0 5px;
-            color: #fff;
-        }
-
-        .user-input {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .user-input input {
+        .messages {
             flex: 1;
-            padding: 15px;
-            font-size: 1em;
+            height: 300px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+            padding: 10px;
             border: 2px solid #00fff0;
             border-radius: 10px;
-            margin-right: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #fff;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .user-input button {
-            background: linear-gradient(135deg, #00fff0, #00ccff);
-            border: none;
-            color: #0f3460;
-            font-size: 1.2em;
-            padding: 10px 20px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.3s ease-in-out;
-        }
-
-        .user-input button:hover {
-            transform: scale(1.05);
+            animation: fadeIn 1s;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .message {
             font-size: 1.1em;
             line-height: 1.5;
-            position: relative;
             padding: 10px 15px;
             border-radius: 20px;
             display: inline-block;
             max-width: 70%;
-            margin: 5px 0;
-            opacity: 0;
-            transform: translateY(20px);
-            animation: slideIn 0.5s forwards;
-        }
-
-        @keyframes slideIn {
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .message.user {
@@ -172,6 +111,67 @@
             animation: typingBlink 1s infinite alternate;
         }
 
+        .user-input {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .user-input input {
+            flex: 1;
+            padding: 15px;
+            font-size: 1em;
+            border: 2px solid #00fff0;
+            border-radius: 10px;
+            margin-right: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .user-input button {
+            background: linear-gradient(135deg, #00fff0, #00ccff);
+            border: none;
+            color: #0f3460;
+            font-size: 1.2em;
+            padding: 10px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s ease-in-out;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            margin-left: 5px;
+        }
+
+        .settings {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        .settings-menu {
+            display: none;
+            background: rgba(255, 255, 255, 0.1);
+            position: absolute;
+            top: 45px; 
+            right: 10px;
+            z-index: 2;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+        }
+
+        /* Additional styles for improved UI */
+        .settings-menu label {
+            color: #fff;
+            margin: 5px 0;
+            display: flex;
+            flex-direction: column;
+        }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -184,7 +184,13 @@
     </style>
 </head>
 <body>
-    <div class="background"></div>
+    <div class="background" id="background"></div>
+    
+    <audio id="backgroundMusic" loop>
+        <source src="https://raw.githubusercontent.com/animeduniya/mikasatest/main/daylight.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
     <div class="chatbot-container">
         <div class="settings" onclick="toggleSettings()">⚙️</div>
         <div class="settings-menu" id="settingsMenu">
@@ -196,7 +202,6 @@
                 <option value="de">German</option>
                 <option value="it">Italian</option>
             </select>
-
             <label for="theme">Text Color Theme:</label>
             <select id="theme" onchange="changeTheme()">
                 <option value="default">Default</option>
@@ -211,53 +216,26 @@
                 <option value="theme-color-9">Pink</option>
                 <option value="theme-color-10">Brown</option>
             </select>
-
-            <label for="personality">Chatbot Personality:</label>
-            <select id="personality" onchange="changePersonality()">
-                <option value="friendly">Friendly</option>
-                <option value="funny">Funny</option>
-                <option value="smart">Smart</option>
-                <option value="casual">Casual</option>
-            </select>
-
-            <div class="music-controls">
-                <label for="musicToggle">Background Music:</label>
-                <input type="checkbox" id="musicToggle" onchange="toggleMusic()"> On
-                <label for="volume">Volume:</label>
-                <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" onchange="setVolume()" />
-            </div>
-
             <label for="backgroundSource">Background Source:</label>
             <input type="text" id="backgroundSource" placeholder="Background Image URL"/>
             <button onclick="changeBackground()">Change Background</button>
-
+            <label for="musicVolume">Music Volume:</label>
+            <input type="range" id="musicVolume" min="0" max="1" step="0.1" onchange="setVolume()" />
+            <button id="musicToggle" onclick="toggleMusic()">Pause Music</button>
             <button onclick="resetChat()">Reset Chat</button>
-
             <label for="voiceToggle">Enable Voice:</label>
             <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
-
             <label for="feedback">Feedback:</label>
             <select id="feedback" onchange="sendFeedback()">
                 <option value="">Select Feedback</option>
                 <option value="helpful">Helpful</option>
                 <option value="not_helpful">Not Helpful</option>
             </select>
-
-            <label for="historyToggle">Enable Chat History:</label>
-            <input type="checkbox" id="historyToggle" checked onchange="toggleHistory()"> On
-
-            <label for="animationToggle">Enable Animations:</label>
-            <input type="checkbox" id="animationToggle" checked onchange="toggleAnimations()"> On
-            
-            <label for="bgColor">Background Color:</label>
-            <input type="color" id="bgColor" value="#000000" onchange="changeBgColor()" />
-            <label for="textColor">Text Color:</label>
-            <input type="color" id="textColor" value="#ffffff" onchange="changeTextColor()" />
         </div>
 
         <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
-        <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
-
+        <div class="sub-header">Made by Rishab, Ansh and Abhi</div>
+        
         <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
         <div id="typingIndicator" class="typing-indicator" style="display: none;">🤖 Mikasa is typing...</div>
         <div class="message-count" id="messageCount">Messages: 0</div>
@@ -266,96 +244,61 @@
             <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
             <button onclick="sendMessage()">Send</button>
         </div>
-
-        <audio id="bgMusic" loop>
-            <source src="https://raw.githubusercontent.com/animeduniya/mikasatest/main/daylight.mp3" type="audio/mpeg">
-            Your browser does not support the audio tag.
-        </audio>
     </div>
 
+    <script src="https://js.puter.com/v2/"></script>
     <script>
         let chatbotName = "Mikasa";
-        let voiceEnabled = true; 
-        let musicEnabled = true; 
-        let messageCount = 0; 
-        let chatHistoryEnabled = true; 
-        let animationsEnabled = true; 
-        let personality = "friendly"; 
-        const bgMusic = document.getElementById("bgMusic");
+        let voiceEnabled = true; // Default voice enabled
+        let messageCount = 0; // Tracks number of messages
+        let musicVolume = 0.5; // Default volume
+        const backgroundMusic = document.getElementById("backgroundMusic");
 
+        // Load user preferences from local storage
         window.onload = function () {
             loadPreferences();
-            setVolume();
+            setVolume(); // Set initial volume
         }
 
         function loadPreferences() {
             const savedLang = localStorage.getItem('language');
             const savedTheme = localStorage.getItem('theme');
             const savedBackground = localStorage.getItem('background');
-            const savedMusic = localStorage.getItem('music');
             const savedVolume = localStorage.getItem('volume');
-            const savedHistory = localStorage.getItem('history');
-            const savedPersonality = localStorage.getItem('personality');
-            const savedAnimations = localStorage.getItem('animations');
-            const savedBgColor = localStorage.getItem('bgColor');
-            const savedTextColor = localStorage.getItem('textColor');
+            const savedVoice = localStorage.getItem('voice');
+            
+            if (savedLang) {
+                document.getElementById("language").value = savedLang;
+            }
 
-            if (savedLang) document.getElementById("language").value = savedLang;
             if (savedTheme) {
-                document.body.setAttribute('class', savedTheme);
+                document.body.className = savedTheme;
                 document.getElementById("theme").value = savedTheme;
             }
+
             if (savedBackground) {
                 document.querySelector('.background').style.backgroundImage = `url(${savedBackground})`;
                 document.getElementById("backgroundSource").value = savedBackground;
             }
-            if (savedMusic === "false") {
-                musicEnabled = false;
-                document.getElementById("musicToggle").checked = false;
-                bgMusic.pause();
-            }
-            if (savedVolume) document.getElementById("volume").value = savedVolume;
-            if (savedHistory === "false") {
-                chatHistoryEnabled = false;
-                document.getElementById("historyToggle").checked = false;
-            }
-            if (savedPersonality) {
-                personality = savedPersonality;
-                document.getElementById("personality").value = personality;
-            }
-            if (savedAnimations === "false") {
-                animationsEnabled = false;
-                document.getElementById("animationToggle").checked = false;
-            }
-            if (savedBgColor) {
-                document.body.style.backgroundColor = savedBgColor;
-                document.getElementById("bgColor").value = savedBgColor;
-            }
-            if (savedTextColor) {
-                document.body.style.color = savedTextColor;
-                document.getElementById("textColor").value = savedTextColor;
+
+            if (savedVolume) {
+                musicVolume = savedVolume;
+                document.getElementById("musicVolume").value = musicVolume;
+                setVolume();
             }
 
-            setVolume();
-            if (musicEnabled) {
-                bgMusic.play();
+            if (savedVoice === "false") {
+                voiceEnabled = false;
+                document.getElementById("voiceToggle").checked = false;
             }
         }
 
-        function toggleMusic() {
-            musicEnabled = document.getElementById("musicToggle").checked;
-            localStorage.setItem('music', musicEnabled);
-            if (musicEnabled) {
-                bgMusic.play();
-            } else {
-                bgMusic.pause();
+        function speakResponse(response) {
+            if (voiceEnabled) {
+                const utterance = new SpeechSynthesisUtterance(response);
+                utterance.lang = "en-US";
+                window.speechSynthesis.speak(utterance);
             }
-        }
-
-        function setVolume() {
-            const volume = document.getElementById("volume").value;
-            bgMusic.volume = volume;
-            localStorage.setItem('volume', volume);
         }
 
         async function sendMessage() {
@@ -368,59 +311,41 @@
                 userMessage.className = "message user";
                 userMessage.textContent = "🧑: " + userInput.value.trim();
                 chatbox.appendChild(userMessage);
-                if (animationsEnabled) {
-                    userMessage.style.animation = "slideIn 0.5s forwards";
-                }
                 chatbox.scrollTop = chatbox.scrollHeight;
 
-                if (!chatHistoryEnabled) {
-                    messageCount++;
-                    updateMessageCount();
-                }
-
                 typingIndicator.style.display = "block";
+                try {
+                    let response;
+                    const query = userInput.value.trim();
 
-                setTimeout(() => {
+                    if (/what's your name|who are you/i.test(userInput.value)) {
+                        response = `My name is ${chatbotName}.`;
+                    } else if (/who made you|your creator/i.test(userInput.value)) {
+                        response = "I was made by Rishab.";
+                    } else {
+                        response = await puter.ai.chat(query);
+                    }
+
                     typingIndicator.style.display = "none";
+
                     const botMessage = document.createElement("div");
                     botMessage.className = "message bot";
-                    botMessage.textContent = getBotResponse(userInput.value.trim());
+                    botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm evolving to understand you better!"}`;
                     chatbox.appendChild(botMessage);
 
-                    if (animationsEnabled) {
-                        botMessage.style.animation = "slideIn 0.5s forwards";
-                    }
+                    speakResponse(response);
+                    messageCount++;
+                    document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
+                } catch (error) {
+                    typingIndicator.style.display = "none";
+                    const errorMessage = document.createElement("div");
+                    errorMessage.className = "message bot";
+                    errorMessage.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
+                    chatbox.appendChild(errorMessage);
+                }
 
-                    if (voiceEnabled) {
-                        const utterance = new SpeechSynthesisUtterance(botMessage.textContent);
-                        utterance.lang = "en-US";
-                        window.speechSynthesis.speak(utterance);
-                    }
-
-                    if (chatHistoryEnabled) {
-                        messageCount++;
-                        updateMessageCount();
-                    }
-
-                    chatbox.scrollTop = chatbox.scrollHeight;
-                }, 1000); // Simulated delay for bot's response
-
+                chatbox.scrollTop = chatbox.scrollHeight;
                 userInput.value = "";
-            }
-        }
-
-        function getBotResponse(userText) {
-            switch(personality) {
-                case 'friendly':
-                    return `🤖 ${chatbotName}: I'm here to help, how can I assist you today?`;
-                case 'funny':
-                    return `🤖 ${chatbotName}: Why did the robot cross the road? Because it was programmed to!`;
-                case 'smart':
-                    return `🤖 ${chatbotName}: Let’s tackle this question together!`;
-                case 'casual':
-                    return `🤖 ${chatbotName}: Hey there! What’s up?`;
-                default:
-                    return `🤖 ${chatbotName}: I'm evolving to understand you better!`;
             }
         }
 
@@ -432,24 +357,8 @@
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.setAttribute('class', selectedTheme);
+            document.body.className = selectedTheme;
             localStorage.setItem('theme', selectedTheme);
-            adjustSettingsMenuBackground();
-        }
-
-        function adjustSettingsMenuBackground() {
-            const settingsMenu = document.getElementById("settingsMenu");
-            if (document.body.className === 'default') {
-                settingsMenu.style.background = 'rgba(0, 0, 0, 0.8)';
-            } else {
-                settingsMenu.style.background = 'rgba(255, 255, 255, 0.8)';
-            }
-        }
-
-        function changePersonality() {
-            personality = document.getElementById("personality").value;
-            localStorage.setItem('personality', personality);
-            alert("Chatbot personality changed to: " + personality);
         }
 
         function changeBackground() {
@@ -462,37 +371,40 @@
             }
         }
 
+        function setVolume() {
+            const volumeControl = document.getElementById("musicVolume");
+            musicVolume = volumeControl.value;
+            backgroundMusic.volume = musicVolume;
+            localStorage.setItem('volume', musicVolume);
+        }
+
+        function toggleMusic() {
+            const musicToggleButton = document.getElementById("musicToggle");
+            if (backgroundMusic.paused) {
+                backgroundMusic.play().catch(() => {});
+                musicToggleButton.innerText = "Pause Music";
+            } else {
+                backgroundMusic.pause();
+                musicToggleButton.innerText = "Play Music";
+            }
+        }
+
         function resetChat() {
-            document.getElementById("chatbox").innerHTML = "";
+            const chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML = "";
             messageCount = 0;
-            updateMessageCount();
+            document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
+        }
+
+        function toggleSettings() {
+            const settingsMenu = document.getElementById("settingsMenu");
+            settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block';
         }
 
         function toggleVoice() {
             voiceEnabled = document.getElementById("voiceToggle").checked;
+            localStorage.setItem('voice', voiceEnabled);
             alert("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
-        }
-
-        function toggleHistory() {
-            chatHistoryEnabled = document.getElementById("historyToggle").checked;
-            localStorage.setItem('history', chatHistoryEnabled);
-            alert("Chat history tracking is now " + (chatHistoryEnabled ? "enabled" : "disabled") + ".");
-        }
-
-        function updateMessageCount() {
-            document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
-        }
-
-        function changeBgColor() {
-            const bgColor = document.getElementById("bgColor").value;
-            document.body.style.backgroundColor = bgColor;
-            localStorage.setItem('bgColor', bgColor);
-        }
-
-        function changeTextColor() {
-            const textColor = document.getElementById("textColor").value;
-            document.body.style.color = textColor;
-            localStorage.setItem('textColor', textColor);
         }
 
         function sendFeedback() {
@@ -501,11 +413,6 @@
                 alert("Thank you for your feedback: " + feedback);
                 document.getElementById("feedback").value = ""; // Reset the feedback dropdown
             }
-        }
-
-        function toggleSettings() {
-            const settingsMenu = document.getElementById("settingsMenu");
-            settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block';
         }
     </script>
 </body>
