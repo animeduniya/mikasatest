@@ -28,8 +28,15 @@
             right: 0;
             bottom: 0;
             z-index: -1;
-            background: url('https://wallpaperaccess.com/full/47587.jpg') no-repeat center center fixed;
             background-size: cover;
+            animation: backgroundEffect 20s infinite linear; /* Background slideshow effect */
+        }
+
+        @keyframes backgroundEffect {
+            0% { background-image: url('https://wallpapers.com/full/47587.jpg'); }
+            33% { background-image: url('https://wallpaperaccess.com/full/8583147.jpg'); }
+            66% { background-image: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg'); }
+            100% { background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg'); }
         }
 
         .chatbot-container {
@@ -208,15 +215,20 @@
             <input type="text" id="backgroundMusic" placeholder="Background Music URL"/>
 
             <label for="musicToggle">Enable Music:</label>
-            <input type="checkbox" id="musicToggle" checked onchange="toggleMusic()"> Enable
+            <input type="checkbox" id="musicToggle" onchange="toggleMusic()"> Enable
+
+            <label for="volumeControl">Volume:</label>
+            <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1" onchange="setVolume()">
 
             <button onclick="changeBackground()">Change Background</button>
+            <button onclick="changeBackgroundMusic()">Change Music</button>
             <button onclick="closeSettings()">Close</button>
         </div>
     </div>
 
     <audio id="backgroundAudio" loop>
-        <source src="daylight.mp3" type="audio/mpeg"> <!-- Update with your default music file -->
+        <source src="default-background-music.mp3" type="audio/mpeg"> <!-- Update with your default music file -->
+        Your browser does not support the audio element.
     </audio>
 
     <script src="https://js.puter.com/v2/"></script>
@@ -230,6 +242,7 @@
         // Load user preferences from local storage
         window.onload = function () {
             loadPreferences();
+            setupBackgroundAudio();
         };
 
         function loadPreferences() {
@@ -238,6 +251,24 @@
             if (savedTheme) {
                 document.getElementById("theme").value = savedTheme;
                 applyTheme(savedTheme);
+            }
+            const savedBackground = localStorage.getItem('background');
+            const savedMusic = localStorage.getItem('backgroundMusic');
+            const musicEnabled = localStorage.getItem('musicEnabled') === 'true';
+
+            if (savedBackground) {
+                document.querySelector('.background').style.backgroundImage = `url(${savedBackground})`;
+                document.getElementById("backgroundSource").value = savedBackground;
+            }
+
+            if (savedMusic) {
+                document.getElementById("backgroundMusic").value = savedMusic;
+                backgroundAudio.src = savedMusic;
+            }
+
+            document.getElementById("musicToggle").checked = musicEnabled;
+            if (musicEnabled) {
+                backgroundAudio.play();
             }
         }
 
@@ -260,6 +291,13 @@
             applyTheme(selectedTheme);
         }
 
+        function setupBackgroundAudio() {
+            backgroundAudio.loop = true;
+            if (isMusicPlaying) {
+                backgroundAudio.play();
+            }
+        }
+
         async function sendMessage() {
             const userInput = document.getElementById("userInput");
             const chatbox = document.getElementById("chatbox");
@@ -276,8 +314,9 @@
 
                 try {
                     const query = userInput.value.trim();
-                    // Basic question handling for responses
                     let response;
+
+                    // Basic question handling for responses
                     if (/what's your name|who are you/i.test(userInput.value)) {
                         response = `My name is ${chatbotName}.`;
                     } else if (/who made you|your creator/i.test(userInput.value)) {
@@ -317,13 +356,32 @@
             }
         }
 
+        function changeBackgroundMusic() {
+            const inputMusicURL = document.getElementById("backgroundMusic").value;
+            if (inputMusicURL) {
+                backgroundAudio.src = inputMusicURL;
+                localStorage.setItem('backgroundMusic', inputMusicURL);
+                if (isMusicPlaying) {
+                    backgroundAudio.play();
+                }
+            } else {
+                alert("Please enter a valid music URL.");
+            }
+        }
+
         function toggleMusic() {
             isMusicPlaying = document.getElementById("musicToggle").checked;
+            localStorage.setItem('musicEnabled', isMusicPlaying);
             if (isMusicPlaying) {
                 backgroundAudio.play();
             } else {
                 backgroundAudio.pause();
             }
+        }
+
+        function setVolume() {
+            const volume = document.getElementById("volumeControl").value;
+            backgroundAudio.volume = volume;
         }
 
         function openSettings() {
@@ -332,14 +390,6 @@
 
         function closeSettings() {
             document.getElementById("settingsModal").style.display = "none";
-        }
-
-        // Initialize background music by default
-        window.onload = function () {
-            backgroundAudio.loop = true;
-            if (isMusicPlaying) {
-                backgroundAudio.play();
-            }
         }
     </script>
 </body>
