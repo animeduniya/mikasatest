@@ -183,7 +183,7 @@
     </style>
 </head>
 <body>
-    <div class="background" id="background"></div>
+    <div class="background"></div>
     <div class="chatbot-container">
         <div class="settings" onclick="toggleSettings()">⚙️</div>
         <div class="settings-menu" id="settingsMenu">
@@ -229,9 +229,9 @@
             <label for="backgroundSource">Background Source:</label>
             <input type="text" id="backgroundSource" placeholder="Background Image URL"/>
             <button onclick="changeBackground()">Change Background</button>
-            
+
             <button onclick="resetChat()">Reset Chat</button>
-            
+
             <label for="voiceToggle">Enable Voice:</label>
             <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
 
@@ -247,6 +247,11 @@
 
             <label for="animationToggle">Enable Animations:</label>
             <input type="checkbox" id="animationToggle" checked onchange="toggleAnimations()"> On
+
+            <label for="bgColor">Background Color:</label>
+            <input type="color" id="bgColor" value="#000000" onchange="changeBgColor()" />
+            <label for="textColor">Text Color:</label>
+            <input type="color" id="textColor" value="#ffffff" onchange="changeTextColor()" />
         </div>
 
         <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
@@ -262,7 +267,7 @@
         </div>
 
         <audio id="bgMusic" loop>
-            <source src="https://raw.githubusercontent.com/animeduniya/mikasatest/blob/main/daylight.mp3" type="audio/mpeg">
+            <source src="https://raw.githubusercontent.com/animeduniya/mikasatest/main/daylight.mp3" type="audio/mpeg">
             Your browser does not support the audio tag.
         </audio>
     </div>
@@ -291,6 +296,8 @@
             const savedHistory = localStorage.getItem('history');
             const savedPersonality = localStorage.getItem('personality');
             const savedAnimations = localStorage.getItem('animations');
+            const savedBgColor = localStorage.getItem('bgColor');
+            const savedTextColor = localStorage.getItem('textColor');
 
             if (savedLang) document.getElementById("language").value = savedLang;
             if (savedTheme) {
@@ -318,6 +325,19 @@
             if (savedAnimations === "false") {
                 animationsEnabled = false;
                 document.getElementById("animationToggle").checked = false;
+            }
+            if (savedBgColor) {
+                document.body.style.backgroundColor = savedBgColor;
+                document.getElementById("bgColor").value = savedBgColor;
+            }
+            if (savedTextColor) {
+                document.body.style.color = savedTextColor;
+                document.getElementById("textColor").value = savedTextColor;
+            }
+
+            setVolume();
+            if (musicEnabled) {
+                bgMusic.play();
             }
         }
 
@@ -449,6 +469,18 @@
 
         function updateMessageCount() {
             document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
+        }
+
+        function changeBgColor() {
+            const bgColor = document.getElementById("bgColor").value;
+            document.body.style.backgroundColor = bgColor;
+            localStorage.setItem('bgColor', bgColor);
+        }
+
+        function changeTextColor() {
+            const textColor = document.getElementById("textColor").value;
+            document.body.style.color = textColor;
+            localStorage.setItem('textColor', textColor);
         }
 
         function sendFeedback() {
