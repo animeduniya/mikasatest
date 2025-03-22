@@ -124,7 +124,6 @@
             border: 2px solid #00fff0;
             border-radius: 10px;
             margin-right: 10px;
-            transition: transform 0.3s ease-in-out;
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
         }
@@ -137,19 +136,17 @@
             padding: 10px 20px;
             border-radius: 10px;
             cursor: pointer;
-            transition: transform 0.3s ease-in-out;
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
             margin-left: 5px;
         }
 
         .user-input input:focus {
-            transform: scale(1.05);
             outline: none;
             background: rgba(255, 255, 255, 0.2);
         }
 
         .user-input button:hover {
-            transform: scale(1.1);
+            transform: scale(1.05);
         }
 
         .settings {
@@ -255,7 +252,7 @@
 
         <label for="backgroundSource">Background Image:</label>
         <input type="file" id="backgroundSource" accept="image/*" onchange="changeBackground()" />
-        
+
         <label for="musicSource">Background Music:</label>
         <input type="file" id="musicSource" accept="audio/*" onchange="changeMusic()" />
 
@@ -271,7 +268,7 @@
     </div>
 
     <audio id="backgroundMusic" loop>
-        <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg"> <!-- "Daylight" as default background music -->
+        <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg"> <!-- Default Background Music -->
         Your browser does not support the audio element.
     </audio>
 
@@ -286,10 +283,13 @@
 
         window.onload = function () {
             loadPreferences();
-            musicPlayer.play(); // Ensuring default background music starts playing
+            if (musicEnabled) {
+                musicPlayer.play(); // Play music if enabled
+            }
         }
 
         function loadPreferences() {
+            // Load saved preferences from local storage
             const savedLang = localStorage.getItem('language');
             const savedTheme = localStorage.getItem('theme');
             const savedBackground = localStorage.getItem('background');
@@ -422,7 +422,7 @@
                     musicPlayer.src = reader.result; // Set music source
                     localStorage.setItem('music', reader.result); // Save music source
                     if (musicEnabled) {
-                        musicPlayer.play();
+                        musicPlayer.play(); // Play new music if enabled
                     }
                 }
                 reader.readAsDataURL(file);
@@ -432,6 +432,9 @@
         function toggleMusic() {
             musicEnabled = document.getElementById("musicToggle").checked;
             if (musicEnabled) {
+                if (musicPlayer.src === '') {
+                    musicPlayer.src = "https://www.bensound.com/bensound-music/bensound-sunny.mp3"; // Default music if none is set
+                }
                 musicPlayer.play();
             } else {
                 musicPlayer.pause();
@@ -450,11 +453,12 @@
             document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
         }
 
+        // Function to provide feedback.
         function sendFeedback() {
             const feedback = document.getElementById("feedback").value;
             if (feedback) {
                 alert("Thank you for your feedback: " + feedback);
-                document.getElementById("feedback").value = ""; // Reset the feedback dropdown
+                document.getElementById("feedback").value = ""; // Reset the feedback input
             }
         }
     </script>
