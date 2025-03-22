@@ -207,6 +207,7 @@
         <div class="user-input">
             <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
             <button onclick="sendMessage()">Send</button>
+            <button onclick="toggleDefaultMusic()">Play/Pause Default Music</button>
         </div>
     </div>
 
@@ -248,13 +249,18 @@
         <label for="volume">Music Volume:</label>
         <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume()"/>
 
+        <label for="textReaderToggle">Enable Text Reader:</label>
+        <input type="checkbox" id="textReaderToggle" checked onchange="toggleTextReader()"> Enable
+
         <button onclick="resetChat()">Reset Chat</button>
+
+        <button onclick="toggleBackgroundMusic()">Play/Pause Background Music</button>
 
         <button onclick="closeSettings()">Close Settings</button>
     </div>
 
     <audio id="backgroundMusic" loop>
-        <source id="audioSource" src="https://raw.githubusercontent.com/animeduniya/mikasatest/main/default-background-music.mp3" type="audio/mpeg">
+        <source id="audioSource" src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
@@ -267,6 +273,7 @@
         let musicPlayer = document.getElementById("backgroundMusic");
         let audioSource = document.getElementById("audioSource");
         let currentBackgroundImage = '';
+        let textReaderEnabled = true;
 
         // On window load, set up initial settings and music
         window.onload = function () {
@@ -317,6 +324,28 @@
             }
         }
 
+        function pauseMusic() {
+            musicPlayer.pause();
+        }
+
+        function toggleMusic() {
+            musicEnabled = document.getElementById("musicToggle").checked;
+            if (musicEnabled) {
+                playMusic();
+            } else {
+                pauseMusic();
+            }
+            alert("Music is now " + (musicEnabled ? "enabled" : "disabled") + ".");
+        }
+
+        function toggleBackgroundMusic() {
+            if (musicPlayer.paused) {
+                playMusic();
+            } else {
+                pauseMusic();
+            }
+        }
+
         function speakResponse(response) {
             if (voiceEnabled) {
                 const utterance = new SpeechSynthesisUtterance(response);
@@ -359,7 +388,9 @@
                     botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm evolving to understand you better!"}`;
                     chatbox.appendChild(botMessage);
 
-                    speakResponse(response);
+                    if (textReaderEnabled) {
+                        speakResponse(response);
+                    }
                     messageCount++;
                     document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
                 } catch (error) {
@@ -426,14 +457,9 @@
             }
         }
 
-        function toggleMusic() {
-            musicEnabled = document.getElementById("musicToggle").checked;
-            if (musicEnabled) {
-                playMusic();
-            } else {
-                musicPlayer.pause();
-            }
-            alert("Music is now " + (musicEnabled ? "enabled" : "disabled") + ".");
+        function toggleTextReader() {
+            textReaderEnabled = document.getElementById("textReaderToggle").checked;
+            alert("Text Reader is now " + (textReaderEnabled ? "enabled" : "disabled") + ".");
         }
 
         function changeVolume() {
