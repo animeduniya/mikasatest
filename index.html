@@ -60,7 +60,6 @@
             color: #00fff0;
             text-shadow: 0 0 15px #00fff0, 0 0 30px #00fff0;
             animation: pulse 2s infinite;
-            margin: 0;
         }
 
         .sub-header {
@@ -192,28 +191,16 @@
             0% { opacity: 0.5; }
             100% { opacity: 1; }
         }
-
-        /* Custom Theme Colors */
-        .theme-color-1 { color: #FF5722; }
-        .theme-color-2 { color: #4CAF50; }
-        .theme-color-3 { color: #2196F3; }
-        .theme-color-4 { color: #FFEB3B; }
-        .theme-color-5 { color: #9C27B0; }
-        .theme-color-6 { color: #FF9800; }
-        .theme-color-7 { color: #00BCD4; }
-        .theme-color-8 { color: #3F51B5; }
-        .theme-color-9 { color: #E91E63; }
-        .theme-color-10 { color: #795548; }
     </style>
 </head>
 <body>
     <div class="background" id="background"></div>
     <div class="chatbot-container">
         <div class="settings" onclick="openSettings()">⚙️</div>
-        
+
         <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
         <div class="sub-header">Made by Rishab, Ansh and Abhi</div>
-        
+
         <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
         <div id="typingIndicator" class="typing-indicator" style="display: none;">🤖 Mikasa is typing...</div>
         <div class="message-count" id="messageCount">Messages: 0</div>
@@ -263,12 +250,12 @@
         <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume()"/>
 
         <button onclick="resetChat()">Reset Chat</button>
-        
+
         <button onclick="closeSettings()">Close Settings</button>
     </div>
 
     <audio id="backgroundMusic" loop>
-        <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg"> <!-- Default Background Music -->
+        <source id="audioSource" src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
@@ -279,13 +266,12 @@
         let messageCount = 0;
         let musicEnabled = true;
         let musicPlayer = document.getElementById("backgroundMusic");
+        let audioSource = document.getElementById("audioSource");
         let currentBackgroundImage = '';
 
         window.onload = function () {
             loadPreferences();
-            if (musicEnabled) {
-                musicPlayer.play(); // Play music if enabled
-            }
+            playMusic();
         }
 
         function loadPreferences() {
@@ -293,6 +279,7 @@
             const savedLang = localStorage.getItem('language');
             const savedTheme = localStorage.getItem('theme');
             const savedBackground = localStorage.getItem('background');
+            const savedMusic = localStorage.getItem('music');
 
             if (savedLang) {
                 document.getElementById("language").value = savedLang;
@@ -304,18 +291,26 @@
             }
 
             if (savedBackground) {
-                currentBackgroundImage = savedBackground; // Save for resetting
+                currentBackgroundImage = savedBackground; 
                 document.querySelector('.background').style.backgroundImage = `url(${savedBackground})`;
                 document.getElementById("backgroundSource").value = '';
             }
 
-            const savedMusic = localStorage.getItem('music');
             if (savedMusic) {
-                musicPlayer.src = savedMusic;
-                musicPlayer.volume = document.getElementById("volume").value;
+                audioSource.src = savedMusic; // Use uploaded music if available
             } else {
-                musicPlayer.volume = 0.5; // Set the default volume
-                musicPlayer.play(); // Play default music
+                audioSource.src = "https://www.bensound.com/bensound-music/bensound-sunny.mp3"; // Use default music
+            }
+
+            musicPlayer.volume = document.getElementById("volume").value;
+            musicPlayer.load(); // Load the selected music
+        }
+
+        function playMusic() {
+            if (musicEnabled) {
+                musicPlayer.play().catch(error => {
+                    console.error("Error playing music: ", error);
+                });
             }
         }
 
@@ -404,7 +399,7 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onloadend = function () {
-                    currentBackgroundImage = reader.result; // Save for resetting
+                    currentBackgroundImage = reader.result; 
                     document.querySelector('.background').style.backgroundImage = `url(${currentBackgroundImage})`;
                     localStorage.setItem('background', currentBackgroundImage);
                 }
@@ -419,11 +414,9 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onloadend = function () {
-                    musicPlayer.src = reader.result; // Set music source
-                    localStorage.setItem('music', reader.result); // Save music source
-                    if (musicEnabled) {
-                        musicPlayer.play(); // Play new music if enabled
-                    }
+                    audioSource.src = reader.result; 
+                    localStorage.setItem('music', reader.result); 
+                    playMusic(); // Play new music immediately
                 }
                 reader.readAsDataURL(file);
             }
@@ -432,10 +425,7 @@
         function toggleMusic() {
             musicEnabled = document.getElementById("musicToggle").checked;
             if (musicEnabled) {
-                if (musicPlayer.src === '') {
-                    musicPlayer.src = "https://www.bensound.com/bensound-music/bensound-sunny.mp3"; // Default music if none is set
-                }
-                musicPlayer.play();
+                playMusic();
             } else {
                 musicPlayer.pause();
             }
@@ -451,15 +441,6 @@
             chatbox.innerHTML = "";
             messageCount = 0;
             document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
-        }
-
-        // Function to provide feedback.
-        function sendFeedback() {
-            const feedback = document.getElementById("feedback").value;
-            if (feedback) {
-                alert("Thank you for your feedback: " + feedback);
-                document.getElementById("feedback").value = ""; // Reset the feedback input
-            }
         }
     </script>
 </body>
