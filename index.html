@@ -278,6 +278,9 @@
         <label for="volume">Music Volume:</label>
         <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume()"/>
 
+        <label for="textReaderToggle">Enable Text Reader:</label>
+        <input type="checkbox" id="textReaderToggle" checked onchange="toggleTextReader()"> Enable
+
         <button onclick="resetChat()" style="margin-top: 15px; width: 100%; padding: 10px; border-radius: 5px; font-weight: bold;">Reset Chat</button>
         
         <button onclick="closeSettings()" style="margin-top: 10px; width: 100%; padding: 10px; border-radius: 5px; font-weight: bold;">Close Settings</button>
@@ -291,6 +294,7 @@
         let voiceEnabled = true;
         let messageCount = 0;
         let musicEnabled = true;
+        let voiceToggle = true; // For text-to-speech
         let musicPlayer = document.getElementById("backgroundMusic");
 
         window.onload = function () {
@@ -303,6 +307,8 @@
             const savedTheme = localStorage.getItem('theme');
             const savedBackground = localStorage.getItem('background');
             const savedMusic = localStorage.getItem('music');
+            const savedVolume = localStorage.getItem('volume');
+            const savedVoiceToggle = localStorage.getItem('voiceToggle');
 
             if (savedLang) {
                 document.getElementById("language").value = savedLang;
@@ -319,15 +325,20 @@
 
             if (savedMusic) {
                 musicPlayer.src = savedMusic;
-                musicPlayer.volume = document.getElementById("volume").value;
+                musicPlayer.volume = savedVolume ? savedVolume : 0.5;
                 if (musicEnabled) {
                     musicPlayer.play();
                 }
             }
+
+            if (savedVoiceToggle !== null) {
+                voiceToggle = savedVoiceToggle === 'true';
+                document.getElementById("textReaderToggle").checked = voiceToggle;
+            }
         }
 
         function speakResponse(response) {
-            if (voiceEnabled) {
+            if (voiceToggle) {
                 const utterance = new SpeechSynthesisUtterance(response);
                 utterance.lang = "en-US";
                 window.speechSynthesis.speak(utterance);
@@ -400,7 +411,7 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onloadend = function () {
-                    const backgroundImage = reader.result; // Save for resetting
+                    const backgroundImage = reader.result;
                     document.querySelector('.background').style.backgroundImage = `url(${backgroundImage})`;
                     localStorage.setItem('background', backgroundImage);
                 }
@@ -415,9 +426,9 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onloadend = function () {
-                    const musicSource = reader.result; // Set music source
+                    const musicSource = reader.result;
                     musicPlayer.src = musicSource;
-                    localStorage.setItem('music', musicSource); // Save music source
+                    localStorage.setItem('music', musicSource);
                     if (musicEnabled) {
                         musicPlayer.play();
                     }
@@ -433,21 +444,28 @@
             } else {
                 musicPlayer.pause();
             }
+            localStorage.setItem('musicEnabled', musicEnabled);
             alert("Music is now " + (musicEnabled ? "enabled" : "disabled") + ".");
         }
 
         function changeVolume() {
             const volume = document.getElementById("volume").value;
             musicPlayer.volume = volume;
-            localStorage.setItem('volume', volume); // Save volume settings
+            localStorage.setItem('volume', volume);
         }
 
         function updateMusicVolume() {
             const savedVolume = localStorage.getItem('volume');
             if (savedVolume) {
                 document.getElementById("volume").value = savedVolume;
-                musicPlayer.volume = savedVolume; // Set saved volume on load
+                musicPlayer.volume = savedVolume;
             }
+        }
+
+        function toggleTextReader() {
+            voiceToggle = document.getElementById("textReaderToggle").checked;
+            localStorage.setItem('voiceToggle', voiceToggle);
+            alert("Text reader is now " + (voiceToggle ? "enabled" : "disabled") + ".");
         }
 
         function resetChat() {
