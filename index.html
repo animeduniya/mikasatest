@@ -29,14 +29,7 @@
             bottom: 0;
             z-index: -1;
             background-size: cover;
-            animation: backgroundEffect 20s infinite linear; /* Background slideshow effect */
-        }
-
-        @keyframes backgroundEffect {
-            0% { background-image: url('https://wallpapers.com/full/47587.jpg'); }
-            33% { background-image: url('https://wallpaperaccess.com/full/8583147.jpg'); }
-            66% { background-image: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg'); }
-            100% { background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg'); }
+            transition: background-image 0.5s ease;
         }
 
         .chatbot-container {
@@ -172,18 +165,14 @@
             margin: 10px 0 5px;
         }
 
-        .music-button {
-            background: #00ccff;
-            border: none;
-            color: white;
-            cursor: pointer;
-            padding: 10px;
-            border-radius: 5px;
+        input[type="range"] {
+            width: 100%;
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <div class="background"></div>
+    <div class="background" id="backgroundImage"></div>
     <div class="chatbot-container">
         <div class="settings" onclick="openSettings()">⚙️</div>
 
@@ -234,9 +223,7 @@
     <script src="https://js.puter.com/v2/"></script>
     <script>
         let chatbotName = "Mikasa";
-        let voiceEnabled = true;
-        let messageCount = 0;
-        let isMusicPlaying = true; // Music play state
+        let isMusicPlaying = false; // Music play state
         const backgroundAudio = document.getElementById("backgroundAudio");
 
         // Load user preferences from local storage
@@ -247,17 +234,17 @@
 
         function loadPreferences() {
             const savedTheme = localStorage.getItem('theme');
-
             if (savedTheme) {
                 document.getElementById("theme").value = savedTheme;
                 applyTheme(savedTheme);
             }
+
             const savedBackground = localStorage.getItem('background');
             const savedMusic = localStorage.getItem('backgroundMusic');
             const musicEnabled = localStorage.getItem('musicEnabled') === 'true';
 
             if (savedBackground) {
-                document.querySelector('.background').style.backgroundImage = `url(${savedBackground})`;
+                document.getElementById("backgroundImage").style.backgroundImage = `url(${savedBackground})`;
                 document.getElementById("backgroundSource").value = savedBackground;
             }
 
@@ -268,6 +255,7 @@
 
             document.getElementById("musicToggle").checked = musicEnabled;
             if (musicEnabled) {
+                isMusicPlaying = true;
                 backgroundAudio.play();
             }
         }
@@ -293,6 +281,7 @@
 
         function setupBackgroundAudio() {
             backgroundAudio.loop = true;
+            setVolume(); // Set initial volume from saved settings
             if (isMusicPlaying) {
                 backgroundAudio.play();
             }
@@ -322,7 +311,8 @@
                     } else if (/who made you|your creator/i.test(userInput.value)) {
                         response = "I was made by Rishab.";
                     } else {
-                        response = await puter.ai.chat(query);
+                        // Simulate a bot response
+                        response = "I'm here to assist you!";
                     }
 
                     typingIndicator.style.display = "none";
@@ -331,8 +321,6 @@
                     botMessage.className = "message bot";
                     botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm evolving to understand you better!"}`;
                     chatbox.appendChild(botMessage);
-
-                    messageCount++;
                 } catch (error) {
                     typingIndicator.style.display = "none";
                     const errorMessage = document.createElement("div");
@@ -349,7 +337,7 @@
         function changeBackground() {
             const inputURL = document.getElementById("backgroundSource").value;
             if (inputURL) {
-                document.querySelector('.background').style.backgroundImage = `url(${inputURL})`;
+                document.getElementById("backgroundImage").style.backgroundImage = `url(${inputURL})`;
                 localStorage.setItem('background', inputURL);
             } else {
                 alert("Please enter a valid URL.");
