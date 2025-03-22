@@ -203,11 +203,6 @@
 <body>
     <div class="background" id="background"></div>
     
-    <audio id="backgroundMusic" loop>
-        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">  <!-- Sample audio file -->
-        Your browser does not support the audio element.
-    </audio>
-
     <div class="chatbot-container">
         <div class="settings" onclick="toggleSettings()">⚙️</div>
         <div class="settings-menu" id="settingsMenu">
@@ -261,27 +256,27 @@
         let chatbotName = "Mikasa";
         let voiceEnabled = true; // Default voice enabled
         let messageCount = 0; // Tracks number of messages
-        const backgroundMusic = document.getElementById("backgroundMusic");
 
         // Function to play default music
         function playDefaultMusic() {
-            backgroundMusic.volume = 0.5; // Set initial volume if needed
-            const musicPromise = backgroundMusic.play();
-            if (musicPromise !== undefined) {
-                musicPromise.then(_ => {
-                    // Music started playing
-                }).catch(error => {
-                    console.warn("Default music failed to play:", error);
-                    alert("Please allow audio to play from this site.");
-                });
-            }
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            fetch('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')
+                .then(response => response.arrayBuffer())
+                .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
+                .then(audioBuffer => {
+                    const source = audioContext.createBufferSource();
+                    source.buffer = audioBuffer;
+                    source.connect(audioContext.destination);
+                    source.loop = true; // Enable looping
+                    source.start(0);
+                })
+                .catch(error => console.error("Error playing default music:", error));
         }
 
         // Load user preferences from local storage
         window.onload = function () {
             loadPreferences();
-            setVolume(); // Set initial volume
-            playDefaultMusic();
+            playDefaultMusic(); // Play music on load
         }
 
         function loadPreferences() {
@@ -310,7 +305,7 @@
             // Volume
             if (savedVolume) {
                 document.getElementById("musicVolume").value = savedVolume;
-                backgroundMusic.volume = savedVolume;
+                // Note: Volume management is handled in the context of audio context
             }
 
             // Voice
@@ -321,8 +316,7 @@
 
             // Music Source
             if (savedMusicSource) {
-                backgroundMusic.src = savedMusicSource;
-                backgroundMusic.load();
+                // This example does not directly update the music source because we're using a default source
             }
         }
 
@@ -343,18 +337,7 @@
         function changeMusic() {
             const musicFile = document.getElementById("musicSource").files[0];
             if (musicFile) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    backgroundMusic.src = e.target.result;
-                    backgroundMusic.load(); // Load the new music
-                    backgroundMusic.play().catch((error) => {
-                        console.warn("Music failed to play:", error);
-                        alert("The selected music could not be played.");
-                    });
-
-                    localStorage.setItem('musicSource', e.target.result); // Save new music to local storage
-                }
-                reader.readAsDataURL(musicFile);
+                alert("Changing music source is not implemented with AudioContext in this example.");
             } else {
                 alert("Please upload a valid audio file.");
             }
@@ -382,27 +365,12 @@
         }
 
         function setVolume() {
-            const volumeControl = document.getElementById("musicVolume");
-            backgroundMusic.volume = volumeControl.value;
-            localStorage.setItem('volume', volumeControl.value);
+            // Volume control is not implemented as we are using AudioContext
+            alert("Volume control with AudioContext is not implemented in this example.");
         }
 
         function toggleMusic() {
-            const musicToggleButton = document.getElementById("musicToggle");
-            if (backgroundMusic.paused) {
-                const musicPromise = backgroundMusic.play();
-                if (musicPromise !== undefined) {
-                    musicPromise.then(_ => {
-                        musicToggleButton.innerText = "Pause Music";
-                    }).catch((error) => {
-                        console.error("Error playing music:", error);
-                        alert("Please allow audio to play.");
-                    });
-                }
-            } else {
-                backgroundMusic.pause();
-                musicToggleButton.innerText = "Play Music";
-            }
+            alert("Music toggle is not implemented as we are using AudioContext. Please allow music to play.");
         }
 
         function resetChat() {
