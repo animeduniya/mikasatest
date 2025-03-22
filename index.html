@@ -228,6 +228,7 @@
     </div>
 
     <div id="settingsWindow" class="settings-menu" style="display: none;">
+        <h3>Settings</h3>
         <label for="language">Language:</label>
         <select id="language" onchange="changeLanguage()">
             <option value="en">English</option>
@@ -252,29 +253,20 @@
             <option value="theme-color-10">Brown</option>
         </select>
 
-        <label for="backgroundSource">Background Image URL:</label>
-        <input type="text" id="backgroundSource" placeholder="Background Image URL"/>
-        <button onclick="changeBackground()">Change Background</button>
+        <label for="backgroundSource">Background Image:</label>
+        <input type="file" id="backgroundSource" accept="image/*" onchange="changeBackground()" />
         
-        <label for="musicSource">Music URL:</label>
-        <input type="text" id="musicSource" placeholder="Music URL"/>
-        <button onclick="changeMusic()">Change Music</button>
-        
+        <label for="musicSource">Background Music:</label>
+        <input type="file" id="musicSource" accept="audio/*" onchange="changeMusic()" />
+
         <label for="musicToggle">Enable Music:</label>
         <input type="checkbox" id="musicToggle" checked onchange="toggleMusic()"> Enable
 
         <label for="volume">Music Volume:</label>
-        <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume()">
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume()"/>
 
         <button onclick="resetChat()">Reset Chat</button>
         
-        <label for="feedback">Feedback:</label>
-        <select id="feedback" onchange="sendFeedback()">
-            <option value="">Select Feedback</option>
-            <option value="helpful">Helpful</option>
-            <option value="not_helpful">Not Helpful</option>
-        </select>
-
         <button onclick="closeSettings()">Close Settings</button>
     </div>
 
@@ -287,6 +279,7 @@
         let messageCount = 0;
         let musicEnabled = true;
         let musicPlayer = document.getElementById("backgroundMusic");
+        let currentBackgroundImage = '';
 
         window.onload = function () {
             loadPreferences();
@@ -308,8 +301,9 @@
             }
 
             if (savedBackground) {
+                currentBackgroundImage = savedBackground; // Save for resetting
                 document.querySelector('.background').style.backgroundImage = `url(${savedBackground})`;
-                document.getElementById("backgroundSource").value = savedBackground;
+                document.getElementById("backgroundSource").value = '';
             }
 
             if (savedMusic) {
@@ -400,25 +394,34 @@
         }
 
         function changeBackground() {
-            const inputURL = document.getElementById("backgroundSource").value;
-            if (inputURL) {
-                document.querySelector('.background').style.backgroundImage = `url(${inputURL})`;
-                localStorage.setItem('background', inputURL);
-            } else {
-                alert("Please enter a valid URL.");
+            const fileInput = document.getElementById("backgroundSource");
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    currentBackgroundImage = reader.result; // Save for resetting
+                    document.querySelector('.background').style.backgroundImage = `url(${currentBackgroundImage})`;
+                    localStorage.setItem('background', currentBackgroundImage);
+                }
+                reader.readAsDataURL(file);
             }
         }
 
         function changeMusic() {
-            const inputMusicURL = document.getElementById("musicSource").value;
-            if (inputMusicURL) {
-                musicPlayer.src = inputMusicURL;
-                localStorage.setItem('music', inputMusicURL);
-                if (musicEnabled) {
-                    musicPlayer.play();
+            const fileInput = document.getElementById("musicSource");
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onloadend = function () {
+                    musicPlayer.src = reader.result; // Set music source
+                    localStorage.setItem('music', reader.result); // Save music source
+                    if (musicEnabled) {
+                        musicPlayer.play();
+                    }
                 }
-            } else {
-                alert("Please enter a valid music URL.");
+                reader.readAsDataURL(file);
             }
         }
 
