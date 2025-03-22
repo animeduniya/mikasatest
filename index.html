@@ -149,6 +149,8 @@
             cursor: pointer;
             background: rgba(0, 0, 0, 0.7); /* Set to black */
             border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5); /* RGB lighting effect */
+            transition: box-shadow 0.3s;
         }
 
         .settings-menu {
@@ -258,6 +260,7 @@
         window.onload = function () {
             loadPreferences();
             setVolume(); // Set initial volume
+            toggleMusic(); // Play music on load
         }
 
         function loadPreferences() {
@@ -299,7 +302,7 @@
             if (theme === "default") {
                 settingsMenu.style.background = "rgba(0, 0, 0, 0.8)";
             } else {
-                settingsMenu.style.background = theme.includes("theme-color-") ? "rgba(255, 255, 255, 0.1)" : "rgba(0, 0, 0, 0.7)";
+                settingsMenu.style.background = theme.includes("theme-color-") ? "rgba(0, 0, 0, 0.9)" : "rgba(0, 0, 0, 0.7)";
             }
         }
 
@@ -370,8 +373,6 @@
             document.body.className = selectedTheme;
             localStorage.setItem('theme', selectedTheme);
             updateSettingsBackground(selectedTheme);
-            // Update the music toggle button text
-            document.getElementById("musicToggle").innerText = "Toggle Music";
         }
 
         function changeBackground() {
@@ -394,7 +395,10 @@
         function toggleMusic() {
             const musicToggleButton = document.getElementById("musicToggle");
             if (backgroundMusic.paused) {
-                backgroundMusic.play().catch(() => {});
+                backgroundMusic.play().catch((error) => {
+                    console.error("Error playing music:", error);
+                    alert("Please allow audio to play.");
+                });
                 musicToggleButton.innerText = "Pause Music";
             } else {
                 backgroundMusic.pause();
@@ -412,6 +416,7 @@
         function toggleSettings() {
             const settingsMenu = document.getElementById("settingsMenu");
             settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block';
+            settingsMenu.style.transition = 'all 0.3s';
         }
 
         function toggleVoice() {
