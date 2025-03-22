@@ -17,7 +17,6 @@
             overflow: hidden;
             position: relative;
             transition: background 0.5s ease;
-            background-color: black; /* Default background color */
         }
 
         /* Slider Background Styles */
@@ -28,8 +27,16 @@
             right: 0;
             bottom: 0;
             z-index: -1;
+            background: url('https://wallpaperaccess.com/full/47587.jpg') no-repeat center center fixed;
             background-size: cover;
-            transition: background-image 0.5s ease;
+            animation: backgroundEffect 20s infinite linear; /* Background slideshow effect */
+        }
+
+        @keyframes backgroundEffect {
+            0% { background-image: url('https://wallpapercave.com/wp/wp9388551.jpg'); }
+            33% { background-image: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg'); }
+            66% { background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg'); }
+            100% { background-image: url('https://wallpaperaccess.com/full/8583147.jpg'); }
         }
 
         .chatbot-container {
@@ -44,6 +51,7 @@
             flex-direction: column;
             position: relative;
             z-index: 2;
+            animation: fadeIn 1.5s ease-in-out;
         }
 
         .header {
@@ -51,6 +59,7 @@
             font-weight: bold;
             color: #00fff0;
             text-shadow: 0 0 15px #00fff0, 0 0 30px #00fff0;
+            animation: pulse 2s infinite;
             margin: 0;
         }
 
@@ -62,15 +71,17 @@
 
         .messages {
             flex: 1;
+            height: 300px;
             max-height: 300px;
             overflow-y: auto;
             margin: 20px 0;
             padding: 10px;
             border: 2px solid #00fff0;
             border-radius: 10px;
+            animation: fadeIn 1s;
             display: flex;
             flex-direction: column;
-            gap: 10px; /* Space between messages */
+            gap: 10px;
         }
 
         .message {
@@ -97,6 +108,7 @@
         .typing-indicator {
             font-size: 0.9em;
             color: #ffffffa0;
+            animation: typingBlink 1s infinite alternate;
         }
 
         .user-input {
@@ -112,6 +124,7 @@
             border: 2px solid #00fff0;
             border-radius: 10px;
             margin-right: 10px;
+            transition: transform 0.3s ease-in-out;
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
         }
@@ -124,8 +137,19 @@
             padding: 10px 20px;
             border-radius: 10px;
             cursor: pointer;
+            transition: transform 0.3s ease-in-out;
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
             margin-left: 5px;
+        }
+
+        .user-input input:focus {
+            transform: scale(1.05);
+            outline: none;
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-input button:hover {
+            transform: scale(1.1);
         }
 
         .settings {
@@ -138,152 +162,170 @@
             border-radius: 5px;
         }
 
-        /* Settings Modal */
-        .settings-modal {
+        .settings-menu {
             display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .settings-content {
-            background: rgba(0, 0, 0, 0.9);
-            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            position: absolute;
+            top: 45px;
+            right: 10px;
+            z-index: 2;
+            padding: 15px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            color: white;
+            transition: all 0.3s;
         }
 
-        .settings-content label {
+        .settings-menu label {
             display: block;
             margin: 10px 0 5px;
+            color: #fff;
         }
 
-        input[type="range"] {
-            width: 100%;
+        .message-count {
+            font-size: 1em;
             margin-top: 10px;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes typingBlink {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Custom Theme Colors */
+        .theme-color-1 { color: #FF5722; }
+        .theme-color-2 { color: #4CAF50; }
+        .theme-color-3 { color: #2196F3; }
+        .theme-color-4 { color: #FFEB3B; }
+        .theme-color-5 { color: #9C27B0; }
+        .theme-color-6 { color: #FF9800; }
+        .theme-color-7 { color: #00BCD4; }
+        .theme-color-8 { color: #3F51B5; }
+        .theme-color-9 { color: #E91E63; }
+        .theme-color-10 { color: #795548; }
     </style>
 </head>
 <body>
-    <div class="background" id="backgroundImage"></div>
+    <div class="background" id="background"></div>
     <div class="chatbot-container">
         <div class="settings" onclick="openSettings()">⚙️</div>
-
+        
         <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
-        <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
-
+        <div class="sub-header">Made by Rishab, Ansh and Abhi</div>
+        
         <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
         <div id="typingIndicator" class="typing-indicator" style="display: none;">🤖 Mikasa is typing...</div>
+        <div class="message-count" id="messageCount">Messages: 0</div>
+
         <div class="user-input">
             <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>
 
-    <div class="settings-modal" id="settingsModal">
-        <div class="settings-content">
-            <h2>Settings</h2>
-            <label for="theme">Theme:</label>
-            <select id="theme" onchange="changeTheme()">
-                <option value="dark">Dark</option>
-                <option value="light">Light</option>
-                <option value="system">System</option>
-            </select>
+    <div id="settingsWindow" class="settings-menu" style="display: none;">
+        <label for="language">Language:</label>
+        <select id="language" onchange="changeLanguage()">
+            <option value="en">English</option>
+            <option value="es">Spanish</option>
+            <option value="fr">French</option>
+            <option value="de">German</option>
+            <option value="it">Italian</option>
+        </select>
 
-            <label for="backgroundSource">Background Image URL:</label>
-            <input type="text" id="backgroundSource" placeholder="Background Image URL"/>
+        <label for="theme">Text Color Theme:</label>
+        <select id="theme" onchange="changeTheme()">
+            <option value="default">Default</option>
+            <option value="theme-color-1">Deep Orange</option>
+            <option value="theme-color-2">Green</option>
+            <option value="theme-color-3">Blue</option>
+            <option value="theme-color-4">Yellow</option>
+            <option value="theme-color-5">Purple</option>
+            <option value="theme-color-6">Orange</option>
+            <option value="theme-color-7">Cyan</option>
+            <option value="theme-color-8">Indigo</option>
+            <option value="theme-color-9">Pink</option>
+            <option value="theme-color-10">Brown</option>
+        </select>
 
-            <label for="backgroundMusic">Background Music URL:</label>
-            <input type="text" id="backgroundMusic" placeholder="Background Music URL"/>
+        <label for="backgroundSource">Background Image URL:</label>
+        <input type="text" id="backgroundSource" placeholder="Background Image URL"/>
+        <button onclick="changeBackground()">Change Background</button>
+        
+        <label for="musicSource">Music URL:</label>
+        <input type="text" id="musicSource" placeholder="Music URL"/>
+        <button onclick="changeMusic()">Change Music</button>
+        
+        <label for="musicToggle">Enable Music:</label>
+        <input type="checkbox" id="musicToggle" checked onchange="toggleMusic()"> Enable
 
-            <label for="musicToggle">Enable Music:</label>
-            <input type="checkbox" id="musicToggle" onchange="toggleMusic()"> Enable
+        <label for="volume">Music Volume:</label>
+        <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume()">
 
-            <label for="volumeControl">Volume:</label>
-            <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="1" onchange="setVolume()">
+        <button onclick="resetChat()">Reset Chat</button>
+        
+        <label for="feedback">Feedback:</label>
+        <select id="feedback" onchange="sendFeedback()">
+            <option value="">Select Feedback</option>
+            <option value="helpful">Helpful</option>
+            <option value="not_helpful">Not Helpful</option>
+        </select>
 
-            <button onclick="changeBackground()">Change Background</button>
-            <button onclick="changeBackgroundMusic()">Change Music</button>
-            <button onclick="closeSettings()">Close</button>
-        </div>
+        <button onclick="closeSettings()">Close Settings</button>
     </div>
 
-    <audio id="backgroundAudio" loop>
-        <source src="default-background-music.mp3" type="audio/mpeg"> <!-- Update with your default music file -->
-        Your browser does not support the audio element.
-    </audio>
+    <audio id="backgroundMusic" loop></audio>
 
     <script src="https://js.puter.com/v2/"></script>
     <script>
         let chatbotName = "Mikasa";
-        let isMusicPlaying = false; // Music play state
-        const backgroundAudio = document.getElementById("backgroundAudio");
+        let voiceEnabled = true;
+        let messageCount = 0;
+        let musicEnabled = true;
+        let musicPlayer = document.getElementById("backgroundMusic");
 
-        // Load user preferences from local storage
         window.onload = function () {
             loadPreferences();
-            setupBackgroundAudio();
-        };
+        }
 
         function loadPreferences() {
+            const savedLang = localStorage.getItem('language');
             const savedTheme = localStorage.getItem('theme');
-            if (savedTheme) {
-                document.getElementById("theme").value = savedTheme;
-                applyTheme(savedTheme);
+            const savedBackground = localStorage.getItem('background');
+            const savedMusic = localStorage.getItem('music');
+
+            if (savedLang) {
+                document.getElementById("language").value = savedLang;
             }
 
-            const savedBackground = localStorage.getItem('background');
-            const savedMusic = localStorage.getItem('backgroundMusic');
-            const musicEnabled = localStorage.getItem('musicEnabled') === 'true';
+            if (savedTheme) {
+                document.body.className = savedTheme;
+                document.getElementById("theme").value = savedTheme;
+            }
 
             if (savedBackground) {
-                document.getElementById("backgroundImage").style.backgroundImage = `url(${savedBackground})`;
+                document.querySelector('.background').style.backgroundImage = `url(${savedBackground})`;
                 document.getElementById("backgroundSource").value = savedBackground;
             }
 
             if (savedMusic) {
-                document.getElementById("backgroundMusic").value = savedMusic;
-                backgroundAudio.src = savedMusic;
-            }
-
-            document.getElementById("musicToggle").checked = musicEnabled;
-            if (musicEnabled) {
-                isMusicPlaying = true;
-                backgroundAudio.play();
+                musicPlayer.src = savedMusic;
+                musicPlayer.volume = document.getElementById("volume").value;
+                if (musicEnabled) {
+                    musicPlayer.play();
+                }
             }
         }
 
-        function applyTheme(theme) {
-            if (theme === "dark") {
-                document.body.style.backgroundColor = "black";
-                document.body.style.color = "white";
-            } else if (theme === "light") {
-                document.body.style.backgroundColor = "white";
-                document.body.style.color = "black";
-            } else {
-                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-                document.body.style.backgroundColor = mediaQuery.matches ? "black" : "white";
-            }
-        }
-
-        function changeTheme() {
-            const selectedTheme = document.getElementById("theme").value;
-            localStorage.setItem('theme', selectedTheme);
-            applyTheme(selectedTheme);
-        }
-
-        function setupBackgroundAudio() {
-            backgroundAudio.loop = true;
-            setVolume(); // Set initial volume from saved settings
-            if (isMusicPlaying) {
-                backgroundAudio.play();
+        function speakResponse(response) {
+            if (voiceEnabled) {
+                const utterance = new SpeechSynthesisUtterance(response);
+                utterance.lang = "en-US";
+                window.speechSynthesis.speak(utterance);
             }
         }
 
@@ -302,8 +344,8 @@
                 typingIndicator.style.display = "block";
 
                 try {
-                    const query = userInput.value.trim();
                     let response;
+                    const query = userInput.value.trim();
 
                     // Basic question handling for responses
                     if (/what's your name|who are you/i.test(userInput.value)) {
@@ -311,8 +353,7 @@
                     } else if (/who made you|your creator/i.test(userInput.value)) {
                         response = "I was made by Rishab.";
                     } else {
-                        // Simulate a bot response
-                        response = "I'm here to assist you!";
+                        response = await puter.ai.chat(query);
                     }
 
                     typingIndicator.style.display = "none";
@@ -321,6 +362,10 @@
                     botMessage.className = "message bot";
                     botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm evolving to understand you better!"}`;
                     chatbox.appendChild(botMessage);
+
+                    speakResponse(response);
+                    messageCount++;
+                    document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
                 } catch (error) {
                     typingIndicator.style.display = "none";
                     const errorMessage = document.createElement("div");
@@ -334,23 +379,43 @@
             }
         }
 
+        function openSettings() {
+            document.getElementById("settingsWindow").style.display = "block";
+        }
+
+        function closeSettings() {
+            document.getElementById("settingsWindow").style.display = "none";
+        }
+
+        function changeLanguage() {
+            const selectedLanguage = document.getElementById("language").value;
+            localStorage.setItem('language', selectedLanguage);
+            alert("Language changed to: " + selectedLanguage);
+        }
+
+        function changeTheme() {
+            const selectedTheme = document.getElementById("theme").value;
+            document.body.className = selectedTheme;
+            localStorage.setItem('theme', selectedTheme);
+        }
+
         function changeBackground() {
             const inputURL = document.getElementById("backgroundSource").value;
             if (inputURL) {
-                document.getElementById("backgroundImage").style.backgroundImage = `url(${inputURL})`;
+                document.querySelector('.background').style.backgroundImage = `url(${inputURL})`;
                 localStorage.setItem('background', inputURL);
             } else {
                 alert("Please enter a valid URL.");
             }
         }
 
-        function changeBackgroundMusic() {
-            const inputMusicURL = document.getElementById("backgroundMusic").value;
+        function changeMusic() {
+            const inputMusicURL = document.getElementById("musicSource").value;
             if (inputMusicURL) {
-                backgroundAudio.src = inputMusicURL;
-                localStorage.setItem('backgroundMusic', inputMusicURL);
-                if (isMusicPlaying) {
-                    backgroundAudio.play();
+                musicPlayer.src = inputMusicURL;
+                localStorage.setItem('music', inputMusicURL);
+                if (musicEnabled) {
+                    musicPlayer.play();
                 }
             } else {
                 alert("Please enter a valid music URL.");
@@ -358,26 +423,32 @@
         }
 
         function toggleMusic() {
-            isMusicPlaying = document.getElementById("musicToggle").checked;
-            localStorage.setItem('musicEnabled', isMusicPlaying);
-            if (isMusicPlaying) {
-                backgroundAudio.play();
+            musicEnabled = document.getElementById("musicToggle").checked;
+            if (musicEnabled) {
+                musicPlayer.play();
             } else {
-                backgroundAudio.pause();
+                musicPlayer.pause();
             }
+            alert("Music is now " + (musicEnabled ? "enabled" : "disabled") + ".");
         }
 
-        function setVolume() {
-            const volume = document.getElementById("volumeControl").value;
-            backgroundAudio.volume = volume;
+        function changeVolume() {
+            musicPlayer.volume = document.getElementById("volume").value;
         }
 
-        function openSettings() {
-            document.getElementById("settingsModal").style.display = "flex";
+        function resetChat() {
+            const chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML = "";
+            messageCount = 0;
+            document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
         }
 
-        function closeSettings() {
-            document.getElementById("settingsModal").style.display = "none";
+        function sendFeedback() {
+            const feedback = document.getElementById("feedback").value;
+            if (feedback) {
+                alert("Thank you for your feedback: " + feedback);
+                document.getElementById("feedback").value = ""; // Reset the feedback dropdown
+            }
         }
     </script>
 </body>
