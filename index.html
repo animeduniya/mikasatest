@@ -17,6 +17,7 @@
             overflow: hidden;
             position: relative;
             transition: background 0.5s ease;
+            background-color: #000; /* Default background color */
         }
 
         .background {
@@ -221,7 +222,7 @@
 
             <div class="music-controls">
                 <label for="musicToggle">Background Music:</label>
-                <input type="checkbox" id="musicToggle" checked onchange="toggleMusic()"> On
+                <input type="checkbox" id="musicToggle" onchange="toggleMusic()"> On
                 <label for="volume">Volume:</label>
                 <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" onchange="setVolume()" />
             </div>
@@ -247,7 +248,7 @@
 
             <label for="animationToggle">Enable Animations:</label>
             <input type="checkbox" id="animationToggle" checked onchange="toggleAnimations()"> On
-
+            
             <label for="bgColor">Background Color:</label>
             <input type="color" id="bgColor" value="#000000" onchange="changeBgColor()" />
             <label for="textColor">Text Color:</label>
@@ -301,7 +302,7 @@
 
             if (savedLang) document.getElementById("language").value = savedLang;
             if (savedTheme) {
-                document.body.className = savedTheme;
+                document.body.setAttribute('class', savedTheme);
                 document.getElementById("theme").value = savedTheme;
             }
             if (savedBackground) {
@@ -339,12 +340,6 @@
             if (musicEnabled) {
                 bgMusic.play();
             }
-        }
-
-        function toggleAnimations() {
-            animationsEnabled = document.getElementById("animationToggle").checked;
-            localStorage.setItem('animations', animationsEnabled);
-            alert("Animations are now " + (animationsEnabled ? "enabled" : "disabled") + ".");
         }
 
         function toggleMusic() {
@@ -389,7 +384,7 @@
                     typingIndicator.style.display = "none";
                     const botMessage = document.createElement("div");
                     botMessage.className = "message bot";
-                    botMessage.textContent = `🤖 ${chatbotName}: I'm evolving to understand you better!`;
+                    botMessage.textContent = getBotResponse(userInput.value.trim());
                     chatbox.appendChild(botMessage);
 
                     if (animationsEnabled) {
@@ -408,9 +403,24 @@
                     }
 
                     chatbox.scrollTop = chatbox.scrollHeight;
-                }, 1000); // Simulated delay for the bot's response
+                }, 1000); // Simulated delay for bot's response
 
                 userInput.value = "";
+            }
+        }
+
+        function getBotResponse(userText) {
+            switch(personality) {
+                case 'friendly':
+                    return `🤖 ${chatbotName}: I'm here to help, how can I assist you today?`;
+                case 'funny':
+                    return `🤖 ${chatbotName}: Why did the robot cross the road? Because it was programmed to!`;
+                case 'smart':
+                    return `🤖 ${chatbotName}: Let’s tackle this question together!`;
+                case 'casual':
+                    return `🤖 ${chatbotName}: Hey there! What’s up?`;
+                default:
+                    return `🤖 ${chatbotName}: I'm evolving to understand you better!`;
             }
         }
 
@@ -422,12 +432,14 @@
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.className = selectedTheme;
+            document.body.setAttribute('class', selectedTheme);
             localStorage.setItem('theme', selectedTheme);
+            adjustSettingsMenuBackground();
+        }
 
-            // Change settings background color accordingly
+        function adjustSettingsMenuBackground() {
             const settingsMenu = document.getElementById("settingsMenu");
-            if (selectedTheme === 'default') {
+            if (document.body.className === 'default') {
                 settingsMenu.style.background = 'rgba(0, 0, 0, 0.8)';
             } else {
                 settingsMenu.style.background = 'rgba(255, 255, 255, 0.8)';
