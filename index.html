@@ -204,7 +204,7 @@
     <div class="background" id="background"></div>
     
     <audio id="backgroundMusic" loop>
-        <source src="https://archive.org/download/david-kushner-daylight-official-music-video/David%20Kushner%20-%20Daylight%20%28Official%20Music%20Video%29.mp3" type="audio/mpeg">
+        <source src="https://raw.githubusercontent.com/animeduniya/mikasatest/main/daylight.mp3" type="audio/mpeg">
         Your browser does not support the audio element.
     </audio>
 
@@ -315,6 +315,7 @@
         function playDefaultMusic() {
             backgroundMusic.play().catch((error) => {
                 console.warn("Default music failed to play:", error);
+                alert("Please allow audio to play from this site.");
             });
         }
 
@@ -338,11 +339,10 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     backgroundMusic.src = e.target.result;
-
-                    // Ensure music plays after changing the source
-                    backgroundMusic.load();
+                    backgroundMusic.load(); // Load the new music
                     backgroundMusic.play().catch((error) => {
                         console.warn("Music failed to play:", error);
+                        alert("The selected music could not be played.");
                     });
 
                     localStorage.setItem('musicSource', e.target.result); // Save new music to local storage
@@ -358,7 +358,9 @@
                 selectedTheme = document.getElementById("theme").value;
             }
             // Reset body classes to prevent clashes
-            document.body.classList.remove('light', 'dark', 'default');
+            document.body.classList.remove('light', 'dark');
+            document.querySelector('.chatbot-container').classList.remove('light', 'dark');
+
             if (selectedTheme === 'light') {
                 document.body.classList.add('light');
                 document.querySelector('.chatbot-container').classList.add('light');
@@ -366,8 +368,8 @@
                 document.body.classList.add('dark');
                 document.querySelector('.chatbot-container').classList.add('dark');
             } else {
-                document.body.classList.add('default'); // Keep this for your default styling
-                document.querySelector('.chatbot-container').classList.remove('light', 'dark'); // Reset
+                document.body.classList.remove('light', 'dark'); // Remove both classes for default
+                document.querySelector('.chatbot-container').classList.remove('light', 'dark'); // Reset the container classes
             }
             localStorage.setItem('theme', selectedTheme);
         }
