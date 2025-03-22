@@ -17,7 +17,7 @@
             overflow: hidden;
             position: relative;
             transition: background 0.5s ease;
-            background-color: #000; /* Default dark background */
+            background-color: black; /* Default background color */
         }
 
         /* Slider Background Styles */
@@ -28,9 +28,8 @@
             right: 0;
             bottom: 0;
             z-index: -1;
-            background-image: url('https://wallpaperaccess.com/full/47587.jpg'); 
+            background: url('https://wallpaperaccess.com/full/47587.jpg') no-repeat center center fixed;
             background-size: cover;
-            background-position: center;
         }
 
         .chatbot-container {
@@ -45,16 +44,13 @@
             flex-direction: column;
             position: relative;
             z-index: 2;
-            animation: fadeIn 1.5s ease-in-out;
         }
 
-        /* Header Styles */
         .header {
             font-size: 2.5em;
             font-weight: bold;
             color: #00fff0;
             text-shadow: 0 0 15px #00fff0, 0 0 30px #00fff0;
-            animation: pulse 2s infinite;
             margin: 0;
         }
 
@@ -66,22 +62,21 @@
 
         .messages {
             flex: 1;
-            height: 300px;
             max-height: 300px;
             overflow-y: auto;
             margin: 20px 0;
             padding: 10px;
             border: 2px solid #00fff0;
             border-radius: 10px;
-            animation: fadeIn 1s;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 10px; /* Space between messages */
         }
 
         .message {
             font-size: 1.1em;
             line-height: 1.5;
+            position: relative;
             padding: 10px 15px;
             border-radius: 20px;
             display: inline-block;
@@ -102,7 +97,6 @@
         .typing-indicator {
             font-size: 0.9em;
             color: #ffffffa0;
-            animation: typingBlink 1s infinite alternate;
         }
 
         .user-input {
@@ -130,7 +124,6 @@
             padding: 10px 20px;
             border-radius: 10px;
             cursor: pointer;
-            transition: transform 0.3s ease-in-out;
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
             margin-left: 5px;
         }
@@ -141,298 +134,130 @@
             right: 10px;
             padding: 10px;
             cursor: pointer;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(255, 255, 255, 0.1);
             border-radius: 5px;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-            transition: box-shadow 0.3s, background 0.3s;
         }
 
-        .settings-menu {
+        /* Settings Modal */
+        .settings-modal {
             display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
             background: rgba(0, 0, 0, 0.8);
-            position: absolute;
-            top: 45px; 
-            right: 10px;
-            z-index: 2;
-            padding: 15px;
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .settings-content {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            transition: all 0.3s;
+            color: white;
         }
 
-        .settings-menu label {
-            color: #fff;
-            margin: 5px 0;
-            display: flex;
-            flex-direction: column;
+        .settings-content label {
+            display: block;
+            margin: 10px 0 5px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes typingBlink {
-            0% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        /* Light Theme Styles */
-        body.light {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        .chatbot-container.light {
-            background: rgba(255, 255, 255, 0.85);
-            border: 2px solid #3f51b5;
-        }
-
-        /* Dark Theme Styles */
-        body.dark {
-            background-color: #000000;
-            color: #ffffff;
-        }
-
-        .chatbot-container.dark {
-            background: rgba(0, 0, 0, 0.85);
-            border: 2px solid #00fff0;
+        .music-button {
+            background: #00ccff;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
-    <div id="soundcloud-player"></div>
-<script src="https://w.soundcloud.com/player.api.js"></script>
-<script>
-    var widget = SC.Widget(document.getElementById('soundcloud-player'));
-    widget.load('https://soundcloud.com/kelly-cavanagh-930071897/daylight-by-david-kushner-full?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing', { 
-        show_comments: false,
-        auto_play: true,
-        hide_related: true
-    });
-</script>
-
+    <div class="background"></div>
     <div class="chatbot-container">
-        <div class="settings" onclick="toggleSettings()">⚙️</div>
-        <div class="settings-menu" id="settingsMenu">
-            <label for="language">Language:</label>
-            <select id="language" onchange="changeLanguage()">
-                <option value="en">English</option>
-                <option value="es">Spanish</option>
-                <option value="fr">French</option>
-                <option value="de">German</option>
-                <option value="it">Italian</option>
-            </select>
-            <label for="theme">Choose Theme:</label>
-            <select id="theme" onchange="changeTheme()">
-                <option value="default">Default</option>
-                <option value="light">Light</option>
-                <option value="dark">Dark</option>
-            </select>
-            <label for="backgroundSource">Background Source:</label>
-            <input type="file" id="backgroundSource" accept="image/*" onchange="changeBackground()" />
-            <label for="musicSource">Music Source:</label>
-            <input type="file" id="musicSource" accept="audio/*" onchange="changeMusic()" />
-            <label for="musicVolume">Music Volume:</label>
-            <input type="range" id="musicVolume" min="0" max="1" step="0.1" onchange="setVolume()" value="0.5" />
-            <button id="musicToggle" onclick="toggleMusic()">Pause Music</button>
-            <button onclick="resetChat()">Reset Chat</button>
-            <label for="voiceToggle">Enable Voice:</label>
-            <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
-            <label for="feedback">Feedback:</label>
-            <select id="feedback" onchange="sendFeedback()">
-                <option value="">Select Feedback</option>
-                <option value="helpful">Helpful</option>
-                <option value="not_helpful">Not Helpful</option>
-            </select>
-        </div>
+        <div class="settings" onclick="openSettings()">⚙️</div>
 
         <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
         <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
-        
+
         <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
         <div id="typingIndicator" class="typing-indicator" style="display: none;">🤖 Mikasa is typing...</div>
-        <div class="message-count" id="messageCount">Messages: 0</div>
-
         <div class="user-input">
             <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>
 
+    <div class="settings-modal" id="settingsModal">
+        <div class="settings-content">
+            <h2>Settings</h2>
+            <label for="theme">Theme:</label>
+            <select id="theme" onchange="changeTheme()">
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
+                <option value="system">System</option>
+            </select>
+
+            <label for="backgroundSource">Background Image URL:</label>
+            <input type="text" id="backgroundSource" placeholder="Background Image URL"/>
+
+            <label for="backgroundMusic">Background Music URL:</label>
+            <input type="text" id="backgroundMusic" placeholder="Background Music URL"/>
+
+            <label for="musicToggle">Enable Music:</label>
+            <input type="checkbox" id="musicToggle" checked onchange="toggleMusic()"> Enable
+
+            <button onclick="changeBackground()">Change Background</button>
+            <button onclick="closeSettings()">Close</button>
+        </div>
+    </div>
+
+    <audio id="backgroundAudio" loop>
+        <source src="daylight.mp3" type="audio/mpeg"> <!-- Update with your default music file -->
+    </audio>
+
     <script src="https://js.puter.com/v2/"></script>
     <script>
         let chatbotName = "Mikasa";
-        let voiceEnabled = true; // Default voice enabled
-        let messageCount = 0; // Tracks number of messages
-        const backgroundMusic = document.getElementById("backgroundMusic");
-
-        // Function to play default music
-        function playDefaultMusic() {
-            backgroundMusic.volume = 0.5; // Set initial volume if needed
-            const musicPromise = backgroundMusic.play();
-            if (musicPromise !== undefined) {
-                musicPromise.then(_ => {
-                    // Music started playing
-                }).catch(error => {
-                    console.warn("Default music failed to play:", error);
-                    alert("Please allow audio to play from this site.");
-                });
-            }
-        }
+        let voiceEnabled = true;
+        let messageCount = 0;
+        let isMusicPlaying = true; // Music play state
+        const backgroundAudio = document.getElementById("backgroundAudio");
 
         // Load user preferences from local storage
         window.onload = function () {
             loadPreferences();
-            setVolume(); // Set initial volume
-            playDefaultMusic();
-        }
+        };
 
         function loadPreferences() {
-            const savedLang = localStorage.getItem('language');
             const savedTheme = localStorage.getItem('theme');
-            const savedBackground = localStorage.getItem('background');
-            const savedVolume = localStorage.getItem('volume');
-            const savedVoice = localStorage.getItem('voice');
-            const savedMusicSource = localStorage.getItem('musicSource');
 
-            // Language
-            if (savedLang) {
-                document.getElementById("language").value = savedLang;
-            }
-
-            // Theme
             if (savedTheme) {
-                changeTheme(savedTheme);
-            }
-
-            // Background
-            if (savedBackground) {
-                document.querySelector('.background').style.backgroundImage = `url(${savedBackground})`;
-            }
-
-            // Volume
-            if (savedVolume) {
-                document.getElementById("musicVolume").value = savedVolume;
-                backgroundMusic.volume = savedVolume;
-            }
-
-            // Voice
-            if (savedVoice === "false") {
-                voiceEnabled = false;
-                document.getElementById("voiceToggle").checked = false;
-            }
-
-            // Music Source
-            if (savedMusicSource) {
-                backgroundMusic.src = savedMusicSource;
-                backgroundMusic.load();
+                document.getElementById("theme").value = savedTheme;
+                applyTheme(savedTheme);
             }
         }
 
-        function changeBackground() {
-            const inputFile = document.getElementById("backgroundSource").files[0];
-            if (inputFile) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    document.querySelector('.background').style.backgroundImage = `url(${e.target.result})`;
-                    localStorage.setItem('background', e.target.result); 
-                }
-                reader.readAsDataURL(inputFile);
+        function applyTheme(theme) {
+            if (theme === "dark") {
+                document.body.style.backgroundColor = "black";
+                document.body.style.color = "white";
+            } else if (theme === "light") {
+                document.body.style.backgroundColor = "white";
+                document.body.style.color = "black";
             } else {
-                alert("Please upload a valid image file.");
+                const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+                document.body.style.backgroundColor = mediaQuery.matches ? "black" : "white";
             }
         }
 
-        function changeMusic() {
-            const musicFile = document.getElementById("musicSource").files[0];
-            if (musicFile) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    backgroundMusic.src = e.target.result;
-                    backgroundMusic.load(); // Load the new music
-                    backgroundMusic.play().catch((error) => {
-                        console.warn("Music failed to play:", error);
-                        alert("The selected music could not be played.");
-                    });
-
-                    localStorage.setItem('musicSource', e.target.result); // Save new music to local storage
-                }
-                reader.readAsDataURL(musicFile);
-            } else {
-                alert("Please upload a valid audio file.");
-            }
-        }
-
-        function changeTheme(selectedTheme) {
-            if (!selectedTheme) {
-                selectedTheme = document.getElementById("theme").value;
-            }
-            // Reset body classes to prevent clashes
-            document.body.classList.remove('light', 'dark');
-            document.querySelector('.chatbot-container').classList.remove('light', 'dark');
-
-            if (selectedTheme === 'light') {
-                document.body.classList.add('light');
-                document.querySelector('.chatbot-container').classList.add('light');
-            } else if (selectedTheme === 'dark') {
-                document.body.classList.add('dark');
-                document.querySelector('.chatbot-container').classList.add('dark');
-            } else {
-                document.body.classList.remove('light', 'dark'); // Remove both classes for default
-                document.querySelector('.chatbot-container').classList.remove('light', 'dark'); // Reset the container classes
-            }
+        function changeTheme() {
+            const selectedTheme = document.getElementById("theme").value;
             localStorage.setItem('theme', selectedTheme);
-        }
-
-        function setVolume() {
-            const volumeControl = document.getElementById("musicVolume");
-            backgroundMusic.volume = volumeControl.value;
-            localStorage.setItem('volume', volumeControl.value);
-        }
-
-        function toggleMusic() {
-            const musicToggleButton = document.getElementById("musicToggle");
-            if (backgroundMusic.paused) {
-                const musicPromise = backgroundMusic.play();
-                if (musicPromise !== undefined) {
-                    musicPromise.then(_ => {
-                        musicToggleButton.innerText = "Pause Music";
-                    }).catch((error) => {
-                        console.error("Error playing music:", error);
-                        alert("Please allow audio to play.");
-                    });
-                }
-            } else {
-                backgroundMusic.pause();
-                musicToggleButton.innerText = "Play Music";
-            }
-        }
-
-        function resetChat() {
-            const chatbox = document.getElementById("chatbox");
-            chatbox.innerHTML = "";
-            messageCount = 0;
-            document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
-        }
-
-        function toggleSettings() {
-            const settingsMenu = document.getElementById("settingsMenu");
-            settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function toggleVoice() {
-            voiceEnabled = document.getElementById("voiceToggle").checked;
-            localStorage.setItem('voice', voiceEnabled);
-            alert("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
-        }
-
-        function sendFeedback() {
-            const feedback = document.getElementById("feedback").value;
-            if (feedback) {
-                alert("Thank you for your feedback: " + feedback);
-                document.getElementById("feedback").value = ""; // Reset feedback dropdown
-            }
+            applyTheme(selectedTheme);
         }
 
         async function sendMessage() {
@@ -448,16 +273,17 @@
                 chatbox.scrollTop = chatbox.scrollHeight;
 
                 typingIndicator.style.display = "block";
+
                 try {
-                    let response;
                     const query = userInput.value.trim();
+                    // Basic question handling for responses
+                    let response;
                     if (/what's your name|who are you/i.test(userInput.value)) {
                         response = `My name is ${chatbotName}.`;
                     } else if (/who made you|your creator/i.test(userInput.value)) {
                         response = "I was made by Rishab.";
                     } else {
-                        // Simulate bot response or connect to AI service
-                        response = "I'm sorry, I can't assist with that at the moment.";
+                        response = await puter.ai.chat(query);
                     }
 
                     typingIndicator.style.display = "none";
@@ -468,7 +294,6 @@
                     chatbox.appendChild(botMessage);
 
                     messageCount++;
-                    document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
                 } catch (error) {
                     typingIndicator.style.display = "none";
                     const errorMessage = document.createElement("div");
@@ -479,6 +304,41 @@
 
                 chatbox.scrollTop = chatbox.scrollHeight;
                 userInput.value = "";
+            }
+        }
+
+        function changeBackground() {
+            const inputURL = document.getElementById("backgroundSource").value;
+            if (inputURL) {
+                document.querySelector('.background').style.backgroundImage = `url(${inputURL})`;
+                localStorage.setItem('background', inputURL);
+            } else {
+                alert("Please enter a valid URL.");
+            }
+        }
+
+        function toggleMusic() {
+            isMusicPlaying = document.getElementById("musicToggle").checked;
+            if (isMusicPlaying) {
+                backgroundAudio.play();
+            } else {
+                backgroundAudio.pause();
+            }
+        }
+
+        function openSettings() {
+            document.getElementById("settingsModal").style.display = "flex";
+        }
+
+        function closeSettings() {
+            document.getElementById("settingsModal").style.display = "none";
+        }
+
+        // Initialize background music by default
+        window.onload = function () {
+            backgroundAudio.loop = true;
+            if (isMusicPlaying) {
+                backgroundAudio.play();
             }
         }
     </script>
