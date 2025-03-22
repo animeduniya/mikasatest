@@ -19,7 +19,6 @@
             transition: background 0.5s ease;
         }
 
-        /* Slider Background Styles */
         .background {
             position: absolute;
             top: 0;
@@ -59,7 +58,6 @@
             font-weight: bold;
             color: #00fff0;
             text-shadow: 0 0 15px #00fff0, 0 0 30px #00fff0;
-            animation: pulse 2s infinite;
             margin: 0;
         }
 
@@ -85,23 +83,21 @@
             top: 45px;
             right: 10px;
             z-index: 2;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.8);
             padding: 15px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            width: 240px;
+            width: 250px;
             animation: fadeIn 0.5s ease-in-out;
             text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
         }
 
         .settings-menu label {
             display: block;
             margin: 10px 0 5px;
             color: #fff;
-        }
-
-        .music-controls {
-            margin: 10px 0;
         }
 
         .user-input {
@@ -119,6 +115,7 @@
             margin-right: 10px;
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
+            transition: transform 0.3s ease-in-out;
         }
 
         .user-input button {
@@ -132,6 +129,10 @@
             transition: transform 0.3s ease-in-out;
         }
 
+        .user-input button:hover {
+            transform: scale(1.05);
+        }
+
         .message {
             font-size: 1.1em;
             line-height: 1.5;
@@ -141,6 +142,16 @@
             display: inline-block;
             max-width: 70%;
             margin: 5px 0;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideIn 0.5s forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .message.user {
@@ -218,7 +229,7 @@
             <label for="backgroundSource">Background Source:</label>
             <input type="text" id="backgroundSource" placeholder="Background Image URL"/>
             <button onclick="changeBackground()">Change Background</button>
-
+            
             <button onclick="resetChat()">Reset Chat</button>
             
             <label for="voiceToggle">Enable Voice:</label>
@@ -233,11 +244,14 @@
 
             <label for="historyToggle">Enable Chat History:</label>
             <input type="checkbox" id="historyToggle" checked onchange="toggleHistory()"> On
+
+            <label for="animationToggle">Enable Animations:</label>
+            <input type="checkbox" id="animationToggle" checked onchange="toggleAnimations()"> On
         </div>
 
         <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
         <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
-        
+
         <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
         <div id="typingIndicator" class="typing-indicator" style="display: none;">🤖 Mikasa is typing...</div>
         <div class="message-count" id="messageCount">Messages: 0</div>
@@ -247,20 +261,19 @@
             <button onclick="sendMessage()">Send</button>
         </div>
 
-        <!-- Background Music -->
         <audio id="bgMusic" loop>
             <source src="your-audio-file.mp3" type="audio/mpeg">
             Your browser does not support the audio tag.
         </audio>
     </div>
 
-    <script src="https://js.puter.com/v2/"></script>
     <script>
         let chatbotName = "Mikasa";
         let voiceEnabled = true; 
         let musicEnabled = true; 
         let messageCount = 0; 
         let chatHistoryEnabled = true; 
+        let animationsEnabled = true; 
         let personality = "friendly"; 
         const bgMusic = document.getElementById("bgMusic");
 
@@ -277,6 +290,7 @@
             const savedVolume = localStorage.getItem('volume');
             const savedHistory = localStorage.getItem('history');
             const savedPersonality = localStorage.getItem('personality');
+            const savedAnimations = localStorage.getItem('animations');
 
             if (savedLang) document.getElementById("language").value = savedLang;
             if (savedTheme) {
@@ -301,6 +315,16 @@
                 personality = savedPersonality;
                 document.getElementById("personality").value = personality;
             }
+            if (savedAnimations === "false") {
+                animationsEnabled = false;
+                document.getElementById("animationToggle").checked = false;
+            }
+        }
+
+        function toggleAnimations() {
+            animationsEnabled = document.getElementById("animationToggle").checked;
+            localStorage.setItem('animations', animationsEnabled);
+            alert("Animations are now " + (animationsEnabled ? "enabled" : "disabled") + ".");
         }
 
         function toggleMusic() {
@@ -329,6 +353,9 @@
                 userMessage.className = "message user";
                 userMessage.textContent = "🧑: " + userInput.value.trim();
                 chatbox.appendChild(userMessage);
+                if (animationsEnabled) {
+                    userMessage.style.animation = "slideIn 0.5s forwards";
+                }
                 chatbox.scrollTop = chatbox.scrollHeight;
 
                 if (!chatHistoryEnabled) {
@@ -338,34 +365,19 @@
 
                 typingIndicator.style.display = "block";
 
-                try {
-                    let response;
-                    const query = userInput.value.trim();
-
-                    if (/what's your name|who are you/i.test(query)) {
-                        response = `My name is ${chatbotName}.`;
-                    } else if (/who made you|your creator/i.test(query)) {
-                        response = "I was made by Rishab.";
-                    } else if (query.toLowerCase() === "tell me a joke") {
-                        response = "Why don't scientists trust atoms? Because they make up everything!";
-                    } else if (query.toLowerCase() === "give me a fun fact") {
-                        response = "Honey never spoils. Archaeologists have found pots of honey in ancient Egyptian tombs that are over 3000 years old and still edible.";
-                    } else if (query.toLowerCase().includes("weather")) {
-                        response = await getWeather(query);
-                    } else if (query.toLowerCase().includes("news")) {
-                        response = await getNews(query);
-                    } else {
-                        response = await puter.ai.chat(query);
-                    }
-
+                setTimeout(() => {
                     typingIndicator.style.display = "none";
                     const botMessage = document.createElement("div");
                     botMessage.className = "message bot";
-                    botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm evolving to understand you better!"}`;
+                    botMessage.textContent = `🤖 ${chatbotName}: I'm evolving to understand you better!`;
                     chatbox.appendChild(botMessage);
 
+                    if (animationsEnabled) {
+                        botMessage.style.animation = "slideIn 0.5s forwards";
+                    }
+
                     if (voiceEnabled) {
-                        const utterance = new SpeechSynthesisUtterance(response);
+                        const utterance = new SpeechSynthesisUtterance(botMessage.textContent);
                         utterance.lang = "en-US";
                         window.speechSynthesis.speak(utterance);
                     }
@@ -374,45 +386,12 @@
                         messageCount++;
                         updateMessageCount();
                     }
-                } catch (error) {
-                    typingIndicator.style.display = "none";
-                    const errorMessage = document.createElement("div");
-                    errorMessage.className = "message bot";
-                    errorMessage.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
-                    chatbox.appendChild(errorMessage);
-                }
 
-                chatbox.scrollTop = chatbox.scrollHeight;
+                    chatbox.scrollTop = chatbox.scrollHeight;
+                }, 1000); // Simulated delay for the bot's response
+
                 userInput.value = "";
             }
-        }
-
-        async function getWeather(query) {
-            // Fetch the weather data from a weather API (replace with your actual API key and endpoint)
-            const apiKey = "<YOUR_WEATHER_API_KEY>";
-            const location = query.replace("weather", "").trim() || "New York"; // Default location
-            const url = `https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${apiKey}&units=metric`;
-
-            const response = await fetch(url);
-            const data = await response.json();
-            if (data.cod === "404") {
-                return "Sorry, I couldn't find the location. Please try again.";
-            }
-            return `The weather in ${data.name} is ${data.main.temp}°C with ${data.weather[0].description}.`;
-        }
-
-        async function getNews(query) {
-            // Fetch news from a news API (replace with your actual API key and endpoint)
-            const apiKey = "<YOUR_NEWS_API_KEY>";
-            const url = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${apiKey}`;
-            
-            const response = await fetch(url);
-            const data = await response.json();
-            if (data.articles.length === 0) {
-                return "Sorry, I couldn't find any news articles.";
-            }
-            const news = data.articles.map(article => `${article.title}`).join('\n');
-            return `Here are the latest news headlines:\n${news}`;
         }
 
         function changeLanguage() {
@@ -425,6 +404,14 @@
             const selectedTheme = document.getElementById("theme").value;
             document.body.className = selectedTheme;
             localStorage.setItem('theme', selectedTheme);
+
+            // Change settings background color accordingly
+            const settingsMenu = document.getElementById("settingsMenu");
+            if (selectedTheme === 'default') {
+                settingsMenu.style.background = 'rgba(0, 0, 0, 0.8)';
+            } else {
+                settingsMenu.style.background = 'rgba(255, 255, 255, 0.8)';
+            }
         }
 
         function changePersonality() {
@@ -453,7 +440,7 @@
             voiceEnabled = document.getElementById("voiceToggle").checked;
             alert("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
         }
-        
+
         function toggleHistory() {
             chatHistoryEnabled = document.getElementById("historyToggle").checked;
             localStorage.setItem('history', chatHistoryEnabled);
@@ -463,7 +450,7 @@
         function updateMessageCount() {
             document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
         }
-        
+
         function sendFeedback() {
             const feedback = document.getElementById("feedback").value;
             if (feedback) {
