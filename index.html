@@ -160,19 +160,31 @@
             cursor: pointer;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 5px;
+            transition: background 0.3s;
+        }
+
+        .settings:hover {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .settings-menu {
             display: none;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.15);
             position: absolute;
             top: 45px;
             right: 10px;
             z-index: 2;
-            padding: 15px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
             transition: all 0.3s;
+        }
+
+        .settings-menu h3 {
+            margin: 0 0 15px;
+            font-size: 1.5em;
+            color: #fff;
+            text-align: center;
         }
 
         .settings-menu label {
@@ -222,7 +234,8 @@
         <div class="message-count" id="messageCount">Messages: 0</div>
 
         <div class="user-input">
-            <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
+            <input type="text" id="userInput" placeholder="Type your message here..." 
+                   onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>
@@ -265,9 +278,9 @@
         <label for="volume">Music Volume:</label>
         <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume()"/>
 
-        <button onclick="resetChat()">Reset Chat</button>
+        <button onclick="resetChat()" style="margin-top: 15px; width: 100%; padding: 10px; border-radius: 5px; font-weight: bold;">Reset Chat</button>
         
-        <button onclick="closeSettings()">Close Settings</button>
+        <button onclick="closeSettings()" style="margin-top: 10px; width: 100%; padding: 10px; border-radius: 5px; font-weight: bold;">Close Settings</button>
     </div>
 
     <audio id="backgroundMusic" loop></audio>
@@ -279,10 +292,10 @@
         let messageCount = 0;
         let musicEnabled = true;
         let musicPlayer = document.getElementById("backgroundMusic");
-        let currentBackgroundImage = '';
 
         window.onload = function () {
             loadPreferences();
+            updateMusicVolume();
         }
 
         function loadPreferences() {
@@ -301,9 +314,7 @@
             }
 
             if (savedBackground) {
-                currentBackgroundImage = savedBackground; // Save for resetting
                 document.querySelector('.background').style.backgroundImage = `url(${savedBackground})`;
-                document.getElementById("backgroundSource").value = '';
             }
 
             if (savedMusic) {
@@ -324,37 +335,26 @@
         }
 
         async function sendMessage() {
-            const userInput = document.getElementById("userInput");
+            const userInput = document.getElementById("userInput").value.trim();
             const chatbox = document.getElementById("chatbox");
             const typingIndicator = document.getElementById("typingIndicator");
 
-            if (userInput.value.trim()) {
+            if (userInput) {
                 const userMessage = document.createElement("div");
                 userMessage.className = "message user";
-                userMessage.textContent = "🧑: " + userInput.value.trim();
+                userMessage.textContent = "🧑: " + userInput;
                 chatbox.appendChild(userMessage);
                 chatbox.scrollTop = chatbox.scrollHeight;
 
                 typingIndicator.style.display = "block";
 
                 try {
-                    let response;
-                    const query = userInput.value.trim();
-
-                    // Basic question handling for responses
-                    if (/what's your name|who are you/i.test(userInput.value)) {
-                        response = `My name is ${chatbotName}.`;
-                    } else if (/who made you|your creator/i.test(userInput.value)) {
-                        response = "I was made by Rishab.";
-                    } else {
-                        response = await puter.ai.chat(query);
-                    }
-
+                    let response = await puter.ai.chat(userInput);
                     typingIndicator.style.display = "none";
 
                     const botMessage = document.createElement("div");
                     botMessage.className = "message bot";
-                    botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm evolving to understand you better!"}`;
+                    botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm learning to better respond!"}`;
                     chatbox.appendChild(botMessage);
 
                     speakResponse(response);
@@ -369,7 +369,7 @@
                 }
 
                 chatbox.scrollTop = chatbox.scrollHeight;
-                userInput.value = "";
+                document.getElementById("userInput").value = ""; // Clear input field
             }
         }
 
@@ -400,9 +400,9 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onloadend = function () {
-                    currentBackgroundImage = reader.result; // Save for resetting
-                    document.querySelector('.background').style.backgroundImage = `url(${currentBackgroundImage})`;
-                    localStorage.setItem('background', currentBackgroundImage);
+                    const backgroundImage = reader.result; // Save for resetting
+                    document.querySelector('.background').style.backgroundImage = `url(${backgroundImage})`;
+                    localStorage.setItem('background', backgroundImage);
                 }
                 reader.readAsDataURL(file);
             }
@@ -415,8 +415,9 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onloadend = function () {
-                    musicPlayer.src = reader.result; // Set music source
-                    localStorage.setItem('music', reader.result); // Save music source
+                    const musicSource = reader.result; // Set music source
+                    musicPlayer.src = musicSource;
+                    localStorage.setItem('music', musicSource); // Save music source
                     if (musicEnabled) {
                         musicPlayer.play();
                     }
@@ -436,22 +437,23 @@
         }
 
         function changeVolume() {
-            musicPlayer.volume = document.getElementById("volume").value;
+            const volume = document.getElementById("volume").value;
+            musicPlayer.volume = volume;
+            localStorage.setItem('volume', volume); // Save volume settings
+        }
+
+        function updateMusicVolume() {
+            const savedVolume = localStorage.getItem('volume');
+            if (savedVolume) {
+                document.getElementById("volume").value = savedVolume;
+                musicPlayer.volume = savedVolume; // Set saved volume on load
+            }
         }
 
         function resetChat() {
-            const chatbox = document.getElementById("chatbox");
-            chatbox.innerHTML = "";
+            document.getElementById("chatbox").innerHTML = "";
             messageCount = 0;
             document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
-        }
-
-        function sendFeedback() {
-            const feedback = document.getElementById("feedback").value;
-            if (feedback) {
-                alert("Thank you for your feedback: " + feedback);
-                document.getElementById("feedback").value = ""; // Reset the feedback dropdown
-            }
         }
     </script>
 </body>
