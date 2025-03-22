@@ -278,9 +278,6 @@
         // On window load, set up initial settings and music
         window.onload = function () {
             loadPreferences();
-            if (musicEnabled) {
-                playMusic(); // Play music if enabled
-            }
         }
 
         function loadPreferences() {
@@ -309,8 +306,6 @@
             // Set music source
             if (savedMusic) {
                 audioSource.src = savedMusic; // Use uploaded music if available
-            } else {
-                audioSource.src = "https://www.bensound.com/bensound-music/bensound-sunny.mp3"; // Default music
             }
             musicPlayer.volume = document.getElementById("volume").value;
             musicPlayer.load(); // Load the audio source
@@ -451,7 +446,7 @@
                     audioSource.src = reader.result; 
                     localStorage.setItem('music', reader.result); 
                     musicPlayer.load(); // Load new music
-                    playMusic(); // Automatically play uploaded music
+                    playMusic(); // Automatically play uploaded music after loading
                 }
                 reader.readAsDataURL(file);
             }
