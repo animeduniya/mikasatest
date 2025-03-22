@@ -19,7 +19,6 @@
             transition: background 0.5s ease;
         }
 
-        /* Slider Background Styles */
         .background {
             position: absolute;
             top: 0;
@@ -269,41 +268,45 @@
         let audioSource = document.getElementById("audioSource");
         let currentBackgroundImage = '';
 
+        // On window load, set up initial settings and music
         window.onload = function () {
             loadPreferences();
-            playMusic();
+            if (musicEnabled) {
+                playMusic(); // Play music if enabled
+            }
         }
 
         function loadPreferences() {
-            // Load saved preferences from local storage
             const savedLang = localStorage.getItem('language');
             const savedTheme = localStorage.getItem('theme');
             const savedBackground = localStorage.getItem('background');
             const savedMusic = localStorage.getItem('music');
 
+            // Set language
             if (savedLang) {
                 document.getElementById("language").value = savedLang;
             }
 
+            // Set theme
             if (savedTheme) {
                 document.body.className = savedTheme;
                 document.getElementById("theme").value = savedTheme;
             }
 
+            // Set background image
             if (savedBackground) {
-                currentBackgroundImage = savedBackground; 
+                currentBackgroundImage = savedBackground;
                 document.querySelector('.background').style.backgroundImage = `url(${savedBackground})`;
-                document.getElementById("backgroundSource").value = '';
             }
 
+            // Set music source
             if (savedMusic) {
                 audioSource.src = savedMusic; // Use uploaded music if available
             } else {
-                audioSource.src = "https://www.bensound.com/bensound-music/bensound-sunny.mp3"; // Use default music
+                audioSource.src = "https://www.bensound.com/bensound-music/bensound-sunny.mp3"; // Default music
             }
-
             musicPlayer.volume = document.getElementById("volume").value;
-            musicPlayer.load(); // Load the selected music
+            musicPlayer.load(); // Load the audio source
         }
 
         function playMusic() {
@@ -416,7 +419,8 @@
                 reader.onloadend = function () {
                     audioSource.src = reader.result; 
                     localStorage.setItem('music', reader.result); 
-                    playMusic(); // Play new music immediately
+                    musicPlayer.load(); // Load new music
+                    playMusic(); // Automatically play uploaded music
                 }
                 reader.readAsDataURL(file);
             }
