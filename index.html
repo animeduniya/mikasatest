@@ -259,8 +259,9 @@
 
         // Function to play default music
         function playDefaultMusic() {
+            const audioUrl = "audio/default-music.mp3"; // Use relative path
             const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-            fetch('https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3')
+            fetch(audioUrl)
                 .then(response => response.arrayBuffer())
                 .then(arrayBuffer => audioContext.decodeAudioData(arrayBuffer))
                 .then(audioBuffer => {
