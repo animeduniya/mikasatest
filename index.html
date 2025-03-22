@@ -29,7 +29,7 @@
             z-index: -1;
             background: url('https://wallpaperaccess.com/full/47587.jpg') no-repeat center center fixed;
             background-size: cover;
-            animation: backgroundEffect 20s infinite linear; /* Background slideshow effect */
+            animation: backgroundEffect 20s infinite linear;
         }
 
         @keyframes backgroundEffect {
@@ -160,31 +160,19 @@
             cursor: pointer;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 5px;
-            transition: background 0.3s;
-        }
-
-        .settings:hover {
-            background: rgba(255, 255, 255, 0.2);
         }
 
         .settings-menu {
             display: none;
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.1);
             position: absolute;
             top: 45px;
             right: 10px;
             z-index: 2;
-            padding: 20px;
+            padding: 15px;
             border-radius: 10px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
             transition: all 0.3s;
-        }
-
-        .settings-menu h3 {
-            margin: 0 0 15px;
-            font-size: 1.5em;
-            color: #fff;
-            text-align: center;
         }
 
         .settings-menu label {
@@ -234,8 +222,7 @@
         <div class="message-count" id="messageCount">Messages: 0</div>
 
         <div class="user-input">
-            <input type="text" id="userInput" placeholder="Type your message here..." 
-                   onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
+            <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
             <button onclick="sendMessage()">Send</button>
         </div>
     </div>
@@ -278,15 +265,15 @@
         <label for="volume">Music Volume:</label>
         <input type="range" id="volume" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume()"/>
 
-        <label for="textReaderToggle">Enable Text Reader:</label>
-        <input type="checkbox" id="textReaderToggle" checked onchange="toggleTextReader()"> Enable
-
-        <button onclick="resetChat()" style="margin-top: 15px; width: 100%; padding: 10px; border-radius: 5px; font-weight: bold;">Reset Chat</button>
+        <button onclick="resetChat()">Reset Chat</button>
         
-        <button onclick="closeSettings()" style="margin-top: 10px; width: 100%; padding: 10px; border-radius: 5px; font-weight: bold;">Close Settings</button>
+        <button onclick="closeSettings()">Close Settings</button>
     </div>
 
-    <audio id="backgroundMusic" loop></audio>
+    <audio id="backgroundMusic" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" type="audio/mpeg"> <!-- "Daylight" as default background music -->
+        Your browser does not support the audio element.
+    </audio>
 
     <script src="https://js.puter.com/v2/"></script>
     <script>
@@ -294,21 +281,18 @@
         let voiceEnabled = true;
         let messageCount = 0;
         let musicEnabled = true;
-        let voiceToggle = true; // For text-to-speech
         let musicPlayer = document.getElementById("backgroundMusic");
+        let currentBackgroundImage = '';
 
         window.onload = function () {
             loadPreferences();
-            updateMusicVolume();
+            musicPlayer.play(); // Ensuring default background music starts playing
         }
 
         function loadPreferences() {
             const savedLang = localStorage.getItem('language');
             const savedTheme = localStorage.getItem('theme');
             const savedBackground = localStorage.getItem('background');
-            const savedMusic = localStorage.getItem('music');
-            const savedVolume = localStorage.getItem('volume');
-            const savedVoiceToggle = localStorage.getItem('voiceToggle');
 
             if (savedLang) {
                 document.getElementById("language").value = savedLang;
@@ -320,25 +304,23 @@
             }
 
             if (savedBackground) {
+                currentBackgroundImage = savedBackground; // Save for resetting
                 document.querySelector('.background').style.backgroundImage = `url(${savedBackground})`;
+                document.getElementById("backgroundSource").value = '';
             }
 
+            const savedMusic = localStorage.getItem('music');
             if (savedMusic) {
                 musicPlayer.src = savedMusic;
-                musicPlayer.volume = savedVolume ? savedVolume : 0.5;
-                if (musicEnabled) {
-                    musicPlayer.play();
-                }
-            }
-
-            if (savedVoiceToggle !== null) {
-                voiceToggle = savedVoiceToggle === 'true';
-                document.getElementById("textReaderToggle").checked = voiceToggle;
+                musicPlayer.volume = document.getElementById("volume").value;
+            } else {
+                musicPlayer.volume = 0.5; // Set the default volume
+                musicPlayer.play(); // Play default music
             }
         }
 
         function speakResponse(response) {
-            if (voiceToggle) {
+            if (voiceEnabled) {
                 const utterance = new SpeechSynthesisUtterance(response);
                 utterance.lang = "en-US";
                 window.speechSynthesis.speak(utterance);
@@ -346,26 +328,37 @@
         }
 
         async function sendMessage() {
-            const userInput = document.getElementById("userInput").value.trim();
+            const userInput = document.getElementById("userInput");
             const chatbox = document.getElementById("chatbox");
             const typingIndicator = document.getElementById("typingIndicator");
 
-            if (userInput) {
+            if (userInput.value.trim()) {
                 const userMessage = document.createElement("div");
                 userMessage.className = "message user";
-                userMessage.textContent = "🧑: " + userInput;
+                userMessage.textContent = "🧑: " + userInput.value.trim();
                 chatbox.appendChild(userMessage);
                 chatbox.scrollTop = chatbox.scrollHeight;
 
                 typingIndicator.style.display = "block";
 
                 try {
-                    let response = await puter.ai.chat(userInput);
+                    let response;
+                    const query = userInput.value.trim();
+
+                    // Basic question handling for responses
+                    if (/what's your name|who are you/i.test(userInput.value)) {
+                        response = `My name is ${chatbotName}.`;
+                    } else if (/who made you|your creator/i.test(userInput.value)) {
+                        response = "I was made by Rishab.";
+                    } else {
+                        response = await puter.ai.chat(query);
+                    }
+
                     typingIndicator.style.display = "none";
 
                     const botMessage = document.createElement("div");
                     botMessage.className = "message bot";
-                    botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm learning to better respond!"}`;
+                    botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm evolving to understand you better!"}`;
                     chatbox.appendChild(botMessage);
 
                     speakResponse(response);
@@ -380,7 +373,7 @@
                 }
 
                 chatbox.scrollTop = chatbox.scrollHeight;
-                document.getElementById("userInput").value = ""; // Clear input field
+                userInput.value = "";
             }
         }
 
@@ -411,9 +404,9 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onloadend = function () {
-                    const backgroundImage = reader.result;
-                    document.querySelector('.background').style.backgroundImage = `url(${backgroundImage})`;
-                    localStorage.setItem('background', backgroundImage);
+                    currentBackgroundImage = reader.result; // Save for resetting
+                    document.querySelector('.background').style.backgroundImage = `url(${currentBackgroundImage})`;
+                    localStorage.setItem('background', currentBackgroundImage);
                 }
                 reader.readAsDataURL(file);
             }
@@ -426,9 +419,8 @@
             if (file) {
                 const reader = new FileReader();
                 reader.onloadend = function () {
-                    const musicSource = reader.result;
-                    musicPlayer.src = musicSource;
-                    localStorage.setItem('music', musicSource);
+                    musicPlayer.src = reader.result; // Set music source
+                    localStorage.setItem('music', reader.result); // Save music source
                     if (musicEnabled) {
                         musicPlayer.play();
                     }
@@ -444,34 +436,26 @@
             } else {
                 musicPlayer.pause();
             }
-            localStorage.setItem('musicEnabled', musicEnabled);
             alert("Music is now " + (musicEnabled ? "enabled" : "disabled") + ".");
         }
 
         function changeVolume() {
-            const volume = document.getElementById("volume").value;
-            musicPlayer.volume = volume;
-            localStorage.setItem('volume', volume);
-        }
-
-        function updateMusicVolume() {
-            const savedVolume = localStorage.getItem('volume');
-            if (savedVolume) {
-                document.getElementById("volume").value = savedVolume;
-                musicPlayer.volume = savedVolume;
-            }
-        }
-
-        function toggleTextReader() {
-            voiceToggle = document.getElementById("textReaderToggle").checked;
-            localStorage.setItem('voiceToggle', voiceToggle);
-            alert("Text reader is now " + (voiceToggle ? "enabled" : "disabled") + ".");
+            musicPlayer.volume = document.getElementById("volume").value;
         }
 
         function resetChat() {
-            document.getElementById("chatbox").innerHTML = "";
+            const chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML = "";
             messageCount = 0;
             document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
+        }
+
+        function sendFeedback() {
+            const feedback = document.getElementById("feedback").value;
+            if (feedback) {
+                alert("Thank you for your feedback: " + feedback);
+                document.getElementById("feedback").value = ""; // Reset the feedback dropdown
+            }
         }
     </script>
 </body>
