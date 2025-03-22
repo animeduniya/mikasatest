@@ -29,14 +29,7 @@
             z-index: -1;
             background-image: url('https://wallpaperaccess.com/full/47587.jpg'); 
             background-size: cover;
-            animation: backgroundEffect 20s infinite linear;
-        }
-
-        @keyframes backgroundEffect {
-            0% { background-image: url('https://wallpapercave.com/wp/wp9388551.jpg'); }
-            33% { background-image: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg'); }
-            66% { background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg'); }
-            100% { background-image: url('https://wallpaperaccess.com/full/8583147.jpg'); }
+            background-position: center;
         }
 
         .chatbot-container {
@@ -150,7 +143,7 @@
             background: rgba(0, 0, 0, 0.7);
             border-radius: 5px;
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-            transition: box-shadow 0.3s, background 0.3s; /* RGB lighting effect */
+            transition: box-shadow 0.3s, background 0.3s;
         }
 
         .settings-menu {
@@ -223,7 +216,7 @@
             <label for="musicSource">Music Source:</label>
             <input type="file" id="musicSource" accept="audio/*" onchange="changeMusic()" />
             <label for="musicVolume">Music Volume:</label>
-            <input type="range" id="musicVolume" min="0" max="1" step="0.1" onchange="setVolume()" />
+            <input type="range" id="musicVolume" min="0" max="1" step="0.1" onchange="setVolume()" value="0.5" />
             <button id="musicToggle" onclick="toggleMusic()">Pause Music</button>
             <button onclick="resetChat()">Reset Chat</button>
             <label for="voiceToggle">Enable Voice:</label>
@@ -254,18 +247,13 @@
         let chatbotName = "Mikasa";
         let voiceEnabled = true; // Default voice enabled
         let messageCount = 0; // Tracks number of messages
-        let musicVolume = 0.5; // Default volume
         const backgroundMusic = document.getElementById("backgroundMusic");
 
         // Load user preferences from local storage
         window.onload = function () {
             loadPreferences();
             setVolume(); // Set initial volume
-            if (backgroundMusic.paused) {
-                backgroundMusic.play().catch((error) => {
-                    console.warn("Background music failed to play automatically:", error);
-                });
-            }
+            playDefaultMusic();
         }
 
         function loadPreferences() {
@@ -276,40 +264,44 @@
             const savedVoice = localStorage.getItem('voice');
             const savedMusicSource = localStorage.getItem('musicSource');
 
+            // Language
             if (savedLang) {
                 document.getElementById("language").value = savedLang;
             }
 
+            // Theme
             if (savedTheme) {
-                document.body.className = savedTheme;
-                document.getElementById("theme").value = savedTheme;
-                updateSettingsBackground(savedTheme);
+                changeTheme(savedTheme);
             }
 
+            // Background
             if (savedBackground) {
                 document.querySelector('.background').style.backgroundImage = `url(${savedBackground})`;
-                document.getElementById("backgroundSource").value = savedBackground;
             }
 
+            // Volume
             if (savedVolume) {
-                musicVolume = savedVolume;
-                document.getElementById("musicVolume").value = musicVolume;
-                setVolume();
+                document.getElementById("musicVolume").value = savedVolume;
+                backgroundMusic.volume = savedVolume;
             }
 
+            // Voice
             if (savedVoice === "false") {
                 voiceEnabled = false;
                 document.getElementById("voiceToggle").checked = false;
             }
+
+            // Music Source
             if (savedMusicSource) {
                 backgroundMusic.src = savedMusicSource;
-                backgroundMusic.load(); // Load new music source
+                backgroundMusic.load();
             }
         }
 
-        function updateSettingsBackground(theme) {
-            const settingsMenu = document.getElementById("settingsMenu");
-            settingsMenu.style.background = theme === "default" ? "rgba(0, 0, 0, 0.8)" : "rgba(0, 0, 0, 0.9)";
+        function playDefaultMusic() {
+            backgroundMusic.play().catch((error) => {
+                console.warn("Default music failed to play:", error);
+            });
         }
 
         function changeBackground() {
@@ -318,7 +310,7 @@
                 const reader = new FileReader();
                 reader.onload = function (e) {
                     document.querySelector('.background').style.backgroundImage = `url(${e.target.result})`;
-                    localStorage.setItem('background', e.target.result); // Save to local storage
+                    localStorage.setItem('background', e.target.result); 
                 }
                 reader.readAsDataURL(inputFile);
             } else {
@@ -334,9 +326,9 @@
                     backgroundMusic.src = e.target.result;
                     backgroundMusic.load(); // Load new music
                     backgroundMusic.play().catch((error) => {
-                        console.warn("Music failed to play automatically:", error);
+                        console.warn("Music failed to play:", error);
                     });
-                    localStorage.setItem('musicSource', e.target.result); // Save to local storage
+                    localStorage.setItem('musicSource', e.target.result); // Save new music to local storage
                 }
                 reader.readAsDataURL(musicFile);
             } else {
@@ -344,79 +336,18 @@
             }
         }
 
-        function speakResponse(response) {
-            if (voiceEnabled) {
-                const utterance = new SpeechSynthesisUtterance(response);
-                utterance.lang = "en-US";
-                window.speechSynthesis.speak(utterance);
+        function changeTheme(selectedTheme) {
+            if (!selectedTheme) {
+                selectedTheme = document.getElementById("theme").value;
             }
-        }
-
-        async function sendMessage() {
-            const userInput = document.getElementById("userInput");
-            const chatbox = document.getElementById("chatbox");
-            const typingIndicator = document.getElementById("typingIndicator");
-
-            if (userInput.value.trim()) {
-                const userMessage = document.createElement("div");
-                userMessage.className = "message user";
-                userMessage.textContent = "🧑: " + userInput.value.trim();
-                chatbox.appendChild(userMessage);
-                chatbox.scrollTop = chatbox.scrollHeight;
-
-                typingIndicator.style.display = "block";
-                try {
-                    let response;
-                    const query = userInput.value.trim();
-                    if (/what's your name|who are you/i.test(userInput.value)) {
-                        response = `My name is ${chatbotName}.`;
-                    } else if (/who made you|your creator/i.test(userInput.value)) {
-                        response = "I was made by Rishab.";
-                    } else {
-                        response = await puter.ai.chat(query);
-                    }
-
-                    typingIndicator.style.display = "none";
-
-                    const botMessage = document.createElement("div");
-                    botMessage.className = "message bot";
-                    botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm evolving to understand you better!"}`;
-                    chatbox.appendChild(botMessage);
-
-                    speakResponse(response);
-                    messageCount++;
-                    document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
-                } catch (error) {
-                    typingIndicator.style.display = "none";
-                    const errorMessage = document.createElement("div");
-                    errorMessage.className = "message bot";
-                    errorMessage.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
-                    chatbox.appendChild(errorMessage);
-                }
-
-                chatbox.scrollTop = chatbox.scrollHeight;
-                userInput.value = "";
-            }
-        }
-
-        function changeLanguage() {
-            const selectedLanguage = document.getElementById("language").value;
-            localStorage.setItem('language', selectedLanguage);
-            alert("Language changed to: " + selectedLanguage);
-        }
-
-        function changeTheme() {
-            const selectedTheme = document.getElementById("theme").value;
             document.body.className = selectedTheme;
             localStorage.setItem('theme', selectedTheme);
-            updateSettingsBackground(selectedTheme);
         }
 
         function setVolume() {
             const volumeControl = document.getElementById("musicVolume");
-            musicVolume = volumeControl.value;
-            backgroundMusic.volume = musicVolume;
-            localStorage.setItem('volume', musicVolume);
+            backgroundMusic.volume = volumeControl.value;
+            localStorage.setItem('volume', volumeControl.value);
         }
 
         function toggleMusic() {
@@ -455,7 +386,54 @@
             const feedback = document.getElementById("feedback").value;
             if (feedback) {
                 alert("Thank you for your feedback: " + feedback);
-                document.getElementById("feedback").value = ""; // Reset the feedback dropdown
+                document.getElementById("feedback").value = ""; // Reset feedback dropdown
+            }
+        }
+
+        async function sendMessage() {
+            const userInput = document.getElementById("userInput");
+            const chatbox = document.getElementById("chatbox");
+            const typingIndicator = document.getElementById("typingIndicator");
+
+            if (userInput.value.trim()) {
+                const userMessage = document.createElement("div");
+                userMessage.className = "message user";
+                userMessage.textContent = "🧑: " + userInput.value.trim();
+                chatbox.appendChild(userMessage);
+                chatbox.scrollTop = chatbox.scrollHeight;
+
+                typingIndicator.style.display = "block";
+                try {
+                    let response;
+                    const query = userInput.value.trim();
+                    if (/what's your name|who are you/i.test(userInput.value)) {
+                        response = `My name is ${chatbotName}.`;
+                    } else if (/who made you|your creator/i.test(userInput.value)) {
+                        response = "I was made by Rishab.";
+                    } else {
+                        // Simulate bot response or connect to AI service
+                        response = "I'm sorry, I can't assist with that at the moment.";
+                    }
+
+                    typingIndicator.style.display = "none";
+
+                    const botMessage = document.createElement("div");
+                    botMessage.className = "message bot";
+                    botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm evolving to understand you better!"}`;
+                    chatbox.appendChild(botMessage);
+
+                    messageCount++;
+                    document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
+                } catch (error) {
+                    typingIndicator.style.display = "none";
+                    const errorMessage = document.createElement("div");
+                    errorMessage.className = "message bot";
+                    errorMessage.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
+                    chatbox.appendChild(errorMessage);
+                }
+
+                chatbox.scrollTop = chatbox.scrollHeight;
+                userInput.value = "";
             }
         }
     </script>
