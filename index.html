@@ -281,6 +281,109 @@
             }
         }
 
+        /* Theme Styles */
+        /* Theme 1 */
+        body.theme-color-1 {
+            color: #ff5722; /* Dark Orange */
+        }
+        body.theme-color-1 .header {
+            color: #ff5722;
+        }
+        body.theme-color-1 .sub-header {
+            color: #ff5722; /* Dark Orange */
+        }
+        body.theme-color-1 .user-input button,
+        body.theme-color-1 .modal-content button,
+        body.theme-color-1 .action-button {
+            background: #ff5722;
+            color: #ffffff;
+        }
+
+        /* Theme 2 */
+        body.theme-color-2 {
+            color: #4caf50; /* Green */
+        }
+        body.theme-color-2 .header {
+            color: #4caf50;
+        }
+        body.theme-color-2 .sub-header {
+            color: #4caf50; /* Green */
+        }
+        body.theme-color-2 .user-input button,
+        body.theme-color-2 .modal-content button,
+        body.theme-color-2 .action-button {
+            background: #4caf50;
+            color: #ffffff;
+        }
+
+        /* Theme 3 */
+        body.theme-color-3 {
+            color: #2196f3; /* Blue */
+        }
+        body.theme-color-3 .header {
+            color: #2196f3;
+        }
+        body.theme-color-3 .sub-header {
+            color: #2196f3; /* Blue */
+        }
+        body.theme-color-3 .user-input button,
+        body.theme-color-3 .modal-content button,
+        body.theme-color-3 .action-button {
+            background: #2196f3;
+            color: #ffffff;
+        }
+
+        /* Theme 4 */
+        body.theme-color-4 {
+            color: #ffeb3b; /* Yellow */
+        }
+        body.theme-color-4 .header {
+            color: #ffeb3b;
+        }
+        body.theme-color-4 .sub-header {
+            color: #ffeb3b; /* Yellow */
+        }
+        body.theme-color-4 .user-input button,
+        body.theme-color-4 .modal-content button,
+        body.theme-color-4 .action-button {
+            background: #ffeb3b;
+            color: #000000;
+        }
+
+        /* Theme 5 */
+        body.theme-color-5 {
+            color: #673ab7; /* Purple */
+        }
+        body.theme-color-5 .header {
+            color: #673ab7;
+        }
+        body.theme-color-5 .sub-header {
+            color: #673ab7; /* Purple */
+        }
+        body.theme-color-5 .user-input button,
+        body.theme-color-5 .modal-content button,
+        body.theme-color-5 .action-button {
+            background: #673ab7;
+            color: #ffffff;
+        }
+
+        /* Theme 6 */
+        body.theme-color-6 {
+            color: #ff6a00; /* Orange */
+        }
+        body.theme-color-6 .header {
+            color: #ff6a00;
+        }
+        body.theme-color-6 .sub-header {
+            color: #ff6a00; /* Orange */
+        }
+        body.theme-color-6 .user-input button,
+        body.theme-color-6 .modal-content button,
+        body.theme-color-6 .action-button {
+            background: #ff6a00;
+            color: #ffffff;
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
@@ -460,7 +563,6 @@
                 chatbox.appendChild(userMessageDiv);
                 chatList.appendChild(document.createElement("li")).textContent = userMessage;
                 chatMessages.push(userMessage); // Store question
-                chatbox.scrollTop = chatbox.scrollHeight;
 
                 const typingIndicator = document.createElement("div");
                 typingIndicator.innerHTML = "<em>🤖 Rishab is typing...</em>";
@@ -504,13 +606,13 @@
         }
 
         function delayResponse() {
-            return new Promise(resolve => setTimeout(resolve, 1000));
+            return new Promise(resolve => setTimeout(resolve, 1000)); // Simulates typing delay
         }
 
         function addEmoji(emoji) {
             const userInput = document.getElementById("userInput");
             userInput.value += emoji;
-            document.getElementById('emojiPicker').style.display = 'none';
+            document.getElementById('emojiPicker').style.display = 'none'; // Hide emoji picker
         }
 
         function toggleEmojiPicker() {
@@ -555,7 +657,7 @@
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.className = '';
+            document.body.className = ''; // Reset classes
             document.body.classList.add(selectedTheme);
             localStorage.setItem('theme', selectedTheme);
         }
@@ -566,7 +668,7 @@
             chatbox.innerHTML = "";
             chatList.innerHTML = "";
             messageCount = 0;
-            chatMessages.length = 0;
+            chatMessages.length = 0; // Clear messages
             chatAnswers.length = 0; // Clear answers too
         }
 
