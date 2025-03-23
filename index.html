@@ -54,7 +54,7 @@
 
         /* Chat History */
         .chat-history {
-            flex: 0 1 25%;
+            flex: 0 1 20%; /* Reduced height */
             overflow-y: auto;
             padding: 10px;
             border-radius: 10px;
@@ -153,42 +153,18 @@
         }
 
         .user-input button {
-            background: #00fff0;
             border: none;
-            color: #0A0A0A;
             font-size: 1em;
             padding: 10px 15px;
             border-radius: 30px;
             cursor: pointer;
             transition: background 0.3s, transform 0.2s;
             margin-left: 5px;
+            color: #0A0A0A; /* Default text color */
         }
 
         .user-input button:hover {
-            background: #00ccff;
             transform: scale(1.05);
-        }
-
-        /* Emoji Picker */
-        .emoji-picker {
-            display: none;
-            position: absolute;
-            bottom: 70px;
-            right: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            padding: 5px;
-        }
-
-        .emoji-picker button {
-            border: none;
-            cursor: pointer;
-            font-size: 1.5em;
-            transition: transform 0.3s;
-        }
-
-        .emoji-picker button:hover {
-            transform: scale(1.2);
         }
 
         /* Modal Styles */
@@ -246,6 +222,43 @@
             background: #00ccff;
         }
 
+        /* Theme-specific styles */
+        .theme1 button,
+        .theme1 input {
+            color: #1a1a1a; /* Dark text */
+            background: #00aaff; /* Button background */
+        }
+
+        .theme2 button,
+        .theme2 input {
+            color: #333333; /* Dark text */
+            background: #ff7e12; /* Button background */
+        }
+
+        .theme3 button,
+        .theme3 input {
+            color: #2e2e2e; /* Dark text */
+            background: #5eff5e; /* Button background */
+        }
+
+        .theme4 button,
+        .theme4 input {
+            color: #ffffff; /* Light text */
+            background: #d5006d; /* Button background */
+        }
+
+        .theme5 button,
+        .theme5 input {
+            color: #2c2c2c; /* Dark text */
+            background: #ff40a3; /* Button background */
+        }
+
+        .theme6 button,
+        .theme6 input {
+            color: #ffffff; /* Light text */
+            background: #ff6a00; /* Button background */
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             body {
@@ -281,7 +294,7 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="container" id="chatContainer">
         <div class="chat-history">
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
@@ -466,36 +479,69 @@
             const selectedTheme = document.getElementById("theme").value;
             localStorage.setItem('theme', selectedTheme);
 
+            // Remove existing theme classes
+            const themes = ['theme1', 'theme2', 'theme3', 'theme4', 'theme5', 'theme6'];
+            themes.forEach(theme => {
+                document.getElementById('chatContainer').classList.remove(theme);
+            });
+
+            // Add new theme class
             switch (selectedTheme) {
                 case 'theme-color-1':
-                    document.documentElement.style.setProperty('--bg-color', '#2a9df4');
-                    document.documentElement.style.setProperty('--text-color', '#ffffff');
+                    document.getElementById('chatContainer').classList.add('theme1');
                     break;
                 case 'theme-color-2':
-                    document.documentElement.style.setProperty('--bg-color', '#ff8c00');
-                    document.documentElement.style.setProperty('--text-color', '#ffffff');
+                    document.getElementById('chatContainer').classList.add('theme2');
                     break;
                 case 'theme-color-3':
-                    document.documentElement.style.setProperty('--bg-color', '#32ff7e');
-                    document.documentElement.style.setProperty('--text-color', '#000000');
+                    document.getElementById('chatContainer').classList.add('theme3');
                     break;
                 case 'theme-color-4':
-                    document.documentElement.style.setProperty('--bg-color', '#9c27b0');
-                    document.documentElement.style.setProperty('--text-color', '#ffffff');
+                    document.getElementById('chatContainer').classList.add('theme4');
                     break;
                 case 'theme-color-5':
-                    document.documentElement.style.setProperty('--bg-color', '#ff4081');
-                    document.documentElement.style.setProperty('--text-color', '#000000');
+                    document.getElementById('chatContainer').classList.add('theme5');
                     break;
                 case 'theme-color-6':
-                    document.documentElement.style.setProperty('--bg-color', '#ff6f20');
-                    document.documentElement.style.setProperty('--text-color', '#ffffff');
+                    document.getElementById('chatContainer').classList.add('theme6');
                     break;
-                case 'default':
                 default:
-                    document.documentElement.style.setProperty('--bg-color', '#1c1c1c');
-                    document.documentElement.style.setProperty('--text-color', '#ffffff');
+                    document.getElementById('chatContainer').classList.remove('theme1', 'theme2', 'theme3', 'theme4', 'theme5', 'theme6');
             }
+
+            // Update button and input colors based on theme
+            const buttons = document.querySelectorAll('.user-input button, .modal-content button');
+            const inputs = document.querySelectorAll('input[type="text"], input[type="file"], select');
+
+            buttons.forEach(button => {
+                if (selectedTheme === 'theme-color-1') {
+                    button.style.color = "#1a1a1a"; 
+                    button.style.background = "#00aaff"; 
+                } else if (selectedTheme === 'theme-color-2') {
+                    button.style.color = "#333333"; 
+                    button.style.background = "#ff7e12"; 
+                } else if (selectedTheme === 'theme-color-3') {
+                    button.style.color = "#2e2e2e"; 
+                    button.style.background = "#5eff5e"; 
+                } else if (selectedTheme === 'theme-color-4') {
+                    button.style.color = "#ffffff"; 
+                    button.style.background = "#d5006d"; 
+                } else if (selectedTheme === 'theme-color-5') {
+                    button.style.color = "#2c2c2c"; 
+                    button.style.background = "#ff40a3"; 
+                } else if (selectedTheme === 'theme-color-6') {
+                    button.style.color = "#ffffff"; 
+                    button.style.background = "#ff6a00"; 
+                } else {
+                    button.style.color = ""; 
+                    button.style.background = ""; 
+                }
+            });
+
+            inputs.forEach(input => {
+                input.style.color = '#ffffff';  // Color for text inputs
+                input.style.borderColor = '#00fff0'; // Border for inputs
+            });
         }
 
         function resetChat() {
