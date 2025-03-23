@@ -20,19 +20,19 @@
 
         @keyframes backgroundAnimation {
             0% {
-                background: url('https://source.unsplash.com/1600x900/?nature') center center / cover no-repeat;
+                background: url('https://wallpapercave.com/wp/wp9388551.jpg') center center / cover no-repeat;
             }
             25% {
-                background: url('https://source.unsplash.com/1600x900/?city') center center / cover no-repeat;
+                background: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg') center center / cover no-repeat;
             }
             50% {
-                background: url('https://source.unsplash.com/1600x900/?ocean') center center / cover no-repeat;
+                background: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg') center center / cover no-repeat;
             }
             75% {
-                background: url('https://source.unsplash.com/1600x900/?night') center center / cover no-repeat;
+                background: url('https://wallpaperaccess.com/full/8583147.jpg') center center / cover no-repeat;
             }
             100% {
-                background: url('https://source.unsplash.com/1600x900/?forest') center center / cover no-repeat;
+                background: url('https://coolwallpapers.me/picsup/2503093-4k-hd-wallpaper-high-definition.jpg') center center / cover no-repeat;
             }
         }
 
@@ -96,8 +96,17 @@
             font-weight: bold;
             color: #00fff0; /* Default color */
             text-align: center;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
             text-shadow: 2px 2px 5px rgba(0, 255, 255, 0.5);
+        }
+
+        .sub-header {
+            font-size: 1em;
+            color: #00fff0; /* Sub header color */
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 15px;
+            opacity: 0.8; /* Slightly transparent */
         }
 
         .messages {
@@ -257,6 +266,10 @@
                 font-size: 1.5em;
             }
 
+            .sub-header {
+                font-size: 0.9em;
+            }
+
             .user-input input {
                 padding: 10px;
                 font-size: 0.9em;
@@ -273,9 +286,15 @@
         body.theme-color-1 {
             color: #ff5722; /* Dark Orange */
         }
+
         body.theme-color-1 .header {
             color: #ff5722;
         }
+
+        body.theme-color-1 .sub-header {
+            color: #ff5722; /* Dark Orange */
+        }
+
         body.theme-color-1 .user-input button,
         body.theme-color-1 .modal-content button,
         body.theme-color-1 .action-button {
@@ -287,9 +306,15 @@
         body.theme-color-2 {
             color: #4caf50; /* Green */
         }
+
         body.theme-color-2 .header {
             color: #4caf50;
         }
+
+        body.theme-color-2 .sub-header {
+            color: #4caf50; /* Green */
+        }
+
         body.theme-color-2 .user-input button,
         body.theme-color-2 .modal-content button,
         body.theme-color-2 .action-button {
@@ -301,9 +326,15 @@
         body.theme-color-3 {
             color: #2196f3; /* Blue */
         }
+
         body.theme-color-3 .header {
             color: #2196f3;
         }
+
+        body.theme-color-3 .sub-header {
+            color: #2196f3; /* Blue */
+        }
+
         body.theme-color-3 .user-input button,
         body.theme-color-3 .modal-content button,
         body.theme-color-3 .action-button {
@@ -315,9 +346,15 @@
         body.theme-color-4 {
             color: #ffeb3b; /* Yellow */
         }
+
         body.theme-color-4 .header {
             color: #ffeb3b;
         }
+
+        body.theme-color-4 .sub-header {
+            color: #ffeb3b; /* Yellow */
+        }
+
         body.theme-color-4 .user-input button,
         body.theme-color-4 .modal-content button,
         body.theme-color-4 .action-button {
@@ -329,9 +366,15 @@
         body.theme-color-5 {
             color: #673ab7; /* Purple */
         }
+
         body.theme-color-5 .header {
             color: #673ab7;
         }
+
+        body.theme-color-5 .sub-header {
+            color: #673ab7; /* Purple */
+        }
+
         body.theme-color-5 .user-input button,
         body.theme-color-5 .modal-content button,
         body.theme-color-5 .action-button {
@@ -343,9 +386,15 @@
         body.theme-color-6 {
             color: #ff6a00; /* Orange */
         }
+
         body.theme-color-6 .header {
             color: #ff6a00;
         }
+
+        body.theme-color-6 .sub-header {
+            color: #ff6a00; /* Orange */
+        }
+
         body.theme-color-6 .user-input button,
         body.theme-color-6 .modal-content button,
         body.theme-color-6 .action-button {
@@ -376,6 +425,7 @@
         </div>
         <div class="chat-window">
             <div class="header" id="chatbotName">Rishab - Your AI Companion</div>
+            <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
             <div class="user-input">
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
@@ -429,8 +479,15 @@
                 <option value="theme-color-6">Orange</option>
             </select>
 
+            <label for="bgImage">Background Image URL:</label>
+            <input type="text" id="bgImageInput" placeholder="Enter a background image URL" onchange="changeBackgroundImage()" />
+
             <label for="musicUpload">Upload Music:</label>
             <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
+
+            <label for="musicUrl">Music URL:</label>
+            <input type="text" id="musicUrlInput" placeholder="Enter a music URL" onchange="loadMusicFromUrl()" />
+
             <button onclick="playMusic()">Play/Pause Music</button>
             <label>Volume:</label>
             <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)" />
@@ -457,7 +514,10 @@
         let voiceEnabled = true; // Default voice enabled
         let messageCount = 0; // Tracks number of messages
         const chatMessages = []; // Store chat messages for export and summary
+        const chatLog = []; // Store both questions and answers for export
         const musicPlayer = document.getElementById('musicPlayer');
+
+        const synth = window.speechSynthesis; // Speech Synthesis API
 
         window.onload = function () {
             loadPreferences();
@@ -491,6 +551,13 @@
             }
         }
 
+        function loadMusicFromUrl() {
+            const url = document.getElementById('musicUrlInput').value;
+            if (url) {
+                musicPlayer.src = url;
+            }
+        }
+
         function playMusic() {
             if (musicPlayer.paused) {
                 musicPlayer.play();
@@ -504,10 +571,15 @@
         }
 
         function speakResponse(response) {
-            if (voiceEnabled) {
+            // Stop any ongoing speech
+            if (synth.speaking) {
+                synth.cancel(); // Stop previous response
+            }
+
+            if (voiceEnabled && response) {
                 const utterance = new SpeechSynthesisUtterance(response);
                 utterance.lang = "en-US";
-                window.speechSynthesis.speak(utterance);
+                synth.speak(utterance);
             }
         }
 
@@ -523,6 +595,7 @@
                 chatbox.appendChild(userMessage);
                 chatList.appendChild(document.createElement("li")).textContent = userInput.value.trim();
                 chatMessages.push(userInput.value.trim());
+                chatLog.push({ question: userInput.value.trim(), answer: "" }); // Log question
                 chatbox.scrollTop = chatbox.scrollHeight;
 
                 const typingIndicator = document.createElement("div");
@@ -549,6 +622,8 @@
                     botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
                     chatbox.appendChild(botMessage);
 
+                    // Update the chat log with the answer
+                    chatLog[chatLog.length - 1].answer = response;  // Store answer in chat log
                     speakResponse(response);
                     messageCount++;
                 } catch (error) {
@@ -588,7 +663,8 @@
         }
 
         function exportChat() {
-            const chatText = chatMessages.join('\n');
+            // Create a structured export
+            const chatText = chatLog.map(log => `🧑: ${log.question}\n🤖 ${chatbotName}: ${log.answer}`).join('\n\n');
             const blob = new Blob([chatText], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -600,7 +676,7 @@
         }
 
         function summarizeChat() {
-            const summary = `Chat Summary:\nYou have exchanged ${chatMessages.length} messages.`;
+            const summary = `Chat Summary:\nYou have exchanged ${chatLog.length} messages.`;
             alert(summary);
         }
 
@@ -617,6 +693,15 @@
             localStorage.setItem('theme', selectedTheme);
         }
 
+        function changeBackgroundImage() {
+            const bgImageUrl = document.getElementById('bgImageInput').value;
+            if (bgImageUrl) {
+                document.body.style.backgroundImage = `url(${bgImageUrl})`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+            }
+        }
+
         function resetChat() {
             const chatbox = document.getElementById("chatbox");
             const chatList = document.getElementById("chatList");
@@ -624,6 +709,7 @@
             chatList.innerHTML = "";
             messageCount = 0;
             chatMessages.length = 0;
+            chatLog.length = 0; // Clear the chat log as well
         }
 
         function openSettings() {
