@@ -66,7 +66,6 @@
 
         .messages {
             flex: 1; /* Take available space */
-            height: auto;
             overflow-y: auto;
             margin: 15px 0; /* Margin around message area */
             padding: 10px;
@@ -125,7 +124,6 @@
             cursor: pointer;
             transition: background 0.3s ease;
             margin-left: 5px; /* Space between buttons */
-            flex: 0; /* Prevents button from stretching */
             min-width: 70px; /* Minimum button width for consistency */
         }
 
@@ -360,12 +358,6 @@
         let voiceEnabled = true; // Default voice enabled
         let messageCount = 0; // Tracks number of messages
         const chatMessages = []; // Store chat messages for export and summary
-        const slideshowImages = [
-            "https://wallpaperaccess.com/full/47587.jpg",
-            "https://wallpaperaccess.com/full/5827738.jpg",
-            "https://wallpaperaccess.com/full/5787626.jpg"
-        ];
-        let currentImageIndex = 0;
         const musicPlayer = document.getElementById('musicPlayer');
 
         window.onload = function () {
@@ -396,11 +388,12 @@
         // Slideshow Functionality
         function startSlideshow() {
             const images = document.querySelectorAll('.slideshow img');
-            images[currentImageIndex].style.display = 'block';
+            images[0].style.display = 'block';
             setInterval(() => {
-                images[currentImageIndex].style.display = 'none';
-                currentImageIndex = (currentImageIndex + 1) % images.length;
-                images[currentImageIndex].style.display = 'block';
+                const currentImage = Array.from(images).find(img => img.style.display !== 'none');
+                currentImage.style.display = 'none';
+                const nextImage = currentImage.nextElementSibling || images[0]; // Circular slideshow
+                nextImage.style.display = 'block';
             }, 5000); // Change image every 5 seconds
         }
 
@@ -435,16 +428,13 @@
         async function sendMessage() {
             const userInput = document.getElementById("userInput");
             const chatbox = document.getElementById("chatbox");
-            const chatList = document.getElementById("chatList");
 
             if (userInput.value.trim()) {
                 const userMessage = document.createElement("div");
                 userMessage.className = "message user";
                 userMessage.textContent = "🧑: " + userInput.value.trim();
                 chatbox.appendChild(userMessage);
-                chatList.appendChild(document.createElement("li")).textContent = userInput.value.trim(); // Add to chat history
                 chatMessages.push(userInput.value.trim()); // Store message for export and summary
-                chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
 
                 const typingIndicator = document.createElement("div");
                 typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
@@ -453,24 +443,17 @@
                 try {
                     await delayResponse();
                     let response;
-                    const query = userInput.value.trim();
 
-                    if (/what's your name|who are you/i.test(query)) {
-                        response = `My name is ${chatbotName}.`;
-                    } else if (/who made you|your creator/i.test(query)) {
-                        response = "I was made by Rishab.";
-                    } else {
-                        // Here, you would implement the call to your AI service.
-                        response = "I'm able to help you with various queries!"; // Placeholder response
-                    }
+                    // Using pute.js to generate response
+                    response = await pute.chat(userInput.value.trim());
 
                     chatbox.removeChild(typingIndicator); // Remove typing indicator
 
                     const botMessage = document.createElement("div");
                     botMessage.className = "message bot";
-                    botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
+                    botMessage.textContent = `🤖 ${chatbotName}: ${response}`;
                     chatbox.appendChild(botMessage);
-
+                    
                     speakResponse(response);
                     messageCount++;
                 } catch (error) {
@@ -501,7 +484,7 @@
         }
 
         function startVoiceInput() {
-            const recognition = new window.SpeechRecognition || window.webkitSpeechRecognition();
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.onresult = function(event) {
                 const userInput = document.getElementById("userInput");
                 userInput.value = event.results[0][0].transcript; // Set voice input to the text field
@@ -531,103 +514,17 @@
             const selectedLanguage = document.getElementById("language").value;
             localStorage.setItem('language', selectedLanguage);
             alert("Language changed to: " + selectedLanguage);
-            // Additional code can be added here to transform chatbot responses if needed
         }
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.setAttribute("class", selectedTheme);
+            document.body.className = selectedTheme;
             localStorage.setItem('theme', selectedTheme);
-
-            // Colors for text and buttons based on theme
-            const themeColors = {
-                default: {
-                    headerColor: "#00fff0",
-                    buttonTextColor: "#0f3460",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-1': {
-                    headerColor: "#ff5722",
-                    buttonTextColor: "#ffffff",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-2': {
-                    headerColor: "#4caf50",
-                    buttonTextColor: "#000000",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-3': {
-                    headerColor: "#2196f3",
-                    buttonTextColor: "#ffffff",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-4': {
-                    headerColor: "#ffeb3b",
-                    buttonTextColor: "#000000",
-                    messageUserColor: "#000",
-                    messageBotColor: "#000"
-                },
-                'theme-color-5': {
-                    headerColor: "#673ab7",
-                    buttonTextColor: "#ffffff",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-6': {
-                    headerColor: "#ff5722",
-                    buttonTextColor: "#000000",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-7': {
-                    headerColor: "#00bcd4",
-                    buttonTextColor: "#000000",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-8': {
-                    headerColor: "#3f51b5",
-                    buttonTextColor: "#ffffff",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-9': {
-                    headerColor: "#e91e63",
-                    buttonTextColor: "#ffffff",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-10': {
-                    headerColor: "#795548",
-                    buttonTextColor: "#ffffff",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                }
-            };
-
-            // Apply the colors
-            const colors = themeColors[selectedTheme];
-            document.querySelector(".header").style.color = colors.headerColor;
-            document.querySelectorAll('.user-input button').forEach(btn => {
-                btn.style.color = colors.buttonTextColor;
-            });
-            document.querySelectorAll('.message.user').forEach(msg => {
-                msg.style.color = colors.messageUserColor;
-            });
-            document.querySelectorAll('.message.bot').forEach(msg => {
-                msg.style.color = colors.messageBotColor;
-            });
         }
 
         function resetChat() {
             const chatbox = document.getElementById("chatbox");
-            const chatList = document.getElementById("chatList");
             chatbox.innerHTML = "";
-            chatList.innerHTML = ""; // Clear chat history
             messageCount = 0;
             chatMessages.length = 0; // Clear stored chat messages
         }
