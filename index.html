@@ -41,21 +41,19 @@
             width: 95%; /* Use more space on mobile */
             max-width: 800px;
             height: 90vh; /* Flexible height for mobile */
-            background: rgba(0, 0, 0, 0.85);
-            border-radius: 20px;
             display: flex;
-            flex-direction: column;
+            border-radius: 20px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-            position: relative;
-            z-index: 2;
             overflow: hidden;
+            background: rgba(0, 0, 0, 0.85);
+            flex-direction: row; /* Align chat history to the left */
         }
 
         /* Left Side Chat History */
         .chat-history {
-            flex: 1; /* Allow chat history to grow */
+            width: 30%; /* Fixed width for chat history */
             background: rgba(0, 0, 0, 0.7);
-            border-radius: 20px 20px 0 0; /* Rounded top corners */
+            border-radius: 20px 0 0 20px; /* Rounded corners */
             padding: 15px;
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
             overflow-y: auto;
@@ -86,7 +84,7 @@
         }
 
         .chat-window {
-            flex: 2; /* Allocate more space for chat window */
+            flex: 1; /* Allow chat window to grow */
             display: flex;
             flex-direction: column;
             padding: 15px; /* Adjust padding */
@@ -101,8 +99,8 @@
         }
 
         .messages {
-            flex: 1;
-            height: auto; /* Adjust height */
+            flex: 1; /* Take available space */
+            height: auto;
             overflow-y: auto;
             margin: 15px 0; /* Margin around message area */
             padding: 10px;
@@ -222,6 +220,22 @@
 
         /* Responsive Styles */
         @media (max-width: 768px) {
+            .chatbot-container {
+                flex-direction: column; /* Stack vertically on small screens */
+                height: 95vh; /* Adjust height */
+            }
+
+            .chat-history {
+                width: 100%; /* Full width for history on small screens */
+                height: auto; /* Allow it to resize */
+                padding: 10px; /* Adjust padding */
+                overflow-y: auto; /* Enable scrolling */
+            }
+
+            .chat-window {
+                flex: 1; /* Take remaining space */
+            }
+
             .header {
                 font-size: 1.5em; /* Smaller header font on mobile */
             }
