@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mikasa Chatbot</title>
+    <title>Rishab Chatbot</title>
     <style>
         body {
             margin: 0;
@@ -15,7 +15,6 @@
             justify-content: center;
             align-items: center;
             background-color: #1c1c1c;
-            color: #ffffff;
             animation: backgroundAnimation 20s ease-in-out infinite;
         }
 
@@ -65,8 +64,8 @@
 
         .chat-history h3 {
             margin: 0;
-            color: #00fff0;
             text-align: center;
+            color: #00fff0; /* Default text color */
         }
 
         .chat-history ul {
@@ -95,7 +94,7 @@
         .header {
             font-size: 1.8em;
             font-weight: bold;
-            color: #00fff0;
+            color: #00fff0; /* Default color */
             text-align: center;
             margin-bottom: 15px;
             text-shadow: 2px 2px 5px rgba(0, 255, 255, 0.5);
@@ -192,6 +191,7 @@
             margin-top: 10px;
             display: block;
             font-weight: bold;
+            color: #00fff0; /* Label color */
         }
 
         .modal-content input[type="text"],
@@ -223,39 +223,81 @@
         }
 
         /* Theme-specific styles */
-        .theme1 button,
-        .theme1 input {
-            color: #1a1a1a; /* Dark text */
+        .theme1 .header,
+        .theme1 .modal-content label,
+        .theme1 .chat-history h3 {
+            color: #1a1a1a; /* Dark text for titles */
+        }
+
+        .theme1 .user-input button,
+        .theme1 .modal-content button,
+        .theme1 .user-input input {
+            color: #1a1a1a; /* Dark text for inputs */
             background: #00aaff; /* Button background */
         }
 
-        .theme2 button,
-        .theme2 input {
-            color: #333333; /* Dark text */
+        .theme2 .header,
+        .theme2 .modal-content label,
+        .theme2 .chat-history h3 {
+            color: #fff; /* Light text for titles */
+        }
+
+        .theme2 .user-input button,
+        .theme2 .modal-content button,
+        .theme2 .user-input input {
+            color: #333; /* Dark text for inputs */
             background: #ff7e12; /* Button background */
         }
 
-        .theme3 button,
-        .theme3 input {
-            color: #2e2e2e; /* Dark text */
+        .theme3 .header,
+        .theme3 .modal-content label,
+        .theme3 .chat-history h3 {
+            color: #2e2e2e; /* Dark text for titles */
+        }
+
+        .theme3 .user-input button,
+        .theme3 .modal-content button,
+        .theme3 .user-input input {
+            color: #2e2e2e; /* Dark text for inputs */
             background: #5eff5e; /* Button background */
         }
 
-        .theme4 button,
-        .theme4 input {
-            color: #ffffff; /* Light text */
+        .theme4 .header,
+        .theme4 .modal-content label,
+        .theme4 .chat-history h3 {
+            color: #ffffff; /* Light text for titles */
+        }
+
+        .theme4 .user-input button,
+        .theme4 .modal-content button,
+        .theme4 .user-input input {
+            color: #ffffff; /* Light text for inputs */
             background: #d5006d; /* Button background */
         }
 
-        .theme5 button,
-        .theme5 input {
-            color: #2c2c2c; /* Dark text */
+        .theme5 .header,
+        .theme5 .modal-content label,
+        .theme5 .chat-history h3 {
+            color: #2c2c2c; /* Dark text for titles */
+        }
+
+        .theme5 .user-input button,
+        .theme5 .modal-content button,
+        .theme5 .user-input input {
+            color: #2c2c2c; /* Dark text for inputs */
             background: #ff40a3; /* Button background */
         }
 
-        .theme6 button,
-        .theme6 input {
-            color: #ffffff; /* Light text */
+        .theme6 .header,
+        .theme6 .modal-content label,
+        .theme6 .chat-history h3 {
+            color: #ffffff; /* Light text for titles */
+        }
+
+        .theme6 .user-input button,
+        .theme6 .modal-content button,
+        .theme6 .user-input input {
+            color: #ffffff; /* Light text for inputs */
             background: #ff6a00; /* Button background */
         }
 
@@ -300,7 +342,7 @@
             <ul id="chatList"></ul>
         </div>
         <div class="chat-window">
-            <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
+            <div class="header" id="chatbotName">Rishab - Your AI Companion</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
             <div class="user-input">
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
@@ -332,7 +374,7 @@
             <h2>Settings</h2>
 
             <label for="botName">Chatbot Name:</label>
-            <input type="text" id="botNameInput" value="Mikasa" />
+            <input type="text" id="botNameInput" value="Rishab" />
 
             <label for="language">Language:</label>
             <select id="language" onchange="changeLanguage()">
@@ -371,7 +413,7 @@
     <audio id="musicPlayer" src="" preload="auto"></audio>
 
     <script>
-        let chatbotName = "Mikasa";
+        let chatbotName = "Rishab";
         let voiceEnabled = true; // Default voice enabled
         let messageCount = 0; // Tracks number of messages
         const chatMessages = []; // Store chat messages for export and summary
@@ -417,7 +459,7 @@
 
                 // Typing indicator
                 const typingIndicator = document.createElement("div");
-                typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
+                typingIndicator.innerHTML = "<em>🤖 Rishab is typing...</em>";
                 chatbox.appendChild(typingIndicator);
 
                 try {
