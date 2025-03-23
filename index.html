@@ -479,16 +479,20 @@
                 <option value="theme-color-6">Orange</option>
             </select>
 
+            <label for="bgImage">Background Image Upload:</label>
+            <input type="file" id="bgImageUpload" accept="image/*" onchange="changeBackgroundImageFromFile(event)" />
+
             <label for="bgImage">Background Image URL:</label>
-            <input type="text" id="bgImageInput" placeholder="Enter a background image URL" onchange="changeBackgroundImage()" />
+            <input type="text" id="bgImageInput" placeholder="Enter a background image URL" />
+            <button onclick="changeBackgroundImage()">Apply URL</button>
 
             <label for="musicUpload">Upload Music:</label>
             <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
 
             <label for="musicUrl">Music URL:</label>
-            <input type="text" id="musicUrlInput" placeholder="Enter a music URL" onchange="loadMusicFromUrl()" />
+            <input type="text" id="musicUrlInput" placeholder="Enter a music URL" />
+            <button onclick="loadMusicFromUrl()">Play</button>
 
-            <button onclick="playMusic()">Play/Pause Music</button>
             <label>Volume:</label>
             <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)" />
 
@@ -543,6 +547,25 @@
             }
         }
 
+        function changeBackgroundImageFromFile(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                document.body.style.backgroundImage = `url(${url})`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+            }
+        }
+
+        function changeBackgroundImage() {
+            const bgImageUrl = document.getElementById('bgImageInput').value;
+            if (bgImageUrl) {
+                document.body.style.backgroundImage = `url(${bgImageUrl})`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+            }
+        }
+
         function loadMusic(event) {
             const file = event.target.files[0];
             if (file) {
@@ -554,7 +577,14 @@
         function loadMusicFromUrl() {
             const url = document.getElementById('musicUrlInput').value;
             if (url) {
-                musicPlayer.src = url;
+                // Check if the URL is a YouTube or Spotify link
+                if (url.includes("youtube.com") || url.includes("youtu.be") || url.includes("spotify.com")) {
+                    // Here you will need an external library or method to convert the link to a playable audio stream
+                    // For this example, we can simply show an alert
+                    alert("Playing audio from " + url + " is not currently supported in this example. You would need to implement the relevant audio extraction.");
+                } else {
+                    musicPlayer.src = url;
+                }
             }
         }
 
@@ -691,15 +721,6 @@
             document.body.className = ''; // Reset classes
             document.body.classList.add(selectedTheme);
             localStorage.setItem('theme', selectedTheme);
-        }
-
-        function changeBackgroundImage() {
-            const bgImageUrl = document.getElementById('bgImageInput').value;
-            if (bgImageUrl) {
-                document.body.style.backgroundImage = `url(${bgImageUrl})`;
-                document.body.style.backgroundSize = 'cover';
-                document.body.style.backgroundPosition = 'center';
-            }
         }
 
         function resetChat() {
