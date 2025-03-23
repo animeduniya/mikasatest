@@ -140,6 +140,7 @@
             cursor: pointer;
             transition: background 0.3s ease;
             margin: 5px; /* Space between buttons */
+            width: calc(100% - 10px); /* Full width minus margin on sides */
         }
 
         .history-button:hover {
@@ -223,6 +224,7 @@
 
             .history-button {
                 width: calc(100% - 10px); /* Full width minus margin on sides */
+                font-size: 0.9em; /* Adjust font size */
             }
         }
 
@@ -272,7 +274,7 @@
             </div>
         </div>
 
-        <!-- History Options -->
+        <!-- History Actions -->
         <div style="display: flex; flex-direction: column; align-items: center; padding: 10px;">
             <button class="history-button" onclick="exportChat();">Export Chat</button>
             <button class="history-button" onclick="summarizeChat();">Summarize Chat</button>
@@ -458,7 +460,8 @@
                     } else if (/who made you|your creator/i.test(query)) {
                         response = "I was made by Rishab.";
                     } else {
-                        response = await puter.ai.chat(query);
+                        // Here, you would implement the call to your AI service.
+                        response = "I'm able to help you with various queries!"; // Placeholder response
                     }
 
                     chatbox.removeChild(typingIndicator); // Remove typing indicator
@@ -498,10 +501,11 @@
         }
 
         function startVoiceInput() {
-            const recognition = new webkitSpeechRecognition();
+            const recognition = new window.SpeechRecognition || window.webkitSpeechRecognition();
             recognition.onresult = function(event) {
                 const userInput = document.getElementById("userInput");
                 userInput.value = event.results[0][0].transcript; // Set voice input to the text field
+                sendMessage(); // Automatically send the message after voice input
             };
             recognition.start();
         }
