@@ -10,28 +10,32 @@
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
-            background: linear-gradient(120deg, #1c1c1c, #3a3a3a);
-            color: #ffffff;
             overflow: hidden;
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-            animation: backgroundAnimation 10s infinite alternate;
+            background: #1c1c1c;
+            color: #ffffff;
+            animation: backgroundAnimation 20s infinite alternate;
         }
 
         @keyframes backgroundAnimation {
             0% {
-                background: linear-gradient(120deg, #3a3a3a, #1c1c1c);
+                background: url('https://source.unsplash.com/1600x900/?nature,water,city') center center / cover no-repeat;
             }
-
+            25% {
+                background: url('https://source.unsplash.com/1600x900/?sunset,landscape') center center / cover no-repeat;
+            }
             50% {
-                background: linear-gradient(120deg, #1c1c1c, #3a3a3a);
+                background: url('https://source.unsplash.com/1600x900/?ocean,forest') center center / cover no-repeat;
             }
-
+            75% {
+                background: url('https://source.unsplash.com/1600x900/?space,stars') center center / cover no-repeat;
+            }
             100% {
-                background: linear-gradient(120deg, #3a3a3a, #1c1c1c);
+                background: url('https://source.unsplash.com/1600x900/?city,night') center center / cover no-repeat;
             }
         }
 
@@ -41,14 +45,12 @@
             max-width: 800px;
             height: 88vh;
             overflow-y: auto;
-            background-color: rgba(50, 50, 50, 0.9);
+            background-color: rgba(0, 0, 0, 0.8);
             border-radius: 20px;
             box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
             position: relative;
-            backdrop-filter: blur(15px);
-            border: 2px solid #00fff0;
         }
 
         /* Chat History */
@@ -89,7 +91,6 @@
                 transform: scale(0.8);
                 opacity: 0;
             }
-
             to {
                 transform: scale(1);
                 opacity: 1;
@@ -136,7 +137,6 @@
                 transform: translateY(20px);
                 opacity: 0;
             }
-
             to {
                 transform: translateY(0);
                 opacity: 1;
@@ -384,6 +384,12 @@
                 <option value="theme-color-6">Sunset Orange</option>
             </select>
 
+            <label for="musicUpload">Upload Music:</label>
+            <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
+            <button onclick="playMusic()">Play/Pause Music</button>
+            <label>Volume:</label>
+            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)" />
+
             <label>Enable Voice:</label>
             <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()" /> Enable
 
@@ -414,6 +420,7 @@
             }
 
             if (savedTheme) {
+                document.getElementById("theme").value = savedTheme;
                 changeTheme(savedTheme);
             }
 
@@ -500,9 +507,38 @@
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.setAttribute("class", selectedTheme);
+            document.body.className = selectedTheme;
             localStorage.setItem('theme', selectedTheme);
-            // Additional logic can be added to change theme elements
+            // Change theme colors accordingly
+            switch (selectedTheme) {
+                case 'theme-color-1':
+                    document.body.style.setProperty('--bg-color', '#2a9df4');
+                    document.body.style.setProperty('--text-color', '#ffffff');
+                    break;
+                case 'theme-color-2':
+                    document.body.style.setProperty('--bg-color', '#ff8c00');
+                    document.body.style.setProperty('--text-color', '#ffffff');
+                    break;
+                case 'theme-color-3':
+                    document.body.style.setProperty('--bg-color', '#32ff7e');
+                    document.body.style.setProperty('--text-color', '#000000');
+                    break;
+                case 'theme-color-4':
+                    document.body.style.setProperty('--bg-color', '#9c27b0');
+                    document.body.style.setProperty('--text-color', '#ffffff');
+                    break;
+                case 'theme-color-5':
+                    document.body.style.setProperty('--bg-color', '#ff4081');
+                    document.body.style.setProperty('--text-color', '#000000');
+                    break;
+                case 'theme-color-6':
+                    document.body.style.setProperty('--bg-color', '#ff6f20');
+                    document.body.style.setProperty('--text-color', '#ffffff');
+                    break;
+                default:
+                    document.body.style.setProperty('--bg-color', '#1c1c1c');
+                    document.body.style.setProperty('--text-color', '#ffffff');
+            }
         }
 
         function resetChat() {
@@ -526,6 +562,29 @@
                 localStorage.setItem('botName', chatbotName);
             }
             document.getElementById("settingsModal").style.display = "none";
+        }
+
+        function loadMusic(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                musicPlayer.src = url;
+                musicPlayer.volume = document.getElementById("volumeControl").value;
+            }
+        }
+
+        function playMusic() {
+            if (musicPlayer.paused) {
+                musicPlayer.play();
+                alert("Playing music");
+            } else {
+                musicPlayer.pause();
+                alert("Music paused");
+            }
+        }
+
+        function setVolume(value) {
+            musicPlayer.volume = value;
         }
 
         function speakResponse(response) {
