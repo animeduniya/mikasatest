@@ -26,6 +26,7 @@
             right: 0;
             bottom: 0;
             z-index: -1;
+            overflow: hidden;
         }
 
         .slideshow img {
@@ -37,14 +38,14 @@
 
         /* Chatbot Container */
         .chatbot-container {
-            width: 80%;
+            width: 90%;
             max-width: 800px;
-            height: 600px;
+            height: 80vh; /* Make it flexible for mobile */
             background: rgba(0, 0, 0, 0.85);
             border-radius: 20px;
             display: flex;
             flex-direction: row;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
             position: relative;
             z-index: 2;
             overflow: hidden;
@@ -88,6 +89,7 @@
             flex-direction: column;
         }
 
+        /* Messages */
         .message {
             padding: 10px 15px;
             border-radius: 20px;
@@ -97,10 +99,13 @@
         }
 
         .message.user {
+            background-color: #00ccff;
             color: #000;
+            align-self: flex-end;
         }
 
         .message.bot {
+            background-color: #3f51b5;
             color: #fff;
         }
 
@@ -146,8 +151,8 @@
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
             overflow: hidden;
-            width: 400px;
-            max-width: 90%;
+            width: 90%;
+            max-width: 400px;
         }
 
         .modal-content {
@@ -189,17 +194,62 @@
             background: linear-gradient(135deg, #00ccff, #00fff0);
         }
 
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .chatbot-container {
+                flex-direction: column; /* Stack vertical on small screens */
+                height: 90vh;
+            }
+
+            .chat-history {
+                width: 100%; /* Full width for history on small screens */
+                height: 30%; /* Responsive height */
+                overflow-y: auto; /* Enable scrolling */
+            }
+
+            .chat-window {
+                flex: 1; /* Take remaining space */
+            }
+
+            .header {
+                font-size: 1.5em; /* Smaller header font on mobile */
+            }
+
+            .user-input input {
+                font-size: 0.9em; /* Adjust input size */
+                padding: 10px; /* Reduce padding */
+            }
+
+            .user-input button {
+                padding: 8px; /* Adjust button size */
+                font-size: 0.9em; /* Button size */
+            }
+        }
+
         /* Theme Colors */
-        body.theme-color-1 { background: #ff5722; }
-        body.theme-color-2 { background: #4caf50; }
-        body.theme-color-3 { background: #2196f3; }
-        body.theme-color-4 { background: #ffeb3b; }
-        body.theme-color-5 { background: #673ab7; }
-        body.theme-color-6 { background: #ff5722; }
-        body.theme-color-7 { background: #00bcd4; }
-        body.theme-color-8 { background: #3f51b5; }
-        body.theme-color-9 { background: #e91e63; }
-        body.theme-color-10 { background: #795548; }
+        /* Color scheme for the themes, modifying only text and button colors */
+        body.theme-color-1 .header {color: #ff5722;}
+        body.theme-color-2 .header {color: #4caf50;}
+        body.theme-color-3 .header {color: #2196f3;}
+        body.theme-color-4 .header {color: #ffeb3b;}
+        body.theme-color-5 .header {color: #673ab7;}
+        body.theme-color-6 .header {color: #ff5722;}
+        body.theme-color-7 .header {color: #00bcd4;}
+        body.theme-color-8 .header {color: #3f51b5;}
+        body.theme-color-9 .header {color: #e91e63;}
+        body.theme-color-10 .header {color: #795548;}
+
+        /* Button Text Colors */
+        body.theme-color-1 .user-input button {color: #ffffff;}
+        body.theme-color-2 .user-input button {color: #000000;}
+        body.theme-color-3 .user-input button {color: #ffffff;}
+        body.theme-color-4 .user-input button {color: #000000;}
+        body.theme-color-5 .user-input button {color: #ffffff;}
+        body.theme-color-6 .user-input button {color: #000000;}
+        body.theme-color-7 .user-input button {color: #000000;}
+        body.theme-color-8 .user-input button {color: #ffffff;}
+        body.theme-color-9 .user-input button {color: #ffffff;}
+        body.theme-color-10 .user-input button {color: #ffffff;}
     </style>
 </head>
 <body>
@@ -483,100 +533,87 @@
             document.body.setAttribute("class", selectedTheme);
             localStorage.setItem('theme', selectedTheme);
 
-            // Update text colors based on selected theme
-            const themeStyles = {
+            // Colors for text and buttons based on theme
+            const themeColors = {
                 default: {
                     headerColor: "#00fff0",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff",
                     buttonTextColor: "#0f3460",
-                    borderColor: "#00fff0"
+                    messageUserColor: "#000",
+                    messageBotColor: "#fff"
                 },
                 'theme-color-1': {
                     headerColor: "#ff5722",
-                    messageUserColor: "#fff",
-                    messageBotColor: "#fff",
                     buttonTextColor: "#ffffff",
-                    borderColor: "#ff5722"
+                    messageUserColor: "#000",
+                    messageBotColor: "#fff"
                 },
                 'theme-color-2': {
                     headerColor: "#4caf50",
+                    buttonTextColor: "#000000",
                     messageUserColor: "#000",
-                    messageBotColor: "#fff",
-                    buttonTextColor: "#ffffff",
-                    borderColor: "#4caf50"
+                    messageBotColor: "#fff"
                 },
                 'theme-color-3': {
                     headerColor: "#2196f3",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff",
                     buttonTextColor: "#ffffff",
-                    borderColor: "#2196f3"
+                    messageUserColor: "#000",
+                    messageBotColor: "#fff"
                 },
                 'theme-color-4': {
                     headerColor: "#ffeb3b",
+                    buttonTextColor: "#000000",
                     messageUserColor: "#000",
-                    messageBotColor: "#000",
-                    buttonTextColor: "#000",
-                    borderColor: "#ffeb3b"
+                    messageBotColor: "#000"
                 },
                 'theme-color-5': {
                     headerColor: "#673ab7",
-                    messageUserColor: "#fff",
-                    messageBotColor: "#fff",
                     buttonTextColor: "#ffffff",
-                    borderColor: "#673ab7"
+                    messageUserColor: "#000",
+                    messageBotColor: "#fff"
                 },
                 'theme-color-6': {
                     headerColor: "#ff5722",
+                    buttonTextColor: "#000000",
                     messageUserColor: "#000",
-                    messageBotColor: "#fff",
-                    buttonTextColor: "#ffffff",
-                    borderColor: "#ff5722"
+                    messageBotColor: "#fff"
                 },
                 'theme-color-7': {
                     headerColor: "#00bcd4",
+                    buttonTextColor: "#000000",
                     messageUserColor: "#000",
-                    messageBotColor: "#fff",
-                    buttonTextColor: "#ffffff",
-                    borderColor: "#00bcd4"
+                    messageBotColor: "#fff"
                 },
                 'theme-color-8': {
                     headerColor: "#3f51b5",
-                    messageUserColor: "#fff",
-                    messageBotColor: "#fff",
                     buttonTextColor: "#ffffff",
-                    borderColor: "#3f51b5"
+                    messageUserColor: "#000",
+                    messageBotColor: "#fff"
                 },
                 'theme-color-9': {
                     headerColor: "#e91e63",
-                    messageUserColor: "#fff",
-                    messageBotColor: "#fff",
                     buttonTextColor: "#ffffff",
-                    borderColor: "#e91e63"
+                    messageUserColor: "#000",
+                    messageBotColor: "#fff"
                 },
                 'theme-color-10': {
                     headerColor: "#795548",
-                    messageUserColor: "#fff",
-                    messageBotColor: "#fff",
                     buttonTextColor: "#ffffff",
-                    borderColor: "#795548"
+                    messageUserColor: "#000",
+                    messageBotColor: "#fff"
                 }
             };
 
-            const theme = themeStyles[selectedTheme];
-            document.querySelector(".header").style.color = theme.headerColor;
-            document.querySelectorAll('.messages').forEach(msg => {
-                msg.style.borderColor = theme.borderColor;
+            // Apply the colors
+            const colors = themeColors[selectedTheme];
+            document.querySelector(".header").style.color = colors.headerColor;
+            document.querySelectorAll('.user-input button').forEach(btn => {
+                btn.style.color = colors.buttonTextColor;
             });
             document.querySelectorAll('.message.user').forEach(msg => {
-                msg.style.color = theme.messageUserColor;
+                msg.style.color = colors.messageUserColor;
             });
             document.querySelectorAll('.message.bot').forEach(msg => {
-                msg.style.color = theme.messageBotColor;
-            });
-            document.querySelectorAll('.user-input button').forEach(btn => {
-                btn.style.color = theme.buttonTextColor;
+                msg.style.color = colors.messageBotColor;
             });
         }
 
@@ -615,7 +652,6 @@
                 document.getElementById("feedback").value = ""; // Reset the feedback dropdown
             }
         }
-
     </script>
 </body>
 </html>
