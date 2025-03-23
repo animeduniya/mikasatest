@@ -41,17 +41,53 @@
 
         .chatbot-container {
             width: 90%;
-            max-width: 600px;
+            max-width: 800px;
             background: rgba(0, 0, 0, 0.85);
             border-radius: 20px;
             padding: 20px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
-            text-align: center;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
             position: relative;
             z-index: 2;
             animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .chat-history {
+            flex: 0 0 200px;
+            max-width: 200px;
+            background: rgba(255, 255, 255, 0.1);
+            border-right: 1px solid #00fff0;
+            padding: 10px;
+            border-radius: 10px;
+            margin-right: 10px;
+            overflow-y: auto;
+            height: 400px; /* Fixed height */
+        }
+
+        .chat-history h3 {
+            color: #00fff0;
+            margin-top: 0;
+            text-align: center;
+        }
+
+        .chat-history .bot-entry {
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 5px;
+            background: rgba(0, 0, 0, 0.2);
+            transition: background 0.3s;
+        }
+
+        .chat-history .bot-entry:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .chat-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .header {
@@ -206,18 +242,24 @@
 <body>
     <div class="background" id="background"></div>
     <div class="chatbot-container">
-        <div class="settings" onclick="openSettings()">⚙️</div>
-        <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
-        <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
-        
-        <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
-        <div id="typingIndicator" class="typing-indicator" style="display: none;">🤖 Mikasa is typing...</div>
-        <div class="message-count" id="messageCount">Messages: 0</div>
+        <div class="chat-history" id="chatHistory">
+            <h3>Chat History</h3>
+            <div id="botList"></div>
+        </div>
+        <div class="chat-content">
+            <div class="settings" onclick="openSettings()">⚙️</div>
+            <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
+            <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
+            
+            <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
+            <div id="typingIndicator" class="typing-indicator" style="display: none;">🤖 Mikasa is typing...</div>
+            <div class="message-count" id="messageCount">Messages: 0</div>
 
-        <div class="user-input">
-            <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
-            <button onclick="sendMessage()">Send</button>
-            <button onclick="openCustomBot()">Create Bot</button>
+            <div class="user-input">
+                <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
+                <button onclick="sendMessage()">Send</button>
+                <button id="toggleBotButton" onclick="openCustomBot()">Create Bot</button>
+            </div>
         </div>
     </div>
 
@@ -288,6 +330,7 @@
     <script>
         let defaultChatbotName = "Mikasa";
         let currentBot = { name: defaultChatbotName, personality: "I am your AI companion." };
+        let allBots = []; // Store all created bots
         let voiceEnabled = true; // Default voice enabled
         let messageCount = 0; // Tracks number of messages
 
@@ -433,6 +476,8 @@
 
         function openCustomBot() {
             document.getElementById('customBotModal').style.display = 'block';
+            const toggleButton = document.getElementById("toggleBotButton");
+            toggleButton.textContent = allBots.length > 0 ? "Customize Bot" : "Create Bot";
         }
 
         function closeCustomBot() {
@@ -444,8 +489,13 @@
             const botPersonalityInput = document.getElementById("botPersonality");
 
             if (botNameInput.value.trim() && botPersonalityInput.value.trim()) {
-                currentBot.name = botNameInput.value.trim();
-                currentBot.personality = botPersonalityInput.value.trim();
+                const newBot = {
+                    name: botNameInput.value.trim(),
+                    personality: botPersonalityInput.value.trim()
+                };
+                allBots.push(newBot);
+                currentBot = newBot; // Set current bot to the new bot
+                displayBots();
                 alert(`Your bot "${currentBot.name}" has been created with the personality: "${currentBot.personality}"`);
                 document.getElementById("chatbotName").textContent = currentBot.name; // Update display name
                 closeCustomBot();
@@ -453,6 +503,42 @@
                 alert("Please fill in both fields to create your bot.");
             }
         }
+
+        function displayBots() {
+            const botList = document.getElementById("botList");
+            botList.innerHTML = ""; // Clear the list
+            allBots.forEach((bot, index) => {
+                const botEntry = document.createElement("div");
+                botEntry.className = "bot-entry";
+                botEntry.innerText = bot.name;
+                botEntry.onclick = () => selectBot(index);
+                botList.appendChild(botEntry);
+            });
+        }
+
+        function selectBot(index) {
+            currentBot = allBots[index];
+            document.getElementById("chatbotName").textContent = currentBot.name;
+            resetChat();
+        }
+
+        function shareBot() {
+            const currentBotDetails = encodeURIComponent(JSON.stringify(currentBot));
+            const shareableLink = `${window.location.href}?bot=${currentBotDetails}`;
+            alert(`Share this link: ${shareableLink}`);
+        }
+
+        // Handle URL to load specific bot details
+        window.onload = function () {
+            loadPreferences();
+            const urlParams = new URLSearchParams(window.location.search);
+            const botData = urlParams.get('bot');
+            if (botData) {
+                currentBot = JSON.parse(decodeURIComponent(botData));
+                document.getElementById("chatbotName").textContent = currentBot.name;
+            }
+        }
+
     </script>
 </body>
 </html>
