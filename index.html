@@ -63,6 +63,11 @@
             flex-direction: column;
         }
 
+        .chat-history h3 {
+            color: cyan; /* Set chat history header color to cyan */
+            margin: 0 0 10px 0; /* Margin below the header */
+        }
+
         .header {
             font-size: 2.5em;
             font-weight: bold;
@@ -376,7 +381,7 @@
             const savedBotName = localStorage.getItem('botName');
 
             if (savedLang) {
-                document.getElementById("language").value = savedLang;
+                document.getElementById("language").value = savedLang; // Set the selected language from local storage
             }
 
             if (savedTheme) {
@@ -441,7 +446,7 @@
                 chatbox.appendChild(userMessage);
                 chatList.appendChild(document.createElement("li")).textContent = userInput.value.trim(); // Add to chat history
                 chatMessages.push(userInput.value.trim()); // Store message for export and summary
-                chatbox.scrollTop = chatbox.scrollHeight;
+                chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
 
                 const typingIndicator = document.createElement("div");
                 typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
@@ -476,8 +481,8 @@
                     chatbox.appendChild(errorMessage);
                 }
 
-                chatbox.scrollTop = chatbox.scrollHeight;
-                userInput.value = "";
+                chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
+                userInput.value = ""; // Clear input
             }
         }
 
@@ -526,6 +531,7 @@
             const selectedLanguage = document.getElementById("language").value;
             localStorage.setItem('language', selectedLanguage);
             alert("Language changed to: " + selectedLanguage);
+            // Additional code can be added here to translate chatbot responses if needed
         }
 
         function changeTheme() {
