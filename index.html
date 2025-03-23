@@ -4,153 +4,122 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mikasa Chatbot</title>
+    <title>Rishab Chatbot</title>
     <style>
-        /* General Styles */
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
-            transition: background 0.5s ease;
-            background: radial-gradient(circle at 50% 50%, #1c1c1c, #000);
+            background-color: #1c1c1c;
+            animation: backgroundAnimation 20s ease-in-out infinite;
         }
 
-        /* Slideshow Styles */
-        .slideshow {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: -1;
-            overflow: hidden;
+        @keyframes backgroundAnimation {
+            0% {
+                background: url('https://source.unsplash.com/1600x900/?nature') center center / cover no-repeat;
+            }
+            25% {
+                background: url('https://source.unsplash.com/1600x900/?city') center center / cover no-repeat;
+            }
+            50% {
+                background: url('https://source.unsplash.com/1600x900/?ocean') center center / cover no-repeat;
+            }
+            75% {
+                background: url('https://source.unsplash.com/1600x900/?night') center center / cover no-repeat;
+            }
+            100% {
+                background: url('https://source.unsplash.com/1600x900/?forest') center center / cover no-repeat;
+            }
         }
 
-        .slideshow img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-
-        /* Chatbot Container */
-        .chatbot-container {
+        /* Container Styles */
+        .container {
             width: 95%;
             max-width: 800px;
             height: 90vh;
-            display: flex;
-            border-radius: 20px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
-            background: rgba(255, 255, 255, 0.1);
-            flex-direction: row;
-        }
-
-        /* Left Side Chat History */
-        .chat-history {
-            width: 30%;
-            background: rgba(0, 0, 0, 0.85);
-            border-radius: 20px 0 0 20px;
-            padding: 20px;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
+            overflow-y: auto;
+            background-color: rgba(30, 30, 30, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
-            color: cyan;
+            position: relative;
+            padding: 10px;
+        }
+
+        /* Chat History */
+        .chat-history {
+            flex: 0 1 20%;
             overflow-y: auto;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.2);
         }
 
         .chat-history h3 {
-            color: cyan;
-            margin-bottom: 10px;
-            font-size: 1.8em;
+            margin: 0;
+            color: #00fff0; /* Default color */
             text-align: center;
         }
 
         .chat-history ul {
             list-style-type: none;
             padding: 0;
-            margin: 0;
-            flex: 1;
-            overflow-y: auto;
         }
 
         .chat-history li {
-            margin-bottom: 5px;
-            padding: 10px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: cyan;
-            font-size: 1em;
+            background: rgba(0, 255, 240, 0.2);
+            color: #00fff0;
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 8px;
         }
 
-        .chat-history button {
-            padding: 10px;
-            border-radius: 5px;
-            background: linear-gradient(135deg, #00fff0, #00ccff);
-            border: none;
-            color: #0f3460;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-            margin-top: 10px;
-        }
-
-        .chat-history button:hover {
-            background: linear-gradient(135deg, #00ccff, #00fff0);
-            transform: scale(1.05);
-        }
-
+        /* Chat Window */
         .chat-window {
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 15px;
+            padding: 10px;
+            position: relative;
+            overflow-y: auto;
         }
 
         .header {
             font-size: 1.8em;
             font-weight: bold;
-            color: #00fff0;
-            margin: 0;
+            color: #00fff0; /* Default color */
             text-align: center;
-            text-shadow: 2px 2px 4px rgba(0, 255, 255, 0.4);
-            background: rgba(0, 0, 0, 0.5);
-            padding: 10px;
-            border-radius: 10px;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 5px rgba(0, 255, 255, 0.5);
         }
 
         .messages {
             flex: 1;
-            height: auto;
             overflow-y: auto;
-            margin: 15px 0;
-            padding: 10px;
-            border: 2px solid #00fff0;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.2);
-            display: flex;
-            flex-direction: column;
+            margin-bottom: 10px;
+            padding-right: 10px;
         }
 
-        /* Individual Message Styles */
         .message {
             padding: 10px 15px;
             border-radius: 20px;
-            display: inline-block;
+            margin: 5px 0;
             max-width: 70%;
-            margin-bottom: 10px;
-            transition: background 0.3s, transform 0.2s; 
+            animation: slideIn 0.5s forwards;
         }
 
         .message.user {
             background-color: #00ccff;
             color: #000;
             align-self: flex-end;
+            margin-left: auto;
         }
 
         .message.bot {
@@ -162,43 +131,39 @@
         .user-input {
             display: flex;
             align-items: center;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 0;
         }
 
+        /* Styles for Input and Buttons */
         .user-input input {
             flex: 1;
             padding: 12px;
             font-size: 1em;
             border: 2px solid #00fff0;
-            border-radius: 5px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
             margin-right: 5px;
-            background: rgba(0, 0, 0, 0.7); 
-            color: #fff;
-            transition: border 0.3s ease;
+            transition: border 0.3s;
         }
 
         .user-input input:focus {
             outline: none;
-            border-color: #00ccff; 
+            border: 2px solid #00ccff;
         }
 
         .user-input button {
-            background: linear-gradient(135deg, #00fff0, #00ccff);
             border: none;
-            color: #0f3460;
             font-size: 1em;
             padding: 10px 15px;
-            border-radius: 5px;
+            border-radius: 30px;
             cursor: pointer;
-            transition: background 0.3s ease;
+            transition: background 0.3s, transform 0.2s;
             margin-left: 5px;
-            min-width: 40px;
+            color: #0A0A0A; /* Default text color */
         }
 
         .user-input button:hover {
-            background: linear-gradient(135deg, #00ccff, #00fff0);
             transform: scale(1.05);
         }
 
@@ -207,15 +172,15 @@
             display: none;
             position: fixed;
             z-index: 1000;
-            left: 50%;
             top: 50%;
+            left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(40, 40, 40, 0.9);
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
+            background-color: rgba(40, 40, 40, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
             width: 90%;
             max-width: 400px;
+            overflow: hidden;
         }
 
         .modal-content {
@@ -227,6 +192,7 @@
             margin-top: 10px;
             display: block;
             font-weight: bold;
+            color: #00fff0; /* Label color */
         }
 
         .modal-content input[type="text"],
@@ -236,14 +202,14 @@
             margin-top: 5px;
             border: 1px solid #00fff0;
             border-radius: 5px;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
         }
 
         .modal-content button {
-            background: linear-gradient(135deg, #00fff0, #00ccff);
+            background: #00fff0;
             border: none;
-            color: #0f3460;
+            color: #0A0A0A;
             font-size: 1em;
             padding: 10px;
             border-radius: 5px;
@@ -254,32 +220,46 @@
         }
 
         .modal-content button:hover {
-            background: linear-gradient(135deg, #00ccff, #00fff0);
+            background: #00ccff;
+        }
+
+        /* Emoji Picker Styles */
+        .emoji-picker {
+            display: none;
+            position: absolute;
+            bottom: 50px; /* Adjust position */
+            left: 0;
+            right: 0;
+            background-color: rgba(30, 30, 30, 0.95);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
+            z-index: 10;
+            flex-wrap: wrap;
+        }
+
+        .emoji-picker button {
+            background: transparent;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            margin: 5px;
+            transition: transform 0.2s;
+        }
+
+        .emoji-picker button:hover {
+            transform: scale(1.2);
         }
 
         /* Responsive Styles */
         @media (max-width: 768px) {
-            .chatbot-container {
-                flex-direction: column; 
-                height: auto; 
-            }
-
-            .chat-history {
-                width: 100%; 
-                padding: 10px; 
-                overflow-y: auto; 
-            }
-
-            .chat-window {
-                flex: 1; 
+            body {
+                height: auto;
+                overflow-y: auto;
             }
 
             .header {
-                font-size: 1.5em; 
-            }
-
-            .messages {
-                padding: 5px; 
+                font-size: 1.5em;
             }
 
             .user-input input {
@@ -288,28 +268,26 @@
             }
 
             .user-input button {
-                padding: 8px;
-                font-size: 0.9em;
-            }
-
-            .chat-history li {
+                padding: 10px;
                 font-size: 0.9em;
             }
         }
 
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00fff0;
+            border-radius: 10px;
+        }
     </style>
 </head>
 
 <body>
-    <div class="slideshow" id="slideshow">
-        <img src="https://wallpapercave.com/wp/wp9388551.jpg" style="display: block;" />
-        <img src="https://cdn.wallpapersafari.com/64/65/QhkeST.jpg" />
-        <img src="https://wallpaperaccess.com/full/8583147.jpg" />
-        <img src="https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg" />
-    </div>
-
-    <div class="chatbot-container">
-        <div class="chat-history" id="chatHistory">
+    <div class="container" id="chatContainer">
+        <div class="chat-history">
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
             <button onclick="exportChat();">🎤 Export Chat</button>
@@ -317,7 +295,7 @@
             <button onclick="resetChat();">🔄 Add New Chat</button>
         </div>
         <div class="chat-window">
-            <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
+            <div class="header" id="chatbotName">Rishab - Your AI Companion</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
             <div class="user-input">
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
@@ -326,24 +304,20 @@
                 <button onclick="toggleEmojiPicker()">😀</button>
                 <button onclick="startVoiceInput()">🎤</button>
             </div>
+            <div class="emoji-picker" id="emojiPicker">
+                <button onclick="addEmoji('😀')">😀</button>
+                <button onclick="addEmoji('😁')">😁</button>
+                <button onclick="addEmoji('😂')">😂</button>
+                <button onclick="addEmoji('😃')">😃</button>
+                <button onclick="addEmoji('😄')">😄</button>
+                <button onclick="addEmoji('😊')">😊</button>
+                <button onclick="addEmoji('😍')">😍</button>
+                <button onclick="addEmoji('😎')">😎</button>
+                <button onclick="addEmoji('😜')">😜</button>
+                <button onclick="addEmoji('😢')">😢</button>
+                <button onclick="addEmoji('😡')">😡</button>
+            </div>
         </div>
-    </div>
-
-    <!-- Emoji Picker -->
-    <div class="emoji-picker" id="emojiPicker" style="display: none;">
-        <button onclick="addEmoji('😀')">😀</button>
-        <button onclick="addEmoji('😁')">😁</button>
-        <button onclick="addEmoji('😂')">😂</button>
-        <button onclick="addEmoji('😃')">😃</button>
-        <button onclick="addEmoji('😄')">😄</button>
-        <button onclick="addEmoji('😅')">😅</button>
-        <button onclick="addEmoji('😇')">😇</button>
-        <button onclick="addEmoji('😎')">😎</button>
-        <button onclick="addEmoji('😍')">😍</button>
-        <button onclick="addEmoji('😘')">😘</button>
-        <button onclick="addEmoji('😜')">😜</button>
-        <button onclick="addEmoji('🤔')">🤔</button>
-        <button onclick="addEmoji('😡')">😡</button>
     </div>
 
     <!-- Settings Modal -->
@@ -353,7 +327,7 @@
             <h2>Settings</h2>
 
             <label for="botName">Chatbot Name:</label>
-            <input type="text" id="botNameInput" value="Mikasa" />
+            <input type="text" id="botNameInput" value="Rishab" />
 
             <label for="language">Language:</label>
             <select id="language" onchange="changeLanguage()">
@@ -403,15 +377,10 @@
 
     <script src="https://js.puter.com/v2/"></script>
     <script>
-        let chatbotName = "Mikasa";
+        let chatbotName = "Rishab";
         let voiceEnabled = true; // Default voice enabled
         let messageCount = 0; // Tracks number of messages
         const chatMessages = []; // Store chat messages for export and summary
-        const slideshowImages = [
-            "https://wallpaperaccess.com/full/47587.jpg",
-            "https://wallpaperaccess.com/full/5827738.jpg",
-            "https://wallpaperaccess.com/full/5787626.jpg"
-        ];
         let currentImageIndex = 0;
         const musicPlayer = document.getElementById('musicPlayer');
 
@@ -493,7 +462,7 @@
                 chatbox.scrollTop = chatbox.scrollHeight;
 
                 const typingIndicator = document.createElement("div");
-                typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
+                typingIndicator.innerHTML = "<em>🤖 Rishab is typing...</em>";
                 chatbox.appendChild(typingIndicator);
 
                 try {
@@ -581,87 +550,6 @@
             const selectedTheme = document.getElementById("theme").value;
             document.body.setAttribute("class", selectedTheme);
             localStorage.setItem('theme', selectedTheme);
-            
-            const themeColors = {
-                default: {
-                    headerColor: "#00fff0",
-                    buttonTextColor: "#0f3460",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-1': {
-                    headerColor: "#ff5722",
-                    buttonTextColor: "#ffffff",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-2': {
-                    headerColor: "#4caf50",
-                    buttonTextColor: "#000000",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-3': {
-                    headerColor: "#2196f3",
-                    buttonTextColor: "#ffffff",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-4': {
-                    headerColor: "#ffeb3b",
-                    buttonTextColor: "#000000",
-                    messageUserColor: "#000",
-                    messageBotColor: "#000"
-                },
-                'theme-color-5': {
-                    headerColor: "#673ab7",
-                    buttonTextColor: "#ffffff",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-6': {
-                    headerColor: "#ff5722",
-                    buttonTextColor: "#000000",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-7': {
-                    headerColor: "#00bcd4",
-                    buttonTextColor: "#000000",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-8': {
-                    headerColor: "#3f51b5",
-                    buttonTextColor: "#ffffff",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-9': {
-                    headerColor: "#e91e63",
-                    buttonTextColor: "#ffffff",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                },
-                'theme-color-10': {
-                    headerColor: "#795548",
-                    buttonTextColor: "#ffffff",
-                    messageUserColor: "#000",
-                    messageBotColor: "#fff"
-                }
-            };
-
-            const colors = themeColors[selectedTheme];
-            document.querySelector(".header").style.color = colors.headerColor;
-            document.querySelectorAll('.user-input button').forEach(btn => {
-                btn.style.color = colors.buttonTextColor;
-            });
-            document.querySelectorAll('.message.user').forEach(msg => {
-                msg.style.color = colors.messageUserColor;
-            });
-            document.querySelectorAll('.message.bot').forEach(msg => {
-                msg.style.color = colors.messageBotColor;
-            });
         }
 
         function resetChat() {
