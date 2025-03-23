@@ -281,127 +281,6 @@
             }
         }
 
-        /* Theme Styles */
-        /* Theme 1 */
-        body.theme-color-1 {
-            color: #ff5722; /* Dark Orange */
-        }
-
-        body.theme-color-1 .header {
-            color: #ff5722;
-        }
-
-        body.theme-color-1 .sub-header {
-            color: #ff5722; /* Dark Orange */
-        }
-
-        body.theme-color-1 .user-input button,
-        body.theme-color-1 .modal-content button,
-        body.theme-color-1 .action-button {
-            background: #ff5722;
-            color: #ffffff;
-        }
-
-        /* Theme 2 */
-        body.theme-color-2 {
-            color: #4caf50; /* Green */
-        }
-
-        body.theme-color-2 .header {
-            color: #4caf50;
-        }
-
-        body.theme-color-2 .sub-header {
-            color: #4caf50; /* Green */
-        }
-
-        body.theme-color-2 .user-input button,
-        body.theme-color-2 .modal-content button,
-        body.theme-color-2 .action-button {
-            background: #4caf50;
-            color: #ffffff;
-        }
-
-        /* Theme 3 */
-        body.theme-color-3 {
-            color: #2196f3; /* Blue */
-        }
-
-        body.theme-color-3 .header {
-            color: #2196f3;
-        }
-
-        body.theme-color-3 .sub-header {
-            color: #2196f3; /* Blue */
-        }
-
-        body.theme-color-3 .user-input button,
-        body.theme-color-3 .modal-content button,
-        body.theme-color-3 .action-button {
-            background: #2196f3;
-            color: #ffffff;
-        }
-
-        /* Theme 4 */
-        body.theme-color-4 {
-            color: #ffeb3b; /* Yellow */
-        }
-
-        body.theme-color-4 .header {
-            color: #ffeb3b;
-        }
-
-        body.theme-color-4 .sub-header {
-            color: #ffeb3b; /* Yellow */
-        }
-
-        body.theme-color-4 .user-input button,
-        body.theme-color-4 .modal-content button,
-        body.theme-color-4 .action-button {
-            background: #ffeb3b;
-            color: #000000;
-        }
-
-        /* Theme 5 */
-        body.theme-color-5 {
-            color: #673ab7; /* Purple */
-        }
-
-        body.theme-color-5 .header {
-            color: #673ab7;
-        }
-
-        body.theme-color-5 .sub-header {
-            color: #673ab7; /* Purple */
-        }
-
-        body.theme-color-5 .user-input button,
-        body.theme-color-5 .modal-content button,
-        body.theme-color-5 .action-button {
-            background: #673ab7;
-            color: #ffffff;
-        }
-
-        /* Theme 6 */
-        body.theme-color-6 {
-            color: #ff6a00; /* Orange */
-        }
-
-        body.theme-color-6 .header {
-            color: #ff6a00;
-        }
-
-        body.theme-color-6 .sub-header {
-            color: #ff6a00; /* Orange */
-        }
-
-        body.theme-color-6 .user-input button,
-        body.theme-color-6 .modal-content button,
-        body.theme-color-6 .action-button {
-            background: #ff6a00;
-            color: #ffffff;
-        }
-
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
@@ -486,16 +365,6 @@
             <input type="text" id="bgImageInput" placeholder="Enter a background image URL" />
             <button onclick="changeBackgroundImage()">Apply URL</button>
 
-            <label for="musicUpload">Upload Music:</label>
-            <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
-
-            <label for="musicUrl">Music URL:</label>
-            <input type="text" id="musicUrlInput" placeholder="Enter a music URL" />
-            <button onclick="loadMusicFromUrl()">Play</button>
-
-            <label>Volume:</label>
-            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)" />
-
             <label for="voiceToggle">Enable Voice:</label>
             <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
 
@@ -510,18 +379,15 @@
         </div>
     </div>
 
-    <audio id="musicPlayer" src="" preload="auto"></audio>
-
     <script src="https://js.puter.com/v2/"></script>
     <script>
         let chatbotName = "Rishab";
-        let voiceEnabled = true; // Default voice enabled
-        let messageCount = 0; // Tracks number of messages
-        const chatMessages = []; // Store chat messages for export and summary
-        const chatLog = []; // Store both questions and answers for export
-        const musicPlayer = document.getElementById('musicPlayer');
+        let voiceEnabled = true;
+        let messageCount = 0;
+        const chatMessages = [];
+        const chatLog = [];
 
-        const synth = window.speechSynthesis; // Speech Synthesis API
+        const synth = window.speechSynthesis;
 
         window.onload = function () {
             loadPreferences();
@@ -566,44 +432,9 @@
             }
         }
 
-        function loadMusic(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const url = URL.createObjectURL(file);
-                musicPlayer.src = url;
-            }
-        }
-
-        function loadMusicFromUrl() {
-            const url = document.getElementById('musicUrlInput').value;
-            if (url) {
-                // Check if the URL is a YouTube or Spotify link
-                if (url.includes("youtube.com") || url.includes("youtu.be") || url.includes("spotify.com")) {
-                    // Here you will need an external library or method to convert the link to a playable audio stream
-                    // For this example, we can simply show an alert
-                    alert("Playing audio from " + url + " is not currently supported in this example. You would need to implement the relevant audio extraction.");
-                } else {
-                    musicPlayer.src = url;
-                }
-            }
-        }
-
-        function playMusic() {
-            if (musicPlayer.paused) {
-                musicPlayer.play();
-            } else {
-                musicPlayer.pause();
-            }
-        }
-
-        function setVolume(value) {
-            musicPlayer.volume = value;
-        }
-
         function speakResponse(response) {
-            // Stop any ongoing speech
             if (synth.speaking) {
-                synth.cancel(); // Stop previous response
+                synth.cancel();
             }
 
             if (voiceEnabled && response) {
@@ -625,7 +456,7 @@
                 chatbox.appendChild(userMessage);
                 chatList.appendChild(document.createElement("li")).textContent = userInput.value.trim();
                 chatMessages.push(userInput.value.trim());
-                chatLog.push({ question: userInput.value.trim(), answer: "" }); // Log question
+                chatLog.push({ question: userInput.value.trim(), answer: "" });
                 chatbox.scrollTop = chatbox.scrollHeight;
 
                 const typingIndicator = document.createElement("div");
@@ -651,9 +482,7 @@
                     botMessage.className = "message bot";
                     botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
                     chatbox.appendChild(botMessage);
-
-                    // Update the chat log with the answer
-                    chatLog[chatLog.length - 1].answer = response;  // Store answer in chat log
+                    chatLog[chatLog.length - 1].answer = response;
                     speakResponse(response);
                     messageCount++;
                 } catch (error) {
@@ -693,7 +522,6 @@
         }
 
         function exportChat() {
-            // Create a structured export
             const chatText = chatLog.map(log => `🧑: ${log.question}\n🤖 ${chatbotName}: ${log.answer}`).join('\n\n');
             const blob = new Blob([chatText], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
@@ -730,7 +558,7 @@
             chatList.innerHTML = "";
             messageCount = 0;
             chatMessages.length = 0;
-            chatLog.length = 0; // Clear the chat log as well
+            chatLog.length = 0;
         }
 
         function openSettings() {
