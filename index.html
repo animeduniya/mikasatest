@@ -3,19 +3,23 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Custom Chatbot Creator</title>
+    <title>Mikasa Chatbot</title>
     <style>
+        /* General Styles */
         body {
-            background-color: #121212;
-            color: #ffffff;
+            margin: 0;
             font-family: 'Arial', sans-serif;
+            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            overflow: hidden;
             position: relative;
+            transition: background 0.5s ease;
         }
 
+        /* Slider Background Styles */
         .background {
             position: absolute;
             top: 0;
@@ -25,28 +29,50 @@
             z-index: -1;
             background: url('https://wallpaperaccess.com/full/47587.jpg') no-repeat center center fixed;
             background-size: cover;
+            animation: backgroundEffect 20s infinite linear; /* Background slideshow effect */
+        }
+
+        @keyframes backgroundEffect {
+            0% { background-image: url('https://wallpapercave.com/wp/wp9388551.jpg'); }
+            33% { background-image: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg'); }
+            66% { background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg'); }
+            100% { background-image: url('https://wallpaperaccess.com/full/8583147.jpg'); }
         }
 
         .chatbot-container {
             width: 90%;
             max-width: 600px;
-            background: rgba(30, 30, 30, 0.9);
-            border-radius: 15px;
+            background: rgba(0, 0, 0, 0.85);
+            border-radius: 20px;
             padding: 20px;
-            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
+            text-align: center;
             display: flex;
             flex-direction: column;
             position: relative;
+            z-index: 2;
+            animation: fadeIn 1.5s ease-in-out;
         }
 
         .header {
             font-size: 2.5em;
+            font-weight: bold;
             color: #00fff0;
+            text-shadow: 0 0 15px #00fff0, 0 0 30px #00fff0;
+            animation: pulse 2s infinite;
+            margin: 0;
+        }
+
+        .sub-header {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+            color: #ffffff;
         }
 
         .messages {
             flex: 1;
             height: 300px;
+            max-height: 300px; /* Fixed height */
             overflow-y: auto;
             margin: 20px 0;
             padding: 10px;
@@ -54,23 +80,34 @@
             border-radius: 10px;
             display: flex;
             flex-direction: column;
+            gap: 10px; /* Space between messages */
         }
 
         .message {
+            font-size: 1.1em;
+            line-height: 1.5;
+            position: relative;
             padding: 10px 15px;
             border-radius: 20px;
-            margin: 5px 0;
+            display: inline-block;
+            max-width: 70%;
         }
 
         .message.user {
             background-color: #00ccff;
-            color: #000;
             align-self: flex-end;
+            color: #000;
         }
 
         .message.bot {
             background-color: #3f51b5;
             color: #fff;
+        }
+
+        .typing-indicator {
+            font-size: 0.9em;
+            color: #ffffffa0;
+            animation: typingBlink 1s infinite alternate;
         }
 
         .user-input {
@@ -82,8 +119,10 @@
         .user-input input {
             flex: 1;
             padding: 15px;
+            font-size: 1em;
             border: 2px solid #00fff0;
             border-radius: 10px;
+            margin-right: 10px;
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
         }
@@ -92,149 +131,195 @@
             background: linear-gradient(135deg, #00fff0, #00ccff);
             border: none;
             color: #0f3460;
+            font-size: 1.2em;
             padding: 10px 20px;
             border-radius: 10px;
-            margin-left: 5px;
             cursor: pointer;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            margin-left: 5px;
         }
 
+        .settings {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        .message-count {
+            font-size: 1em;
+            margin-top: 10px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes typingBlink {
+            0% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
-            z-index: 10;
+            z-index: 100000;
             left: 0;
             top: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            justify-content: center;
-            align-items: center;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.8);
         }
 
         .modal-content {
-            background-color: #fff;
+            background-color: #2c2c2c;
+            margin: 15% auto;
             padding: 20px;
+            border: 1px solid #888;
+            width: 60%;
             border-radius: 10px;
-            color: #000;
         }
 
-        #emojiPicker {
-            display: flex;
-            gap: 10px;
-            margin-top: 5px;
+        .modal-content h2 {
+            color: #00fff0;
         }
-        
-        .typing-indicator {
-            font-size: 0.9em;
-            color: #ffffffa0;
+
+        .modal-content label,
+        .modal-content select,
+        .modal-content input {
+            width: 100%;
+            margin: 10px 0;
+            color: #fff;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #00fff0;
+            background: rgba(255, 255, 255, 0.1);
         }
     </style>
 </head>
 <body>
-    <div class="background"></div>
-    <div class="chatbot-container" aria-labelledby="chatbotName">
+    <div class="background" id="background"></div>
+    <div class="chatbot-container">
+        <div class="settings" onclick="openSettings()">⚙️</div>
         <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
+        <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
+        
         <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
         <div id="typingIndicator" class="typing-indicator" style="display: none;">🤖 Mikasa is typing...</div>
-        <div class="user-input">
-            <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
-            <button onclick="sendMessage()">Send</button>
-            <button onclick="toggleSettings()">⚙️</button>
-            <button onclick="openChatbotCreationModal()">Create Chatbot</button>
-            <button onclick="toggleEmojiPicker()">😃</button>
-        </div>
+        <div class="message-count" id="messageCount">Messages: 0</div>
 
-        <!-- Emoji Picker -->
-        <div id="emojiPicker" style="display: none;">
-            <span onclick="addEmoji('😀')">😀</span>
-            <span onclick="addEmoji('😁')">😁</span>
-            <span onclick="addEmoji('😂')">😂</span>
-            <span onclick="addEmoji('🥰')">🥰</span>
-            <span onclick="addEmoji('😎')">😎</span>
-            <span onclick="addEmoji('🤖')">🤖</span>
+        <div class="user-input">
+            <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
+            <button onclick="sendMessage()">Send</button>
+            <button onclick="openCustomBot()">Create Bot</button>
         </div>
     </div>
 
-    <!-- Settings Modal -->
+    <!-- Modal for Settings -->
     <div id="settingsModal" class="modal">
         <div class="modal-content">
+            <span onclick="closeSettings()" style="float:right;cursor:pointer;color:#00fff0;">&times;</span>
             <h2>Settings</h2>
-            <label for="chatbotInput">Chatbot Name:</label>
-            <input type="text" id="chatbotInput" placeholder="Enter chatbot name" />
-            <button onclick="saveChatbotSettings()">Save Name</button>
-            <button onclick="closeSettings()">Close</button>
+            <label for="language">Language:</label>
+            <select id="language" onchange="changeLanguage()">
+                <option value="en">English</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="it">Italian</option>
+            </select>
+
+            <label for="theme">Text Color Theme:</label>
+            <select id="theme" onchange="changeTheme()">
+                <option value="default">Default</option>
+                <option value="theme-color-1">Deep Orange</option>
+                <option value="theme-color-2">Green</option>
+                <option value="theme-color-3">Blue</option>
+                <option value="theme-color-4">Yellow</option>
+                <option value="theme-color-5">Purple</option>
+                <option value="theme-color-6">Orange</option>
+                <option value="theme-color-7">Cyan</option>
+                <option value="theme-color-8">Indigo</option>
+                <option value="theme-color-9">Pink</option>
+                <option value="theme-color-10">Brown</option>
+            </select>
+
+            <label for="backgroundSource">Background Source:</label>
+            <input type="text" id="backgroundSource" placeholder="Background Image URL"/>
+            <button onclick="changeBackground()">Change Background</button>
+
+            <label for="voiceToggle">Enable Voice:</label>
+            <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
+
+            <label for="feedback">Feedback:</label>
+            <select id="feedback" onchange="sendFeedback()">
+                <option value="">Select Feedback</option>
+                <option value="helpful">Helpful</option>
+                <option value="not_helpful">Not Helpful</option>
+            </select>
+
+            <button onclick="resetChat()">Reset Chat</button>
         </div>
     </div>
 
-    <!-- Chatbot Creation Modal -->
-    <div id="chatbotCreationModal" class="modal">
+    <!-- Modal for Custom Bot -->
+    <div id="customBotModal" class="modal">
         <div class="modal-content">
-            <h2>Create Your Own Chatbot</h2>
-            <label for="newChatbotName">Chatbot Name:</label>
-            <input type="text" id="newChatbotName" placeholder="Name your chatbot" />
-            <button onclick="createChatbot()">Create</button>
-            <button onclick="closeChatbotCreationModal()">Close</button>
+            <span onclick="closeCustomBot()" style="float:right;cursor:pointer;color:#00fff0;">&times;</span>
+            <h2>Create Your Custom Bot</h2>
+            <p>Customize your bot's name and personality!</p>
+            <label for="botName">Bot Name:</label>
+            <input type="text" id="botName" placeholder="Enter Bot Name">
+
+            <label for="botPersonality">Personality:</label>
+            <textarea id="botPersonality" placeholder="Describe your bot's personality..."></textarea>
+
+            <button id="createBotButton" onclick="createCustomBot()">Create Bot</button>
         </div>
     </div>
 
+    <script src="https://js.puter.com/v2/"></script>
     <script>
-        let currentChatbot = { name: "Mikasa" };
-        let messageCount = 0;
+        let chatbotName = "Mikasa";
+        let voiceEnabled = true; // Default voice enabled
+        let messageCount = 0; // Tracks number of messages
 
-        // Load preferences on page load
-        window.onload = function() {
+        // Load user preferences from local storage
+        window.onload = function () {
             loadPreferences();
         }
 
         function loadPreferences() {
-            const savedChatbotName = localStorage.getItem('chatbotName');
-            if (savedChatbotName) {
-                currentChatbot.name = savedChatbotName;
-                document.getElementById("chatbotName").innerText = currentChatbot.name;
+            const savedLang = localStorage.getItem('language');
+            const savedTheme = localStorage.getItem('theme');
+            const savedBackground = localStorage.getItem('background');
+
+            if (savedLang) {
+                document.getElementById("language").value = savedLang;
+            }
+
+            if (savedTheme) {
+                document.body.className = savedTheme;
+                document.getElementById("theme").value = savedTheme;
+            }
+
+            if (savedBackground) {
+                document.querySelector('.background').style.backgroundImage = `url(${savedBackground})`;
+                document.getElementById("backgroundSource").value = savedBackground;
             }
         }
 
-        // Toggle Settings Modal
-        function toggleSettings() {
-            const modal = document.getElementById("settingsModal");
-            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
-        }
-
-        // Open Chatbot Creation Modal
-        function openChatbotCreationModal() {
-            const modal = document.getElementById("chatbotCreationModal");
-            modal.style.display = 'flex';
-        }
-
-        // Close modals
-        function closeSettings() {
-            document.getElementById("settingsModal").style.display = 'none';
-        }
-
-        function closeChatbotCreationModal() {
-            document.getElementById("chatbotCreationModal").style.display = 'none';
-        }
-
-        function saveChatbotSettings() {
-            const chatbotInput = document.getElementById("chatbotInput").value;
-            if (chatbotInput) {
-                currentChatbot.name = chatbotInput;
-                document.getElementById("chatbotName").innerText = currentChatbot.name;
-                localStorage.setItem('chatbotName', currentChatbot.name);
-                alert("Chatbot name saved!");
-            }
-        }
-
-        function createChatbot() {
-            const newChatbotName = document.getElementById("newChatbotName").value;
-            if (newChatbotName) {
-                localStorage.setItem('customChatbotName', newChatbotName);
-                currentChatbot.name = newChatbotName;
-                document.getElementById("chatbotName").innerText = currentChatbot.name;
-                alert("New chatbot created!");
-                closeChatbotCreationModal();
-            } else {
-                alert("Please enter a name for your chatbot.");
+        function speakResponse(response) {
+            if (voiceEnabled) {
+                const utterance = new SpeechSynthesisUtterance(response);
+                utterance.lang = "en-US";
+                window.speechSynthesis.speak(utterance);
             }
         }
 
@@ -252,53 +337,116 @@
 
                 typingIndicator.style.display = "block";
 
-                // Simulated AI processing for response (this part should be replaced with API integration)
-                let response = simulateAIResponse(userInput.value.trim());
-                
-                typingIndicator.style.display = "none";
+                try {
+                    let response;
+                    const query = userInput.value.trim();
 
-                const botMessage = document.createElement("div");
-                botMessage.className = "message bot";
-                botMessage.textContent = `🤖 ${currentChatbot.name}: ${response}`;
-                chatbox.appendChild(botMessage);
+                    // Basic question handling for responses
+                    if (/what's your name|who are you/i.test(userInput.value)) {
+                        response = `My name is ${chatbotName}.`;
+                    } else if (/who made you|your creator/i.test(userInput.value)) {
+                        response = "I was made by Rishab.";
+                    } else {
+                        response = await puter.ai.chat(query);
+                    }
 
-                messageCount++;
+                    typingIndicator.style.display = "none";
+
+                    const botMessage = document.createElement("div");
+                    botMessage.className = "message bot";
+                    botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm evolving to understand you better!"}`;
+                    chatbox.appendChild(botMessage);
+
+                    speakResponse(response);
+                    messageCount++;
+                    document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
+                } catch (error) {
+                    typingIndicator.style.display = "none";
+                    const errorMessage = document.createElement("div");
+                    errorMessage.className = "message bot";
+                    errorMessage.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
+                    chatbox.appendChild(errorMessage);
+                }
+
                 chatbox.scrollTop = chatbox.scrollHeight;
-
-                // Text to Speech
-                speak(response);
-
-                document.getElementById("userInput").value = ""; // Clear input
+                userInput.value = "";
             }
         }
 
-        // Simulated AI response logic
-        function simulateAIResponse(message) {
-            if (/what's your name|who are you/i.test(message)) {
-                return `My name is ${currentChatbot.name}.`;
-            } else if (/who made you|your creator/i.test(message)) {
-                return "I was made by Rishab, Ansh, and Abhi.";
+        function changeLanguage() {
+            const selectedLanguage = document.getElementById("language").value;
+            localStorage.setItem('language', selectedLanguage);
+            alert("Language changed to: " + selectedLanguage);
+        }
+
+        function changeTheme() {
+            const selectedTheme = document.getElementById("theme").value;
+            document.body.className = selectedTheme;
+            localStorage.setItem('theme', selectedTheme);
+        }
+
+        function changeBackground() {
+            const inputURL = document.getElementById("backgroundSource").value;
+            if (inputURL) {
+                document.querySelector('.background').style.backgroundImage = `url(${inputURL})`;
+                localStorage.setItem('background', inputURL);
             } else {
-                return "I don't know the answer to that yet.";
+                alert("Please enter a valid URL.");
             }
         }
 
-        // Text-to-Speech Implementation
-        function speak(text) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            speechSynthesis.speak(utterance);
+        function resetChat() {
+            const chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML = "";
+            messageCount = 0;
+            document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
         }
 
-        // Emoji Picker
-        function toggleEmojiPicker() {
-            const emojiPicker = document.getElementById("emojiPicker");
-            emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'flex' : 'none';
+        function toggleSettings() {
+            const settingsMenu = document.getElementById("settingsMenu");
+            settingsMenu.style.display = settingsMenu.style.display === 'block' ? 'none' : 'block';
         }
 
-        function addEmoji(emoji) {
-            const userInput = document.getElementById('userInput');
-            userInput.value += emoji;
-            toggleEmojiPicker(); // Hide the emoji picker after selecting an emoji
+        function toggleVoice() {
+            voiceEnabled = document.getElementById("voiceToggle").checked;
+            alert("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
+        }
+
+        function sendFeedback() {
+            const feedback = document.getElementById("feedback").value;
+            if (feedback) {
+                alert("Thank you for your feedback: " + feedback);
+                document.getElementById("feedback").value = ""; // Reset the feedback dropdown
+            }
+        }
+
+        function openSettings() {
+            document.getElementById('settingsModal').style.display = 'block';
+        }
+
+        function closeSettings() {
+            document.getElementById('settingsModal').style.display = 'none';
+        }
+
+        function openCustomBot() {
+            document.getElementById('customBotModal').style.display = 'block';
+        }
+
+        function closeCustomBot() {
+            document.getElementById('customBotModal').style.display = 'none';
+        }
+
+        function createCustomBot() {
+            const botNameInput = document.getElementById("botName");
+            const botPersonalityInput = document.getElementById("botPersonality");
+
+            if (botNameInput.value.trim() && botPersonalityInput.value.trim()) {
+                chatbotName = botNameInput.value.trim();
+                alert(`Your bot "${chatbotName}" has been created with the personality: "${botPersonalityInput.value.trim()}"`);
+                closeCustomBot();
+            } else {
+                alert("Please fill in both fields to create your bot.");
+            }
         }
     </script>
 </body>
