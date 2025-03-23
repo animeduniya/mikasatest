@@ -61,11 +61,25 @@
             overflow-y: auto;
             display: flex;
             flex-direction: column;
+            color: cyan; /* Set text color in chat history to cyan */
         }
 
         .chat-history h3 {
             color: cyan; /* Set chat history header color to cyan */
             margin: 0 0 10px 0; /* Margin below the header */
+        }
+
+        .chat-history ul {
+            list-style-type: none; /* Remove bullet points for chat history */
+            padding: 0;
+        }
+
+        .chat-history li {
+            margin-bottom: 5px; /* Space between history items */
+            padding: 5px;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.5); /* Background for history items */
+            color: cyan; /* Ensure history texts are also cyan */
         }
 
         .header {
@@ -229,6 +243,10 @@
                 padding: 8px; /* Adjust button size */
                 font-size: 0.9em; /* Button size */
             }
+
+            .chat-history li {
+                font-size: 0.9em; /* Smaller font for chat history items on mobile */
+            }
         }
 
         /* Theme Colors */
@@ -268,8 +286,9 @@
         <div class="chat-history" id="chatHistory">
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
-            <button onclick="exportChat()">Export Chat</button>
-            <button onclick="summarizeChat()">Summarize Chat</button>
+            <button onclick="exportChat();">Export Chat</button>
+            <button onclick="summarizeChat();">Summarize Chat</button>
+            <button onclick="resetChat();">Add New Chat</button> <!-- Add New Chat Button -->
         </div>
         <div class="chat-window">
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
