@@ -137,7 +137,7 @@
             cursor: pointer;
             transition: background 0.3s ease;
             margin: 5px;
-            width: calc(100% - 10px);
+            width: calc(100% - 10px); 
         }
 
         .history-button:hover {
@@ -238,10 +238,10 @@
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
             <div class="user-input">
-                <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
+                <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
                 <button onclick="sendMessage()">Send</button>
-                <button onclick="openSettings()">⚙️</button> <!-- Settings button placed here -->
-                <button onclick="toggleEmojiPicker()">😀</button> <!-- Emoji button placed last -->
+                <button onclick="openSettings()">⚙️</button> <!-- Settings button first -->
+                <button onclick="toggleEmojiPicker()">😀</button> <!-- Emoji button last -->
                 <button onclick="startVoiceInput()">🎤</button>
             </div>
         </div>
@@ -327,10 +327,9 @@
 
     <script src="https://js.puter.com/v2/"></script>
     <script>
-        // Initialize variables
         let chatbotName = "Mikasa";
-        let voiceEnabled = true; 
-        const chatMessages = []; 
+        let voiceEnabled = true;
+        const chatMessages = [];
 
         window.onload = function () {
             loadPreferences();
@@ -364,10 +363,10 @@
             let currentImageIndex = 0;
 
             setInterval(() => {
-                images[currentImageIndex].style.display = 'none'; // Hide current image
-                currentImageIndex = (currentImageIndex + 1) % images.length; // Update index
-                images[currentImageIndex].style.display = 'block'; // Show next image
-            }, 5000); // Change every 5 seconds
+                images[currentImageIndex].style.display = 'none';
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                images[currentImageIndex].style.display = 'block';
+            }, 5000);
         }
 
         function loadMusic(event) {
@@ -375,7 +374,7 @@
             if (file) {
                 const url = URL.createObjectURL(file);
                 const musicPlayer = document.getElementById('musicPlayer');
-                musicPlayer.src = url; 
+                musicPlayer.src = url;
             }
         }
 
@@ -418,9 +417,9 @@
 
                 try {
                     await delayResponse();
-                    // Using pute.js to generate response
-                    const response = await pute.chat(userInput.value.trim()); // Ensure this line works correctly
-                    chatbox.removeChild(typingIndicator);
+                    // Make sure to put your actual pute.js call here
+                    const response = await pute.chat(userInput.value.trim()); 
+                    chatbox.removeChild(typingIndicator); 
 
                     const botMessage = document.createElement("div");
                     botMessage.className = "message bot";
@@ -490,8 +489,8 @@
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.className = selectedTheme; // Apply the selected theme
-            localStorage.setItem('theme', selectedTheme); // Save to local storage
+            document.body.className = selectedTheme; 
+            localStorage.setItem('theme', selectedTheme); 
         }
 
         function resetChat() {
