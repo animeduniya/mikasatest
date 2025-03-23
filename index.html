@@ -38,73 +38,90 @@
 
         /* Chatbot Container */
         .chatbot-container {
-            width: 95%; /* Use more space on mobile */
+            width: 95%;
             max-width: 800px;
-            height: 90vh; /* Flexible height for mobile */
+            height: 90vh;
             display: flex;
             border-radius: 20px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
             overflow: hidden;
             background: rgba(0, 0, 0, 0.85);
-            flex-direction: row; /* Align chat history to the left */
+            flex-direction: row;
         }
 
         /* Left Side Chat History */
         .chat-history {
-            width: 30%; /* Fixed width for chat history */
+            width: 30%;
             background: rgba(0, 0, 0, 0.7);
-            border-radius: 20px 0 0 20px; /* Rounded corners */
+            border-radius: 20px 0 0 20px;
             padding: 15px;
             box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            color: cyan; /* Chat history text color */
+            color: cyan;
         }
 
         .chat-history h3 {
-            color: cyan; /* Chat history header color */
-            margin-bottom: 10px; /* Margin below the header */
-            font-size: 1.5em; /* Responsive header font size */
+            color: cyan;
+            margin-bottom: 10px;
+            font-size: 1.5em;
         }
 
         .chat-history ul {
-            list-style-type: none; /* Remove bullet points for chat history */
+            list-style-type: none;
             padding: 0;
             margin: 0;
         }
 
         .chat-history li {
-            margin-bottom: 5px; /* Space between history items */
-            padding: 10px; /* Internal padding for better touch */
+            margin-bottom: 5px;
+            padding: 10px;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1); /* Background for history items */
-            color: cyan; /* Ensure history texts are also cyan */
-            font-size: 1em; /* Ensure text is readable */
+            background: rgba(255, 255, 255, 0.1);
+            color: cyan;
+            font-size: 1em;
+        }
+
+        .chat-history button {
+            padding: 10px;
+            border-radius: 5px;
+            background: linear-gradient(135deg, #00fff0, #00ccff);
+            border: none;
+            color: #0f3460;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin-top: 5px;
+        }
+
+        .chat-history button:hover {
+            background: linear-gradient(135deg, #00ccff, #00fff0);
+            transform: scale(1.05);
         }
 
         .chat-window {
-            flex: 1; /* Allow chat window to grow */
+            flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 15px; /* Adjust padding */
+            padding: 15px;
         }
 
         .header {
-            font-size: 1.8em; /* Adjust for mobile */
+            font-size: 1.8em;
             font-weight: bold;
-            color: #00fff0; /* Default color */
+            color: #00fff0;
             margin: 0;
-            text-align: center; /* Center header */
+            text-align: center;
         }
 
         .messages {
-            flex: 1; /* Take available space */
+            flex: 1;
             height: auto;
             overflow-y: auto;
-            margin: 15px 0; /* Margin around message area */
+            margin: 15px 0;
             padding: 10px;
-            border: 2px solid #00fff0; /* Default border color */
+            border: 2px solid #00fff0;
             border-radius: 10px;
             display: flex;
             flex-direction: column;
@@ -116,7 +133,7 @@
             border-radius: 20px;
             display: inline-block;
             max-width: 70%;
-            margin-bottom: 10px; /* Margin between messages */
+            margin-bottom: 10px;
         }
 
         .message.user {
@@ -133,18 +150,18 @@
         .user-input {
             display: flex;
             align-items: center;
-            margin-top: 10px; /* Margin above */
-            border-top: 1px solid rgba(255, 255, 255, 0.2); /* Separation line */
-            padding-top: 10px; /* Space above the input area */
+            margin-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            padding-top: 10px;
         }
 
         .user-input input {
             flex: 1;
             padding: 10px;
             font-size: 1em;
-            border: 2px solid #00fff0; /* Default border color */
+            border: 2px solid #00fff0;
             border-radius: 5px;
-            margin-right: 5px; /* Space between input and button */
+            margin-right: 5px;
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
         }
@@ -152,20 +169,20 @@
         .user-input button {
             background: linear-gradient(135deg, #00fff0, #00ccff);
             border: none;
-            color: #0f3460; /* Default button text color */
+            color: #0f3460;
             font-size: 1em;
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s ease;
-            margin-left: 5px; /* Space between buttons */
-            flex: 0; /* Prevents button from stretching */
-            min-width: 70px; /* Minimum button width for consistency */
+            margin-left: 5px;
+            flex: 0; 
+            min-width: 70px;
         }
 
         /* Modal Styles */
         .modal {
-            display: none; /* Hidden by default */
+            display: none;
             position: fixed;
             z-index: 1000;
             left: 50%;
@@ -195,7 +212,7 @@
             width: 100%;
             padding: 10px;
             margin-top: 5px;
-            border: 1px solid #00fff0; /* Default border color */
+            border: 1px solid #00fff0;
             border-radius: 5px;
             background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
@@ -204,14 +221,14 @@
         .modal-content button {
             background: linear-gradient(135deg, #00fff0, #00ccff);
             border: none;
-            color: #0f3460; /* Default button text color */
+            color: #0f3460;
             font-size: 1em;
             padding: 10px;
             border-radius: 5px;
             cursor: pointer;
             transition: background 0.3s ease;
             margin-top: 10px;
-            width: 100%; /* Adjust button width */
+            width: 100%;
         }
 
         .modal-content button:hover {
@@ -221,41 +238,41 @@
         /* Responsive Styles */
         @media (max-width: 768px) {
             .chatbot-container {
-                flex-direction: column; /* Stack vertically on small screens */
-                height: 95vh; /* Adjust height */
+                flex-direction: column;
+                height: 95vh;
             }
 
             .chat-history {
-                width: 100%; /* Full width for history on small screens */
-                height: auto; /* Allow it to resize */
-                padding: 10px; /* Adjust padding */
-                overflow-y: auto; /* Enable scrolling */
+                width: 100%; 
+                height: auto; 
+                padding: 10px; 
+                overflow-y: auto; 
             }
 
             .chat-window {
-                flex: 1; /* Take remaining space */
+                flex: 1; 
             }
 
             .header {
-                font-size: 1.5em; /* Smaller header font on mobile */
+                font-size: 1.5em; 
             }
 
             .messages {
-                padding: 5px; /* Less padding on messages */
+                padding: 5px; 
             }
 
             .user-input input {
-                padding: 10px; /* Maintain padding */
-                font-size: 0.9em; /* Smaller input size */
+                padding: 10px; 
+                font-size: 0.9em; 
             }
 
             .user-input button {
-                padding: 8px; /* Adjust button size */
-                font-size: 0.9em; /* Button size */
+                padding: 8px; 
+                font-size: 0.9em; 
             }
 
             .chat-history li {
-                font-size: 0.9em; /* Smaller font for chat history items on mobile */
+                font-size: 0.9em; 
             }
         }
 
@@ -296,19 +313,23 @@
         <div class="chat-history" id="chatHistory">
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
-            <button onclick="exportChat();">Export Chat</button>
-            <button onclick="summarizeChat();">Summarize Chat</button>
-            <button onclick="resetChat();">Add New Chat</button> <!-- Add New Chat Button -->
+            <!-- Enhanced buttons in chat history -->
+            <button onclick="exportChat();">🎤 Export Chat</button>
+            <button onclick="summarizeChat();">📝 Summarize Chat</button>
+            <button onclick="resetChat();">🔄 Add New Chat</button>
         </div>
         <div class="chat-window">
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
             <div class="user-input">
-                <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
+                <input type="text" id="userInput" placeholder="Type your message here..." 
+                    onkeydown="if(event.key === 'Enter') sendMessage();" 
+                    aria-label="Type your message"/>
                 <button onclick="sendMessage()">Send</button>
+                <!-- Moved emoji picker button next to settings -->
                 <button onclick="toggleEmojiPicker()">😀</button>
-                <button onclick="startVoiceInput()">🎤</button>
                 <button onclick="openSettings()">⚙️</button>
+                <button onclick="startVoiceInput()">🎤</button>
             </div>
         </div>
     </div>
@@ -410,7 +431,7 @@
             const savedBotName = localStorage.getItem('botName');
 
             if (savedLang) {
-                document.getElementById("language").value = savedLang; // Set the selected language from local storage
+                document.getElementById("language").value = savedLang;
             }
 
             if (savedTheme) {
@@ -424,7 +445,6 @@
             }
         }
 
-        // Slideshow Functionality
         function startSlideshow() {
             const images = document.querySelectorAll('.slideshow img');
             images[currentImageIndex].style.display = 'block';
@@ -473,9 +493,9 @@
                 userMessage.className = "message user";
                 userMessage.textContent = "🧑: " + userInput.value.trim();
                 chatbox.appendChild(userMessage);
-                chatList.appendChild(document.createElement("li")).textContent = userInput.value.trim(); // Add to chat history
-                chatMessages.push(userInput.value.trim()); // Store message for export and summary
-                chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
+                chatList.appendChild(document.createElement("li")).textContent = userInput.value.trim();
+                chatMessages.push(userInput.value.trim());
+                chatbox.scrollTop = chatbox.scrollHeight;
 
                 const typingIndicator = document.createElement("div");
                 typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
@@ -494,7 +514,7 @@
                         response = await puter.ai.chat(query);
                     }
 
-                    chatbox.removeChild(typingIndicator); // Remove typing indicator
+                    chatbox.removeChild(typingIndicator);
 
                     const botMessage = document.createElement("div");
                     botMessage.className = "message bot";
@@ -510,7 +530,7 @@
                     chatbox.appendChild(errorMessage);
                 }
 
-                chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
+                chatbox.scrollTop = chatbox.scrollHeight;
                 userInput.value = ""; // Clear input
             }
         }
@@ -560,7 +580,6 @@
             const selectedLanguage = document.getElementById("language").value;
             localStorage.setItem('language', selectedLanguage);
             alert("Language changed to: " + selectedLanguage);
-            // Additional code can be added here to transform chatbot responses if needed
         }
 
         function changeTheme() {
@@ -568,7 +587,6 @@
             document.body.setAttribute("class", selectedTheme);
             localStorage.setItem('theme', selectedTheme);
 
-            // Colors for text and buttons based on theme
             const themeColors = {
                 default: {
                     headerColor: "#00fff0",
@@ -638,7 +656,6 @@
                 }
             };
 
-            // Apply the colors
             const colors = themeColors[selectedTheme];
             document.querySelector(".header").style.color = colors.headerColor;
             document.querySelectorAll('.user-input button').forEach(btn => {
@@ -656,9 +673,9 @@
             const chatbox = document.getElementById("chatbox");
             const chatList = document.getElementById("chatList");
             chatbox.innerHTML = "";
-            chatList.innerHTML = ""; // Clear chat history
+            chatList.innerHTML = "";
             messageCount = 0;
-            chatMessages.length = 0; // Clear stored chat messages
+            chatMessages.length = 0;
         }
 
         function openSettings() {
@@ -684,7 +701,7 @@
             const feedback = document.getElementById("feedback").value;
             if (feedback) {
                 alert("Thank you for your feedback: " + feedback);
-                document.getElementById("feedback").value = ""; // Reset the feedback dropdown
+                document.getElementById("feedback").value = "";
             }
         }
     </script>
