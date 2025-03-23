@@ -161,9 +161,32 @@
             transition: background 0.3s, transform 0.2s;
             margin-left: 5px;
             color: #0A0A0A; /* Default text color */
+            background: #00fff0; /* Default button color */
         }
 
         .user-input button:hover {
+            transform: scale(1.05);
+            background: #00ccff; /* Hover effect */
+        }
+
+        /* Epic Button Styles */
+        .action-button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 30px;
+            background: #00fff0;
+            color: #0A0A0A;
+            font-weight: bold;
+            font-size: 1em;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            margin-top: 10px; /* Space between buttons */
+        }
+
+        .action-button:hover {
+            background: #00ccff;
+            border: 2px solid #fff; /* Add white border on hover */
             transform: scale(1.05);
         }
 
@@ -223,34 +246,6 @@
             background: #00ccff;
         }
 
-        /* Emoji Picker Styles */
-        .emoji-picker {
-            display: none;
-            position: absolute;
-            bottom: 50px; /* Adjust position */
-            left: 0;
-            right: 0;
-            background-color: rgba(30, 30, 30, 0.95);
-            border-radius: 10px;
-            padding: 10px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.5);
-            z-index: 10;
-            flex-wrap: wrap;
-        }
-
-        .emoji-picker button {
-            background: transparent;
-            border: none;
-            font-size: 1.5em;
-            cursor: pointer;
-            margin: 5px;
-            transition: transform 0.2s;
-        }
-
-        .emoji-picker button:hover {
-            transform: scale(1.2);
-        }
-
         /* Responsive Styles */
         @media (max-width: 768px) {
             body {
@@ -273,6 +268,91 @@
             }
         }
 
+        /* Theme Styles */
+        /* Theme 1 */
+        body.theme-color-1 {
+            color: #ff5722; /* Dark Orange */
+        }
+        body.theme-color-1 .header {
+            color: #ff5722;
+        }
+        body.theme-color-1 .user-input button,
+        body.theme-color-1 .modal-content button,
+        body.theme-color-1 .action-button {
+            background: #ff5722;
+            color: #ffffff;
+        }
+
+        /* Theme 2 */
+        body.theme-color-2 {
+            color: #4caf50; /* Green */
+        }
+        body.theme-color-2 .header {
+            color: #4caf50;
+        }
+        body.theme-color-2 .user-input button,
+        body.theme-color-2 .modal-content button,
+        body.theme-color-2 .action-button {
+            background: #4caf50;
+            color: #ffffff;
+        }
+
+        /* Theme 3 */
+        body.theme-color-3 {
+            color: #2196f3; /* Blue */
+        }
+        body.theme-color-3 .header {
+            color: #2196f3;
+        }
+        body.theme-color-3 .user-input button,
+        body.theme-color-3 .modal-content button,
+        body.theme-color-3 .action-button {
+            background: #2196f3;
+            color: #ffffff;
+        }
+
+        /* Theme 4 */
+        body.theme-color-4 {
+            color: #ffeb3b; /* Yellow */
+        }
+        body.theme-color-4 .header {
+            color: #ffeb3b;
+        }
+        body.theme-color-4 .user-input button,
+        body.theme-color-4 .modal-content button,
+        body.theme-color-4 .action-button {
+            background: #ffeb3b;
+            color: #000000;
+        }
+
+        /* Theme 5 */
+        body.theme-color-5 {
+            color: #673ab7; /* Purple */
+        }
+        body.theme-color-5 .header {
+            color: #673ab7;
+        }
+        body.theme-color-5 .user-input button,
+        body.theme-color-5 .modal-content button,
+        body.theme-color-5 .action-button {
+            background: #673ab7;
+            color: #ffffff;
+        }
+
+        /* Theme 6 */
+        body.theme-color-6 {
+            color: #ff6a00; /* Orange */
+        }
+        body.theme-color-6 .header {
+            color: #ff6a00;
+        }
+        body.theme-color-6 .user-input button,
+        body.theme-color-6 .modal-content button,
+        body.theme-color-6 .action-button {
+            background: #ff6a00;
+            color: #ffffff;
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
@@ -290,9 +370,9 @@
         <div class="chat-history">
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
-            <button onclick="exportChat();">🎤 Export Chat</button>
-            <button onclick="summarizeChat();">📝 Summarize Chat</button>
-            <button onclick="resetChat();">🔄 Add New Chat</button>
+            <button class="action-button" onclick="exportChat();">🎤 Export Chat</button>
+            <button class="action-button" onclick="summarizeChat();">📝 Summarize Chat</button>
+            <button class="action-button" onclick="resetChat();">🔄 Add New Chat</button>
         </div>
         <div class="chat-window">
             <div class="header" id="chatbotName">Rishab - Your AI Companion</div>
@@ -347,10 +427,6 @@
                 <option value="theme-color-4">Yellow</option>
                 <option value="theme-color-5">Purple</option>
                 <option value="theme-color-6">Orange</option>
-                <option value="theme-color-7">Cyan</option>
-                <option value="theme-color-8">Indigo</option>
-                <option value="theme-color-9">Pink</option>
-                <option value="theme-color-10">Brown</option>
             </select>
 
             <label for="musicUpload">Upload Music:</label>
@@ -381,12 +457,10 @@
         let voiceEnabled = true; // Default voice enabled
         let messageCount = 0; // Tracks number of messages
         const chatMessages = []; // Store chat messages for export and summary
-        let currentImageIndex = 0;
         const musicPlayer = document.getElementById('musicPlayer');
 
         window.onload = function () {
             loadPreferences();
-            startSlideshow();
         }
 
         function loadPreferences() {
@@ -407,16 +481,6 @@
                 document.getElementById("chatbotName").innerText = chatbotName + " - Your AI Companion";
                 document.getElementById("botNameInput").value = chatbotName;
             }
-        }
-
-        function startSlideshow() {
-            const images = document.querySelectorAll('.slideshow img');
-            images[currentImageIndex].style.display = 'block';
-            setInterval(() => {
-                images[currentImageIndex].style.display = 'none';
-                currentImageIndex = (currentImageIndex + 1) % images.length;
-                images[currentImageIndex].style.display = 'block';
-            }, 5000); // Change image every 5 seconds
         }
 
         function loadMusic(event) {
@@ -548,7 +612,8 @@
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.setAttribute("class", selectedTheme);
+            document.body.className = ''; // Reset classes
+            document.body.classList.add(selectedTheme);
             localStorage.setItem('theme', selectedTheme);
         }
 
