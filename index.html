@@ -19,18 +19,24 @@
             transition: background 0.5s ease;
         }
 
-        /* Background Styles */
-        .background {
+        /* Slideshow Background Styles */
+        .slideshow {
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
             z-index: -1;
-            background: url('https://wallpaperaccess.com/full/47587.jpg') no-repeat center center fixed;
-            background-size: cover;
+        }
+        
+        .slideshow img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none; /* Hide images by default */
         }
 
+        /* Chatbot Container */
         .chatbot-container {
             width: 80%;
             max-width: 800px;
@@ -42,6 +48,7 @@
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.8);
             position: relative;
             z-index: 2;
+            overflow: hidden;
         }
 
         /* Left Side Chat History */
@@ -189,7 +196,12 @@
     </style>
 </head>
 <body>
-    <div class="background" id="background"></div>
+    <div class="slideshow" id="slideshow">
+        <img src="https://wallpaperaccess.com/full/47587.jpg" style="display: block;"/>
+        <img src="https://wallpaperaccess.com/full/5827738.jpg"/>
+        <img src="https://wallpaperaccess.com/full/5787626.jpg"/>
+    </div>
+    
     <div class="chatbot-container">
         <div class="chat-history" id="chatHistory">
             <h3>Chat History</h3>
@@ -200,8 +212,6 @@
         <div class="chat-window">
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
-            <div id="typingIndicator" class="typing-indicator" style="display: none;">🤖 Mikasa is typing...</div>
-
             <div class="user-input">
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message"/>
                 <button onclick="sendMessage()">Send</button>
@@ -236,7 +246,7 @@
             <h2>Settings</h2>
             
             <label for="botName">Chatbot Name:</label>
-            <input type="text" id="botName" value="Mikasa"/>
+            <input type="text" id="botNameInput" value="Mikasa"/>
 
             <label for="language">Language:</label>
             <select id="language" onchange="changeLanguage()">
@@ -266,6 +276,12 @@
             <input type="text" id="backgroundSource" placeholder="Background Image URL"/>
             <button onclick="changeBackground()">Change Background</button>
 
+            <label for="musicUpload">Upload Music:</label>
+            <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)"/>
+            <button onclick="playMusic()">Play/Pause Music</button>
+            <label>Volume:</label>
+            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)"/>
+
             <label for="voiceToggle">Enable Voice:</label>
             <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
 
@@ -280,16 +296,25 @@
         </div>
     </div>
 
+    <audio id="musicPlayer" src="" preload="auto"></audio>
+
     <script src="https://js.puter.com/v2/"></script>
     <script>
         let chatbotName = "Mikasa";
         let voiceEnabled = true; // Default voice enabled
         let messageCount = 0; // Tracks number of messages
         const chatMessages = []; // Store chat messages for export and summary
+        const slideshowImages = [
+            "https://wallpaperaccess.com/full/47587.jpg",
+            "https://wallpaperaccess.com/full/5827738.jpg",
+            "https://wallpaperaccess.com/full/5787626.jpg"
+        ];
+        let currentImageIndex = 0;
+        const musicPlayer = document.getElementById('musicPlayer');
 
-        // Load user preferences from local storage
         window.onload = function () {
             loadPreferences();
+            startSlideshow();
         }
 
         function loadPreferences() {
@@ -303,19 +328,50 @@
             }
 
             if (savedTheme) {
-                document.body.className = savedTheme;
+                document.body.setAttribute("class", savedTheme);
                 document.getElementById("theme").value = savedTheme;
             }
 
             if (savedBackground) {
-                document.querySelector('.background').style.backgroundImage = `url(${savedBackground})`;
-                document.getElementById("backgroundSource").value = savedBackground;
+                // Background handling will be handled by the slideshow instead.
             }
 
             if (savedBotName) {
                 chatbotName = savedBotName;
-                document.getElementById("botName").value = chatbotName;
+                document.getElementById("chatbotName").innerText = chatbotName + " - Your AI Companion";
+                document.getElementById("botNameInput").value = chatbotName;
             }
+        }
+
+        // Slideshow Functionality
+        function startSlideshow() {
+            const images = document.querySelectorAll('.slideshow img');
+            images[currentImageIndex].style.display = 'block';
+            setInterval(() => {
+                images[currentImageIndex].style.display = 'none';
+                currentImageIndex = (currentImageIndex + 1) % images.length;
+                images[currentImageIndex].style.display = 'block';
+            }, 5000); // Change image every 5 seconds
+        }
+
+        function loadMusic(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                musicPlayer.src = url;
+            }
+        }
+
+        function playMusic() {
+            if (musicPlayer.paused) {
+                musicPlayer.play();
+            } else {
+                musicPlayer.pause();
+            }
+        }
+
+        function setVolume(value) {
+            musicPlayer.volume = value;
         }
 
         function speakResponse(response) {
@@ -329,7 +385,6 @@
         async function sendMessage() {
             const userInput = document.getElementById("userInput");
             const chatbox = document.getElementById("chatbox");
-            const typingIndicator = document.getElementById("typingIndicator");
             const chatList = document.getElementById("chatList");
 
             if (userInput.value.trim()) {
@@ -341,14 +396,15 @@
                 chatMessages.push(userInput.value.trim()); // Store message for export and summary
                 chatbox.scrollTop = chatbox.scrollHeight;
 
-                typingIndicator.style.display = "block";
+                const typingIndicator = document.createElement("div");
+                typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
+                chatbox.appendChild(typingIndicator);
 
                 try {
                     await delayResponse();
                     let response;
                     const query = userInput.value.trim();
 
-                    // Basic question handling for responses
                     if (/what's your name|who are you/i.test(query)) {
                         response = `My name is ${chatbotName}.`;
                     } else if (/who made you|your creator/i.test(query)) {
@@ -357,7 +413,7 @@
                         response = await puter.ai.chat(query);
                     }
 
-                    typingIndicator.style.display = "none";
+                    chatbox.removeChild(typingIndicator); // Remove typing indicator
 
                     const botMessage = document.createElement("div");
                     botMessage.className = "message bot";
@@ -367,7 +423,6 @@
                     speakResponse(response);
                     messageCount++;
                 } catch (error) {
-                    typingIndicator.style.display = "none";
                     const errorMessage = document.createElement("div");
                     errorMessage.className = "message bot";
                     errorMessage.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
@@ -416,7 +471,6 @@
         }
 
         function summarizeChat() {
-            // Simple summary logic - this can be enhanced with AI capabilities
             const summary = `Chat Summary:\nYou have exchanged ${chatMessages.length} messages.`;
             alert(summary);
         }
@@ -429,15 +483,14 @@
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.className = selectedTheme;
+            document.body.setAttribute("class", selectedTheme);
             localStorage.setItem('theme', selectedTheme);
         }
 
         function changeBackground() {
             const inputURL = document.getElementById("backgroundSource").value;
             if (inputURL) {
-                document.querySelector('.background').style.backgroundImage = `url(${inputURL})`;
-                localStorage.setItem('background', inputURL);
+                alert("Background can't be set with a URL as we are using a slideshow.");
             } else {
                 alert("Please enter a valid URL.");
             }
@@ -457,9 +510,10 @@
         }
 
         function closeSettings() {
-            const newBotName = document.getElementById("botName").value;
+            const newBotName = document.getElementById("botNameInput").value;
             if (newBotName) {
                 chatbotName = newBotName;
+                document.getElementById("chatbotName").innerText = chatbotName + " - Your AI Companion";
                 localStorage.setItem('botName', chatbotName);
             }
             document.getElementById("settingsModal").style.display = "none";
