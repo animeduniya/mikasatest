@@ -42,45 +42,11 @@
             max-width: 800px;
             height: 90vh; /* Flexible height for mobile */
             display: flex;
+            flex-direction: column; /* Stack components on mobile */
             border-radius: 20px;
             box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
             overflow: hidden;
             background: rgba(0, 0, 0, 0.85);
-            flex-direction: row; /* Align chat history to the left */
-        }
-
-        /* Left Side Chat History */
-        .chat-history {
-            width: 30%; /* Fixed width for chat history */
-            background: rgba(0, 0, 0, 0.7);
-            border-radius: 20px 0 0 20px; /* Rounded corners */
-            padding: 15px;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.5);
-            overflow-y: auto;
-            display: flex;
-            flex-direction: column;
-            color: cyan; /* Chat history text color */
-        }
-
-        .chat-history h3 {
-            color: cyan; /* Chat history header color */
-            margin-bottom: 10px; /* Margin below the header */
-            font-size: 1.5em; /* Responsive header font size */
-        }
-
-        .chat-history ul {
-            list-style-type: none; /* Remove bullet points for chat history */
-            padding: 0;
-            margin: 0;
-        }
-
-        .chat-history li {
-            margin-bottom: 5px; /* Space between history items */
-            padding: 10px; /* Internal padding for better touch */
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1); /* Background for history items */
-            color: cyan; /* Ensure history texts are also cyan */
-            font-size: 1em; /* Ensure text is readable */
         }
 
         .chat-window {
@@ -163,6 +129,23 @@
             min-width: 70px; /* Minimum button width for consistency */
         }
 
+        /* Button Styles for History Actions */
+        .history-button {
+            background: rgba(0, 128, 255, 0.8); /* Button color */
+            border: none;
+            color: white;
+            padding: 15px;
+            font-size: 1em;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin: 5px; /* Space between buttons */
+        }
+
+        .history-button:hover {
+            background: rgba(0, 160, 255, 1);
+        }
+
         /* Modal Styles */
         .modal {
             display: none; /* Hidden by default */
@@ -220,22 +203,6 @@
 
         /* Responsive Styles */
         @media (max-width: 768px) {
-            .chatbot-container {
-                flex-direction: column; /* Stack vertically on small screens */
-                height: 95vh; /* Adjust height */
-            }
-
-            .chat-history {
-                width: 100%; /* Full width for history on small screens */
-                height: auto; /* Allow it to resize */
-                padding: 10px; /* Adjust padding */
-                overflow-y: auto; /* Enable scrolling */
-            }
-
-            .chat-window {
-                flex: 1; /* Take remaining space */
-            }
-
             .header {
                 font-size: 1.5em; /* Smaller header font on mobile */
             }
@@ -254,8 +221,8 @@
                 font-size: 0.9em; /* Button size */
             }
 
-            .chat-history li {
-                font-size: 0.9em; /* Smaller font for chat history items on mobile */
+            .history-button {
+                width: calc(100% - 10px); /* Full width minus margin on sides */
             }
         }
 
@@ -293,13 +260,6 @@
     </div>
 
     <div class="chatbot-container">
-        <div class="chat-history" id="chatHistory">
-            <h3>Chat History</h3>
-            <ul id="chatList"></ul>
-            <button onclick="exportChat();">Export Chat</button>
-            <button onclick="summarizeChat();">Summarize Chat</button>
-            <button onclick="resetChat();">Add New Chat</button> <!-- Add New Chat Button -->
-        </div>
         <div class="chat-window">
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
@@ -310,6 +270,13 @@
                 <button onclick="startVoiceInput()">🎤</button>
                 <button onclick="openSettings()">⚙️</button>
             </div>
+        </div>
+
+        <!-- History Options -->
+        <div style="display: flex; flex-direction: column; align-items: center; padding: 10px;">
+            <button class="history-button" onclick="exportChat();">Export Chat</button>
+            <button class="history-button" onclick="summarizeChat();">Summarize Chat</button>
+            <button class="history-button" onclick="resetChat();">Start New Chat</button>
         </div>
     </div>
 
