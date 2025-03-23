@@ -286,7 +286,8 @@
 
     <script src="https://js.puter.com/v2/"></script>
     <script>
-        let chatbotName = "Mikasa";
+        let defaultChatbotName = "Mikasa";
+        let currentBot = { name: defaultChatbotName, personality: "I am your AI companion." };
         let voiceEnabled = true; // Default voice enabled
         let messageCount = 0; // Tracks number of messages
 
@@ -343,9 +344,11 @@
 
                     // Basic question handling for responses
                     if (/what's your name|who are you/i.test(userInput.value)) {
-                        response = `My name is ${chatbotName}.`;
+                        response = `My name is ${currentBot.name}.`;
                     } else if (/who made you|your creator/i.test(userInput.value)) {
                         response = "I was made by Rishab.";
+                    } else if (/personality/i.test(userInput.value)) {
+                        response = currentBot.personality;
                     } else {
                         response = await puter.ai.chat(query);
                     }
@@ -354,7 +357,7 @@
 
                     const botMessage = document.createElement("div");
                     botMessage.className = "message bot";
-                    botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm evolving to understand you better!"}`;
+                    botMessage.textContent = `🤖 ${currentBot.name}: ${response || "I'm evolving to understand you better!"}`;
                     chatbox.appendChild(botMessage);
 
                     speakResponse(response);
@@ -364,7 +367,7 @@
                     typingIndicator.style.display = "none";
                     const errorMessage = document.createElement("div");
                     errorMessage.className = "message bot";
-                    errorMessage.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
+                    errorMessage.textContent = `🤖 ${currentBot.name}: Oops! Something went wrong. Please try again.`;
                     chatbox.appendChild(errorMessage);
                 }
 
@@ -441,8 +444,10 @@
             const botPersonalityInput = document.getElementById("botPersonality");
 
             if (botNameInput.value.trim() && botPersonalityInput.value.trim()) {
-                chatbotName = botNameInput.value.trim();
-                alert(`Your bot "${chatbotName}" has been created with the personality: "${botPersonalityInput.value.trim()}"`);
+                currentBot.name = botNameInput.value.trim();
+                currentBot.personality = botPersonalityInput.value.trim();
+                alert(`Your bot "${currentBot.name}" has been created with the personality: "${currentBot.personality}"`);
+                document.getElementById("chatbotName").textContent = currentBot.name; // Update display name
                 closeCustomBot();
             } else {
                 alert("Please fill in both fields to create your bot.");
