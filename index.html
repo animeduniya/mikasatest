@@ -9,7 +9,6 @@
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
-            color: #ffffff;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -28,7 +27,7 @@
             bottom: 0;
             z-index: -1;
         }
-        
+
         .slideshow img {
             width: 100%;
             height: 100%;
@@ -66,8 +65,7 @@
         .header {
             font-size: 2.5em;
             font-weight: bold;
-            color: #00fff0;
-            text-shadow: 0 0 15px #00fff0, 0 0 30px #00fff0;
+            color: #00fff0; /* Default color */
             margin: 0;
         }
 
@@ -84,7 +82,7 @@
             overflow-y: auto;
             margin: 20px 0;
             padding: 10px;
-            border: 2px solid #00fff0;
+            border: 2px solid #00fff0; /* Default border color */
             border-radius: 10px;
             display: flex;
             flex-direction: column;
@@ -99,13 +97,10 @@
         }
 
         .message.user {
-            background-color: #00ccff;
-            align-self: flex-end;
             color: #000;
         }
 
         .message.bot {
-            background-color: #3f51b5;
             color: #fff;
         }
 
@@ -119,7 +114,7 @@
             flex: 1;
             padding: 15px;
             font-size: 1em;
-            border: 2px solid #00fff0;
+            border: 2px solid #00fff0; /* Default border color */
             border-radius: 10px;
             margin-right: 10px;
             background: rgba(255, 255, 255, 0.1);
@@ -129,12 +124,12 @@
         .user-input button {
             background: linear-gradient(135deg, #00fff0, #00ccff);
             border: none;
-            color: #0f3460;
+            color: #0f3460; /* Default button text color */
             font-size: 1.2em;
             padding: 10px 20px;
             border-radius: 10px;
             cursor: pointer;
-            transition: transform 0.3s ease-in-out;
+            transition: transform 0.3s ease-in-out, background 0.3s ease;
             box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
             margin-left: 5px;
         }
@@ -171,7 +166,7 @@
             width: 100%;
             padding: 10px;
             margin-top: 5px;
-            border: 1px solid #00fff0;
+            border: 1px solid #00fff0; /* Default border color */
             border-radius: 5px;
             background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
@@ -180,7 +175,7 @@
         .modal-content button {
             background: linear-gradient(135deg, #00fff0, #00ccff);
             border: none;
-            color: #0f3460;
+            color: #0f3460; /* Default button text color */
             font-size: 1em;
             padding: 10px;
             border-radius: 5px;
@@ -193,6 +188,18 @@
         .modal-content button:hover {
             background: linear-gradient(135deg, #00ccff, #00fff0);
         }
+
+        /* Theme Colors */
+        body.theme-color-1 { background: #ff5722; }
+        body.theme-color-2 { background: #4caf50; }
+        body.theme-color-3 { background: #2196f3; }
+        body.theme-color-4 { background: #ffeb3b; }
+        body.theme-color-5 { background: #673ab7; }
+        body.theme-color-6 { background: #ff5722; }
+        body.theme-color-7 { background: #00bcd4; }
+        body.theme-color-8 { background: #3f51b5; }
+        body.theme-color-9 { background: #e91e63; }
+        body.theme-color-10 { background: #795548; }
     </style>
 </head>
 <body>
@@ -201,7 +208,7 @@
         <img src="https://wallpaperaccess.com/full/5827738.jpg"/>
         <img src="https://wallpaperaccess.com/full/5787626.jpg"/>
     </div>
-    
+
     <div class="chatbot-container">
         <div class="chat-history" id="chatHistory">
             <h3>Chat History</h3>
@@ -244,7 +251,7 @@
         <div class="modal-content">
             <span onclick="closeSettings()" style="float:right;cursor:pointer;color:#00fff0;">×</span>
             <h2>Settings</h2>
-            
+
             <label for="botName">Chatbot Name:</label>
             <input type="text" id="botNameInput" value="Mikasa"/>
 
@@ -271,10 +278,6 @@
                 <option value="theme-color-9">Pink</option>
                 <option value="theme-color-10">Brown</option>
             </select>
-
-            <label for="backgroundSource">Background Source:</label>
-            <input type="text" id="backgroundSource" placeholder="Background Image URL"/>
-            <button onclick="changeBackground()">Change Background</button>
 
             <label for="musicUpload">Upload Music:</label>
             <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)"/>
@@ -320,7 +323,6 @@
         function loadPreferences() {
             const savedLang = localStorage.getItem('language');
             const savedTheme = localStorage.getItem('theme');
-            const savedBackground = localStorage.getItem('background');
             const savedBotName = localStorage.getItem('botName');
 
             if (savedLang) {
@@ -328,12 +330,7 @@
             }
 
             if (savedTheme) {
-                document.body.setAttribute("class", savedTheme);
-                document.getElementById("theme").value = savedTheme;
-            }
-
-            if (savedBackground) {
-                // Background handling will be handled by the slideshow instead.
+                changeTheme(savedTheme);
             }
 
             if (savedBotName) {
@@ -485,15 +482,102 @@
             const selectedTheme = document.getElementById("theme").value;
             document.body.setAttribute("class", selectedTheme);
             localStorage.setItem('theme', selectedTheme);
-        }
 
-        function changeBackground() {
-            const inputURL = document.getElementById("backgroundSource").value;
-            if (inputURL) {
-                alert("Background can't be set with a URL as we are using a slideshow.");
-            } else {
-                alert("Please enter a valid URL.");
-            }
+            // Update text colors based on selected theme
+            const themeStyles = {
+                default: {
+                    headerColor: "#00fff0",
+                    messageUserColor: "#000",
+                    messageBotColor: "#fff",
+                    buttonTextColor: "#0f3460",
+                    borderColor: "#00fff0"
+                },
+                'theme-color-1': {
+                    headerColor: "#ff5722",
+                    messageUserColor: "#fff",
+                    messageBotColor: "#fff",
+                    buttonTextColor: "#ffffff",
+                    borderColor: "#ff5722"
+                },
+                'theme-color-2': {
+                    headerColor: "#4caf50",
+                    messageUserColor: "#000",
+                    messageBotColor: "#fff",
+                    buttonTextColor: "#ffffff",
+                    borderColor: "#4caf50"
+                },
+                'theme-color-3': {
+                    headerColor: "#2196f3",
+                    messageUserColor: "#000",
+                    messageBotColor: "#fff",
+                    buttonTextColor: "#ffffff",
+                    borderColor: "#2196f3"
+                },
+                'theme-color-4': {
+                    headerColor: "#ffeb3b",
+                    messageUserColor: "#000",
+                    messageBotColor: "#000",
+                    buttonTextColor: "#000",
+                    borderColor: "#ffeb3b"
+                },
+                'theme-color-5': {
+                    headerColor: "#673ab7",
+                    messageUserColor: "#fff",
+                    messageBotColor: "#fff",
+                    buttonTextColor: "#ffffff",
+                    borderColor: "#673ab7"
+                },
+                'theme-color-6': {
+                    headerColor: "#ff5722",
+                    messageUserColor: "#000",
+                    messageBotColor: "#fff",
+                    buttonTextColor: "#ffffff",
+                    borderColor: "#ff5722"
+                },
+                'theme-color-7': {
+                    headerColor: "#00bcd4",
+                    messageUserColor: "#000",
+                    messageBotColor: "#fff",
+                    buttonTextColor: "#ffffff",
+                    borderColor: "#00bcd4"
+                },
+                'theme-color-8': {
+                    headerColor: "#3f51b5",
+                    messageUserColor: "#fff",
+                    messageBotColor: "#fff",
+                    buttonTextColor: "#ffffff",
+                    borderColor: "#3f51b5"
+                },
+                'theme-color-9': {
+                    headerColor: "#e91e63",
+                    messageUserColor: "#fff",
+                    messageBotColor: "#fff",
+                    buttonTextColor: "#ffffff",
+                    borderColor: "#e91e63"
+                },
+                'theme-color-10': {
+                    headerColor: "#795548",
+                    messageUserColor: "#fff",
+                    messageBotColor: "#fff",
+                    buttonTextColor: "#ffffff",
+                    borderColor: "#795548"
+                }
+            };
+
+            const theme = themeStyles[selectedTheme];
+            document.querySelector(".header").style.color = theme.headerColor;
+            document.querySelectorAll('.messages').forEach(msg => {
+                msg.style.borderColor = theme.borderColor;
+            });
+            document.querySelectorAll('.message.user').forEach(msg => {
+                msg.style.color = theme.messageUserColor;
+            });
+            document.querySelectorAll('.message.bot').forEach(msg => {
+                msg.style.color = theme.messageBotColor;
+            });
+            document.querySelectorAll('.user-input button').forEach(btn => {
+                btn.style.color = theme.buttonTextColor;
+            });
         }
 
         function resetChat() {
