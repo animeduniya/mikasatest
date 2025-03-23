@@ -358,12 +358,14 @@
                 <option value="theme-color-6">Orange</option>
             </select>
 
-            <label for="bgImage">Background Image Upload:</label>
-            <input type="file" id="bgImageUpload" accept="image/*" onchange="changeBackgroundImageFromFile(event)" />
+            <label for="backgroundUpload">Change Background Image:</label>
+            <input type="file" accept="image/*" id="backgroundUpload" onchange="changeBackground(event)" />
 
-            <label for="bgImage">Background Image URL:</label>
-            <input type="text" id="bgImageInput" placeholder="Enter a background image URL" />
-            <button onclick="changeBackgroundImage()">Apply URL</button>
+            <label for="musicUpload">Upload Music:</label>
+            <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
+            <button onclick="playMusic()">Play/Pause Music</button>
+            <label>Volume:</label>
+            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)" />
 
             <label for="voiceToggle">Enable Voice:</label>
             <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
@@ -379,15 +381,15 @@
         </div>
     </div>
 
+    <audio id="musicPlayer" src="" preload="auto"></audio>
+
     <script src="https://js.puter.com/v2/"></script>
     <script>
         let chatbotName = "Rishab";
-        let voiceEnabled = true;
-        let messageCount = 0;
-        const chatMessages = [];
-        const chatLog = [];
-
-        const synth = window.speechSynthesis;
+        let voiceEnabled = true; // Default voice enabled
+        let messageCount = 0; // Tracks number of messages
+        const chatMessages = []; // Store chat messages for export and summary
+        const musicPlayer = document.getElementById('musicPlayer');
 
         window.onload = function () {
             loadPreferences();
@@ -413,7 +415,7 @@
             }
         }
 
-        function changeBackgroundImageFromFile(event) {
+        function changeBackground(event) {
             const file = event.target.files[0];
             if (file) {
                 const url = URL.createObjectURL(file);
@@ -423,24 +425,33 @@
             }
         }
 
-        function changeBackgroundImage() {
-            const bgImageUrl = document.getElementById('bgImageInput').value;
-            if (bgImageUrl) {
-                document.body.style.backgroundImage = `url(${bgImageUrl})`;
-                document.body.style.backgroundSize = 'cover';
-                document.body.style.backgroundPosition = 'center';
+        function loadMusic(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                musicPlayer.src = url;
             }
         }
 
-        function speakResponse(response) {
-            if (synth.speaking) {
-                synth.cancel();
+        function playMusic() {
+            if (musicPlayer.paused) {
+                musicPlayer.play();
+            } else {
+                musicPlayer.pause();
             }
+        }
 
-            if (voiceEnabled && response) {
+        function setVolume(value) {
+            musicPlayer.volume = value;
+        }
+
+        function speakResponse(response) {
+            if (voiceEnabled) {
+                // Stop speaking if already speaking
+                window.speechSynthesis.cancel();
                 const utterance = new SpeechSynthesisUtterance(response);
                 utterance.lang = "en-US";
-                synth.speak(utterance);
+                window.speechSynthesis.speak(utterance);
             }
         }
 
@@ -450,15 +461,17 @@
             const chatList = document.getElementById("chatList");
 
             if (userInput.value.trim()) {
-                const userMessage = document.createElement("div");
-                userMessage.className = "message user";
-                userMessage.textContent = "🧑: " + userInput.value.trim();
-                chatbox.appendChild(userMessage);
-                chatList.appendChild(document.createElement("li")).textContent = userInput.value.trim();
-                chatMessages.push(userInput.value.trim());
-                chatLog.push({ question: userInput.value.trim(), answer: "" });
-                chatbox.scrollTop = chatbox.scrollHeight;
+                const userMessage = userInput.value.trim();
+                
+                // Create user message element
+                const userMessageElement = document.createElement("div");
+                userMessageElement.className = "message user";
+                userMessageElement.textContent = "🧑: " + userMessage;
+                chatbox.appendChild(userMessageElement);
+                chatList.appendChild(document.createElement("li")).textContent = userMessage;
+                chatMessages.push("User: " + userMessage); // Add user message to chatMessages
 
+                // Show typing indicator
                 const typingIndicator = document.createElement("div");
                 typingIndicator.innerHTML = "<em>🤖 Rishab is typing...</em>";
                 chatbox.appendChild(typingIndicator);
@@ -466,8 +479,9 @@
                 try {
                     await delayResponse();
                     let response;
-                    const query = userInput.value.trim();
+                    const query = userMessage;
 
+                    // Respond based on input
                     if (/what's your name|who are you/i.test(query)) {
                         response = `My name is ${chatbotName}.`;
                     } else if (/who made you|your creator/i.test(query)) {
@@ -476,14 +490,18 @@
                         response = await puter.ai.chat(query);
                     }
 
+                    // Remove typing indicator
                     chatbox.removeChild(typingIndicator);
 
-                    const botMessage = document.createElement("div");
-                    botMessage.className = "message bot";
-                    botMessage.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
-                    chatbox.appendChild(botMessage);
-                    chatLog[chatLog.length - 1].answer = response;
+                    // Create bot message element
+                    const botMessageElement = document.createElement("div");
+                    botMessageElement.className = "message bot";
+                    botMessageElement.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
+                    chatbox.appendChild(botMessageElement);
+
+                    // Speak the response
                     speakResponse(response);
+                    chatMessages.push("Bot: " + response); // Add bot message to chatMessages
                     messageCount++;
                 } catch (error) {
                     const errorMessage = document.createElement("div");
@@ -522,7 +540,7 @@
         }
 
         function exportChat() {
-            const chatText = chatLog.map(log => `🧑: ${log.question}\n🤖 ${chatbotName}: ${log.answer}`).join('\n\n');
+            const chatText = chatMessages.join('\n');
             const blob = new Blob([chatText], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
@@ -534,7 +552,7 @@
         }
 
         function summarizeChat() {
-            const summary = `Chat Summary:\nYou have exchanged ${chatLog.length} messages.`;
+            const summary = `Chat Summary:\nYou have exchanged ${chatMessages.length} messages.`;
             alert(summary);
         }
 
@@ -558,7 +576,6 @@
             chatList.innerHTML = "";
             messageCount = 0;
             chatMessages.length = 0;
-            chatLog.length = 0;
         }
 
         function openSettings() {
