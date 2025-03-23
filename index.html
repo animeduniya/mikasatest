@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Mikasa Chatbot</title>
+    <title>Custom Chatbot Creator</title>
     <style>
         body {
             background-color: #121212;
@@ -14,7 +14,6 @@
             align-items: center;
             height: 100vh;
             position: relative;
-            transition: background-color 0.5s ease;
         }
 
         .background {
@@ -26,10 +25,8 @@
             z-index: -1;
             background: url('https://wallpaperaccess.com/full/47587.jpg') no-repeat center center fixed;
             background-size: cover;
-            animation: backgroundEffect 20s infinite linear; 
         }
 
-        /* New styles for the chatbot container */
         .chatbot-container {
             width: 90%;
             max-width: 600px;
@@ -37,17 +34,70 @@
             border-radius: 15px;
             padding: 20px;
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
-            text-align: center;
             display: flex;
             flex-direction: column;
             position: relative;
-            z-index: 2;
-            animation: fadeIn 1.5s ease-in-out;
         }
 
-        /* Other styles omitted for brevity... */
+        .header {
+            font-size: 2.5em;
+            color: #00fff0;
+        }
 
-        /* Modal styles */
+        .messages {
+            flex: 1;
+            height: 300px;
+            overflow-y: auto;
+            margin: 20px 0;
+            padding: 10px;
+            border: 2px solid #00fff0;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 20px;
+            margin: 5px 0;
+        }
+
+        .message.user {
+            background-color: #00ccff;
+            color: #000;
+            align-self: flex-end;
+        }
+
+        .message.bot {
+            background-color: #3f51b5;
+            color: #fff;
+        }
+
+        .user-input {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .user-input input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #00fff0;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+        }
+
+        .user-input button {
+            background: linear-gradient(135deg, #00fff0, #00ccff);
+            border: none;
+            color: #0f3460;
+            padding: 10px 20px;
+            border-radius: 10px;
+            margin-left: 5px;
+            cursor: pointer;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -56,59 +106,52 @@
             top: 0;
             width: 100%;
             height: 100%;
-            overflow: auto;
             background-color: rgba(0, 0, 0, 0.9);
             justify-content: center;
             align-items: center;
         }
 
         .modal-content {
-            background-color: #ffffff;
-            color: #000;
+            background-color: #fff;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            max-width: 400px;
-            margin: auto;
+            color: #000;
         }
 
-        /* New styles for music playback */
-        .music-controls {
+        #emojiPicker {
             display: flex;
-            align-items: center;
-            margin-top: 15px;
+            gap: 10px;
+            margin-top: 5px;
         }
-
-        .music-controls input[type="range"] {
-            flex: 1;
-            margin: 0 10px;
+        
+        .typing-indicator {
+            font-size: 0.9em;
+            color: #ffffffa0;
         }
-
-        /* Accessibility improvements */
-        .accessible {
-            font-size: 1.1em;
-            line-height: 1.5;
-        }
-
-        /* Custom theme classes */
-        /* Colors and styles omitted for brevity... */
     </style>
 </head>
 <body>
-    <div class="background" id="background"></div>
+    <div class="background"></div>
     <div class="chatbot-container" aria-labelledby="chatbotName">
         <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
-        
-        <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
-        
         <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
         <div id="typingIndicator" class="typing-indicator" style="display: none;">🤖 Mikasa is typing...</div>
-        <div class="message-count" id="messageCount">Messages: 0</div>
-
         <div class="user-input">
             <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
             <button onclick="sendMessage()">Send</button>
             <button onclick="toggleSettings()">⚙️</button>
+            <button onclick="openChatbotCreationModal()">Create Chatbot</button>
+            <button onclick="toggleEmojiPicker()">😃</button>
+        </div>
+
+        <!-- Emoji Picker -->
+        <div id="emojiPicker" style="display: none;">
+            <span onclick="addEmoji('😀')">😀</span>
+            <span onclick="addEmoji('😁')">😁</span>
+            <span onclick="addEmoji('😂')">😂</span>
+            <span onclick="addEmoji('🥰')">🥰</span>
+            <span onclick="addEmoji('😎')">😎</span>
+            <span onclick="addEmoji('🤖')">🤖</span>
         </div>
     </div>
 
@@ -116,115 +159,146 @@
     <div id="settingsModal" class="modal">
         <div class="modal-content">
             <h2>Settings</h2>
-            <label for="language">Language:</label>
-            <select id="language" onchange="changeLanguage()">
-                <option value="en">English</option>
-                <option value="es">Spanish</option>
-                <option value="fr">French</option>
-                <option value="de">German</option>
-                <option value="it">Italian</option>
-            </select>
-
-            <label for="theme">Text Color Theme:</label>
-            <select id="theme" onchange="changeTheme()">
-                <option value="default">Default</option>
-                <option value="theme-color-1">Deep Orange</option>
-                <option value="theme-color-2">Green</option>
-                <option value="theme-color-3">Blue</option>
-                <option value="theme-color-4">Yellow</option>
-                <option value="theme-color-5">Purple</option>
-                <option value="theme-color-6">Orange</option>
-                <option value="theme-color-7">Cyan</option>
-                <option value="theme-color-8">Indigo</option>
-                <option value="theme-color-9">Pink</option>
-                <option value="theme-color-10">Brown</option>
-            </select>
-
-            <label for="backgroundSource">Background Source:</label>
-            <input type="text" id="backgroundSource" placeholder="Background Image URL"/>
-            <button onclick="changeBackground()">Change Background</button>
-
-            <label for="volume">Music Volume:</label>
-            <div class="music-controls">
-                <button id="playBtn" onclick="toggleMusic()">Play</button>
-                <input type="range" id="volume" min="0" max="1" step="0.1" oninput="changeVolume()" />
-            </div>
-
-            <button onclick="resetChat()">Reset Chat</button>
-
-            <label for="voiceToggle">Enable Voice:</label>
-            <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
-
+            <label for="chatbotInput">Chatbot Name:</label>
+            <input type="text" id="chatbotInput" placeholder="Enter chatbot name" />
+            <button onclick="saveChatbotSettings()">Save Name</button>
             <button onclick="closeSettings()">Close</button>
         </div>
     </div>
 
-    <script src="https://js.puter.com/v2/"></script>
-    <script>
-        let chatbotName = "Mikasa";
-        let voiceEnabled = true; 
-        let messageCount = 0;
-        let audio = new Audio('path/to/your/music.mp3'); // Replace with your audio file path
-        audio.loop = true;
+    <!-- Chatbot Creation Modal -->
+    <div id="chatbotCreationModal" class="modal">
+        <div class="modal-content">
+            <h2>Create Your Own Chatbot</h2>
+            <label for="newChatbotName">Chatbot Name:</label>
+            <input type="text" id="newChatbotName" placeholder="Name your chatbot" />
+            <button onclick="createChatbot()">Create</button>
+            <button onclick="closeChatbotCreationModal()">Close</button>
+        </div>
+    </div>
 
-        window.onload = function () {
+    <script>
+        let currentChatbot = { name: "Mikasa" };
+        let messageCount = 0;
+
+        // Load preferences on page load
+        window.onload = function() {
             loadPreferences();
         }
 
         function loadPreferences() {
-            // Load saved settings from localStorage
-            // Similar to existing implementation...
+            const savedChatbotName = localStorage.getItem('chatbotName');
+            if (savedChatbotName) {
+                currentChatbot.name = savedChatbotName;
+                document.getElementById("chatbotName").innerText = currentChatbot.name;
+            }
         }
 
+        // Toggle Settings Modal
         function toggleSettings() {
             const modal = document.getElementById("settingsModal");
             modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
         }
 
-        function closeSettings() {
-            const modal = document.getElementById("settingsModal");
-            modal.style.display = 'none';
+        // Open Chatbot Creation Modal
+        function openChatbotCreationModal() {
+            const modal = document.getElementById("chatbotCreationModal");
+            modal.style.display = 'flex';
         }
 
-        function toggleMusic() {
-            if (audio.paused) {
-                audio.play();
-                document.getElementById("playBtn").innerText = "Pause";
-            } else {
-                audio.pause();
-                document.getElementById("playBtn").innerText = "Play";
+        // Close modals
+        function closeSettings() {
+            document.getElementById("settingsModal").style.display = 'none';
+        }
+
+        function closeChatbotCreationModal() {
+            document.getElementById("chatbotCreationModal").style.display = 'none';
+        }
+
+        function saveChatbotSettings() {
+            const chatbotInput = document.getElementById("chatbotInput").value;
+            if (chatbotInput) {
+                currentChatbot.name = chatbotInput;
+                document.getElementById("chatbotName").innerText = currentChatbot.name;
+                localStorage.setItem('chatbotName', currentChatbot.name);
+                alert("Chatbot name saved!");
             }
         }
 
-        function changeVolume() {
-            const volumeSlider = document.getElementById("volume");
-            audio.volume = volumeSlider.value;
+        function createChatbot() {
+            const newChatbotName = document.getElementById("newChatbotName").value;
+            if (newChatbotName) {
+                localStorage.setItem('customChatbotName', newChatbotName);
+                currentChatbot.name = newChatbotName;
+                document.getElementById("chatbotName").innerText = currentChatbot.name;
+                alert("New chatbot created!");
+                closeChatbotCreationModal();
+            } else {
+                alert("Please enter a name for your chatbot.");
+            }
         }
 
         async function sendMessage() {
-            // Implementation of sendMessage function similar to existing...
-            messageCount++;
-            document.getElementById("messageCount").textContent = `Messages: ${messageCount}`;
+            const userInput = document.getElementById("userInput");
+            const chatbox = document.getElementById("chatbox");
+            const typingIndicator = document.getElementById("typingIndicator");
+
+            if (userInput.value.trim()) {
+                const userMessage = document.createElement("div");
+                userMessage.className = "message user";
+                userMessage.textContent = "🧑: " + userInput.value.trim();
+                chatbox.appendChild(userMessage);
+                chatbox.scrollTop = chatbox.scrollHeight;
+
+                typingIndicator.style.display = "block";
+
+                // Simulated AI processing for response (this part should be replaced with API integration)
+                let response = simulateAIResponse(userInput.value.trim());
+                
+                typingIndicator.style.display = "none";
+
+                const botMessage = document.createElement("div");
+                botMessage.className = "message bot";
+                botMessage.textContent = `🤖 ${currentChatbot.name}: ${response}`;
+                chatbox.appendChild(botMessage);
+
+                messageCount++;
+                chatbox.scrollTop = chatbox.scrollHeight;
+
+                // Text to Speech
+                speak(response);
+
+                document.getElementById("userInput").value = ""; // Clear input
+            }
         }
 
-        function changeLanguage() {
-            // Implementation for language change...
+        // Simulated AI response logic
+        function simulateAIResponse(message) {
+            if (/what's your name|who are you/i.test(message)) {
+                return `My name is ${currentChatbot.name}.`;
+            } else if (/who made you|your creator/i.test(message)) {
+                return "I was made by Rishab, Ansh, and Abhi.";
+            } else {
+                return "I don't know the answer to that yet.";
+            }
         }
 
-        function changeTheme() {
-            // Implementation for theme change...
+        // Text-to-Speech Implementation
+        function speak(text) {
+            const utterance = new SpeechSynthesisUtterance(text);
+            speechSynthesis.speak(utterance);
         }
 
-        function changeBackground() {
-            // Implementation for changing background image...
+        // Emoji Picker
+        function toggleEmojiPicker() {
+            const emojiPicker = document.getElementById("emojiPicker");
+            emojiPicker.style.display = emojiPicker.style.display === 'none' ? 'flex' : 'none';
         }
 
-        function resetChat() {
-            // Implementation for resetting chat...
-        }
-
-        function toggleVoice() {
-            // Implementation for toggling voice...
+        function addEmoji(emoji) {
+            const userInput = document.getElementById('userInput');
+            userInput.value += emoji;
+            toggleEmojiPicker(); // Hide the emoji picker after selecting an emoji
         }
     </script>
 </body>
