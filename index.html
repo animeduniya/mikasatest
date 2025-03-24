@@ -49,6 +49,27 @@
             flex-direction: column;
             position: relative;
             padding: 10px;
+            border: 5px solid transparent;
+            background-clip: padding-box;
+            animation: borderAnimation 2s infinite alternate;
+        }
+
+        @keyframes borderAnimation {
+            0% {
+                border-color: rgba(255, 0, 0, 0.8);
+            }
+            25% {
+                border-color: rgba(0, 255, 0, 0.8);
+            }
+            50% {
+                border-color: rgba(0, 0, 255, 0.8);
+            }
+            75% {
+                border-color: rgba(255, 255, 0, 0.8);
+            }
+            100% {
+                border-color: rgba(255, 0, 255, 0.8);
+            }
         }
 
         /* Chat History */
@@ -89,6 +110,9 @@
             padding: 10px;
             position: relative;
             overflow-y: auto;
+            border: 5px solid transparent;
+            background-clip: padding-box;
+            animation: borderAnimation 2s infinite alternate;
         }
 
         .header {
@@ -120,7 +144,7 @@
             padding: 10px 15px;
             border-radius: 20px;
             margin: 5px 0;
-            max-width: 70%;
+            max-width: 100%;
             animation: slideIn 0.5s forwards;
         }
 
@@ -129,12 +153,14 @@
             color: #000;
             align-self: flex-end;
             margin-left: auto;
+            max-width: 70%; /* Wider user message */
         }
 
         .message.bot {
             background-color: #3f51b5;
             color: #fff;
             align-self: flex-start;
+            max-width: 70%; /* Wider bot response message */
         }
 
         .user-input {
@@ -199,7 +225,7 @@
             transform: scale(1.05);
         }
 
-        /* Modal Styles */
+        /* Settings Styles */
         .modal {
             display: none;
             position: fixed;
@@ -213,6 +239,16 @@
             width: 90%;
             max-width: 400px;
             overflow: hidden;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         .modal-content {
@@ -255,6 +291,45 @@
             background: #00ccff;
         }
 
+        /* Epic Enable Voice Toggle */
+        #voiceToggle.example-checkbox {
+            display: inline-flex;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        #voiceToggle.example-checkbox input {
+            display: none;
+        }
+
+        #voiceToggle.example-checkbox .switch {
+            width: 52px;
+            height: 26px;
+            border-radius: 50px;
+            position: relative;
+            background: #ccc;
+            transition: background 0.4s;
+        }
+
+        #voiceToggle.example-checkbox input:checked + .switch {
+            background: #00ccff;
+        }
+
+        #voiceToggle.example-checkbox .circle {
+            width: 22px;
+            height: 22px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: left 0.4s;
+        }
+
+        #voiceToggle.example-checkbox input:checked + .switch .circle {
+            left: 28px;
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             body {
@@ -281,109 +356,6 @@
             }
         }
 
-        /* Theme Styles */
-        /* Theme 1 */
-        body.theme-color-1 {
-            color: #ff5722; /* Dark Orange */
-        }
-        body.theme-color-1 .header {
-            color: #ff5722;
-        }
-        body.theme-color-1 .sub-header {
-            color: #ff5722; /* Dark Orange */
-        }
-        body.theme-color-1 .user-input button,
-        body.theme-color-1 .modal-content button,
-        body.theme-color-1 .action-button {
-            background: #ff5722;
-            color: #ffffff;
-        }
-
-        /* Theme 2 */
-        body.theme-color-2 {
-            color: #4caf50; /* Green */
-        }
-        body.theme-color-2 .header {
-            color: #4caf50;
-        }
-        body.theme-color-2 .sub-header {
-            color: #4caf50; /* Green */
-        }
-        body.theme-color-2 .user-input button,
-        body.theme-color-2 .modal-content button,
-        body.theme-color-2 .action-button {
-            background: #4caf50;
-            color: #ffffff;
-        }
-
-        /* Theme 3 */
-        body.theme-color-3 {
-            color: #2196f3; /* Blue */
-        }
-        body.theme-color-3 .header {
-            color: #2196f3;
-        }
-        body.theme-color-3 .sub-header {
-            color: #2196f3; /* Blue */
-        }
-        body.theme-color-3 .user-input button,
-        body.theme-color-3 .modal-content button,
-        body.theme-color-3 .action-button {
-            background: #2196f3;
-            color: #ffffff;
-        }
-
-        /* Theme 4 */
-        body.theme-color-4 {
-            color: #ffeb3b; /* Yellow */
-        }
-        body.theme-color-4 .header {
-            color: #ffeb3b;
-        }
-        body.theme-color-4 .sub-header {
-            color: #ffeb3b; /* Yellow */
-        }
-        body.theme-color-4 .user-input button,
-        body.theme-color-4 .modal-content button,
-        body.theme-color-4 .action-button {
-            background: #ffeb3b;
-            color: #000000;
-        }
-
-        /* Theme 5 */
-        body.theme-color-5 {
-            color: #673ab7; /* Purple */
-        }
-        body.theme-color-5 .header {
-            color: #673ab7;
-        }
-        body.theme-color-5 .sub-header {
-            color: #673ab7; /* Purple */
-        }
-        body.theme-color-5 .user-input button,
-        body.theme-color-5 .modal-content button,
-        body.theme-color-5 .action-button {
-            background: #673ab7;
-            color: #ffffff;
-        }
-
-        /* Theme 6 */
-        body.theme-color-6 {
-            color: #ff6a00; /* Orange */
-        }
-        body.theme-color-6 .header {
-            color: #ff6a00;
-        }
-        body.theme-color-6 .sub-header {
-            color: #ff6a00; /* Orange */
-        }
-        body.theme-color-6 .user-input button,
-        body.theme-color-6 .modal-content button,
-        body.theme-color-6 .action-button {
-            background: #ff6a00;
-            color: #ffffff;
-        }
-
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
@@ -402,7 +374,6 @@
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
             <button class="action-button" onclick="exportChat();">🎤 Export Chat</button>
-            <button class="action-button" onclick="summarizeChat();">📝 Summarize Chat</button>
             <button class="action-button" onclick="resetChat();">🔄 Add New Chat</button>
         </div>
         <div class="chat-window">
@@ -467,8 +438,13 @@
             <label>Volume:</label>
             <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)" />
 
-            <label for="voiceToggle">Enable Voice:</label>
-            <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
+            <label class="example-checkbox">
+                <input type="checkbox" id="voiceToggle" onchange="toggleVoice()" checked>
+                <div class="switch">
+                    <div class="circle"></div>
+                </div>
+                Enable Voice
+            </label>
 
             <label for="feedback">Feedback:</label>
             <select id="feedback" onchange="sendFeedback()">
@@ -621,6 +597,11 @@
         }
 
         function startVoiceInput() {
+            // Stop speech synthesis when starting voice input
+            if (speechSynthesisInstance.speaking) {
+                speechSynthesisInstance.cancel();
+            }
+
             const recognition = new webkitSpeechRecognition();
             recognition.onresult = function (event) {
                 const userInput = document.getElementById("userInput");
@@ -642,11 +623,6 @@
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
-        }
-
-        function summarizeChat() {
-            const summary = `Chat Summary:\nYou have exchanged ${chatMessages.length} messages.`;
-            alert(summary);
         }
 
         function changeLanguage() {
