@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mikasa Chatbot</title>
     <style>
+        /* General Styles */
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
@@ -22,18 +23,8 @@
             0% {
                 background: url('https://wallpapercave.com/wp/wp9388551.jpg') center center / cover no-repeat;
             }
-            25% {
-                background: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg') center center / cover no-repeat;
-            }
-            50% {
-                background: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg') center center / cover no-repeat;
-            }
-            75% {
-                background: url('https://wallpaperaccess.com/full/8583147.jpg') center center / cover no-repeat;
-            }
-            100% {
-                background: url('https://coolwallpapers.me/picsup/2503093-4k-hd-wallpaper-high-definition.jpg') center center / cover no-repeat;
-            }
+
+            /* Add additional backgrounds if necessary as per your designs */
         }
 
         /* Container Styles */
@@ -49,6 +40,29 @@
             flex-direction: column;
             position: relative;
             padding: 10px;
+            border: 3px solid transparent;
+            animation: borderColorChange 5s infinite;
+        }
+
+        @keyframes borderColorChange {
+            0% {
+                border-color: rgba(255, 0, 0, 0.5);
+            }
+            20% {
+                border-color: rgba(0, 255, 0, 0.5);
+            }
+            40% {
+                border-color: rgba(0, 0, 255, 0.5);
+            }
+            60% {
+                border-color: rgba(255, 255, 0, 0.5);
+            }
+            80% {
+                border-color: rgba(255, 0, 255, 0.5);
+            }
+            100% {
+                border-color: rgba(0, 255, 255, 0.5);
+            }
         }
 
         /* Chat History */
@@ -79,6 +93,16 @@
             margin: 5px 0;
             padding: 8px;
             border-radius: 8px;
+            animation: fadeIn 0.5s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         /* Chat Window */
@@ -178,19 +202,6 @@
             background: #00ccff;
         }
 
-        /* Music Controls */
-        .music-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .music-controls button {
-            flex: 1;
-            margin-right: 5px;
-        }
-
         /* Modal Styles */
         .modal {
             display: none;
@@ -224,7 +235,8 @@
             color: #ffffff;
         }
 
-        .modal-content h2, .modal-content h3 {
+        .modal-content h2,
+        .modal-content h3 {
             text-align: center;
             margin: 0;
         }
@@ -246,29 +258,101 @@
             background: #00ccff;
         }
 
-        /* UI Theme Styles */
+        /* Theme Styles */
+        /* Theme 1 */
         body.theme-color-1 {
             color: #ff5722; /* Dark Orange */
         }
 
+        body.theme-color-1 .header,
+        body.theme-color-1 .sub-header {
+            color: #ff5722;
+        }
+
+        body.theme-color-1 .user-input button,
+        body.theme-color-1 .modal-content button {
+            background: #ff5722;
+            color: #ffffff;
+        }
+
+        /* Theme 2 */
         body.theme-color-2 {
             color: #4caf50; /* Green */
         }
 
+        body.theme-color-2 .header,
+        body.theme-color-2 .sub-header {
+            color: #4caf50;
+        }
+
+        body.theme-color-2 .user-input button,
+        body.theme-color-2 .modal-content button {
+            background: #4caf50;
+            color: #ffffff;
+        }
+
+        /* Theme 3 */
         body.theme-color-3 {
             color: #2196f3; /* Blue */
         }
 
+        body.theme-color-3 .header,
+        body.theme-color-3 .sub-header {
+            color: #2196f3;
+        }
+
+        body.theme-color-3 .user-input button,
+        body.theme-color-3 .modal-content button {
+            background: #2196f3;
+            color: #ffffff;
+        }
+
+        /* Theme 4 */
         body.theme-color-4 {
             color: #ffeb3b; /* Yellow */
         }
 
+        body.theme-color-4 .header,
+        body.theme-color-4 .sub-header {
+            color: #ffeb3b;
+        }
+
+        body.theme-color-4 .user-input button,
+        body.theme-color-4 .modal-content button {
+            background: #ffeb3b;
+            color: #000000;
+        }
+
+        /* Theme 5 */
         body.theme-color-5 {
             color: #673ab7; /* Purple */
         }
 
+        body.theme-color-5 .header,
+        body.theme-color-5 .sub-header {
+            color: #673ab7;
+        }
+
+        body.theme-color-5 .user-input button,
+        body.theme-color-5 .modal-content button {
+            background: #673ab7;
+            color: #ffffff;
+        }
+
+        /* Theme 6 */
         body.theme-color-6 {
             color: #ff6a00; /* Orange */
+        }
+
+        body.theme-color-6 .header,
+        body.theme-color-6 .sub-header {
+            color: #ff6a00;
+        }
+
+        body.theme-color-6 .user-input button,
+        body.theme-color-6 .modal-content button {
+            background: #ff6a00;
+            color: #ffffff;
         }
 
         /* Scrollbar */
@@ -314,8 +398,8 @@
         <div class="chat-history">
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
-            <button class="action-button" onclick="exportChat();">🎤 Export Chat</button>
             <button class="action-button" onclick="resetChat();">🔄 New Chat</button>
+            <button class="action-button" onclick="exportChat();">🎤 Export Chat</button>
         </div>
         <div class="chat-window">
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
@@ -324,12 +408,8 @@
             <div class="user-input">
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
                 <button onclick="sendMessage()">📤</button>
-                <button onclick="toggleVoice()">🔊</button>
+                <button onclick="setReminder()">⏰ Set Reminder</button>
                 <button onclick="openSettings()">⚙️</button>
-            </div>
-            <div class="music-controls">
-                <button onclick="playMusic()">Play Music</button>
-                <button onclick="pauseMusic()">Pause Music</button>
             </div>
         </div>
     </div>
@@ -353,12 +433,12 @@
             <label for="theme">Text Color Theme:</label>
             <select id="theme" onchange="changeTheme()">
                 <option value="default">Default</option>
-                <option value="theme-color-1">Deep Orange</option>
+                <option value="theme-color-1">Dark Orange</option>
                 <option value="theme-color-2">Green</option>
                 <option value="theme-color-3">Blue</option>
                 <option value="theme-color-4">Yellow</option>
                 <option value="theme-color-5">Purple</option>
-                <option value="theme-color-6">Orange</option>
+                <option value="theme-color-6">Bright Orange</option>
             </select>
 
             <label for="musicUpload">Upload Music:</label>
@@ -369,8 +449,10 @@
             <label for="voiceToggle">Enable Voice:</label>
             <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
 
-            <label for="reminder">Set a Reminder:</label>
-            <input type="datetime-local" id="reminder" onchange="setReminder()">
+            <label for="reminder">Set Message as Reminder:</label>
+            <input type="text" id="reminderMessageInput" placeholder="Enter reminder message" />
+            <input type="datetime-local" id="reminderTimeInput" />
+            <button onclick="setMessageAsReminder()">Set Reminder</button>
 
             <label for="feedback">Feedback:</label>
             <select id="feedback" onchange="sendFeedback()">
@@ -441,6 +523,7 @@
             if (file) {
                 const url = URL.createObjectURL(file);
                 musicPlayer.src = url;
+                showModal("Music Loaded!");
             }
         }
 
@@ -452,10 +535,6 @@
 
         function pauseMusic() {
             musicPlayer.pause();
-        }
-
-        function setVolume(value) {
-            musicPlayer.volume = value;
         }
 
         function speakResponse(response) {
@@ -490,24 +569,15 @@
 
                 try {
                     await delayResponse();
-                    let response;
-                    const query = userMessage;
-
-                    if (/what's your name|who are you/i.test(query)) {
-                        response = `My name is ${chatbotName}.`;
-                    } else if (/who made you|your creator/i.test(query)) {
-                        response = "I was made by Rishab.";
-                    } else {
-                        response = await puter.ai.chat(query);
-                    }
-
+                    let response = userMessage; // Default echo the user message
+                    // Include any AI response logic here
                     chatbox.removeChild(typingIndicator);
                     const botMessageDiv = document.createElement("div");
                     botMessageDiv.className = "message bot";
                     botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
                     chatbox.appendChild(botMessageDiv);
                     chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
-                    
+
                     speakResponse(response);
                     messageCount++;
                 } catch (error) {
@@ -534,10 +604,7 @@
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.className = ''; // Reset classes
-            if (selectedTheme !== "default") {
-                document.body.classList.add(selectedTheme);
-            }
+            document.body.className = 'theme-color-' + selectedTheme.charAt(selectedTheme.length - 1);
             localStorage.setItem('theme', selectedTheme);
         }
 
@@ -547,8 +614,8 @@
             chatbox.innerHTML = "";
             chatList.innerHTML = "";
             messageCount = 0;
-            chatMessages.length = 0;
-            chatAnswers.length = 0;
+            chatMessages.length = 0; // Clear messages
+            chatAnswers.length = 0; // Clear answers too
         }
 
         function openSettings() {
@@ -570,14 +637,24 @@
             showModal("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
         }
 
-        function setReminder() {
-            const reminderDatetime = document.getElementById("reminder").value;
-            if (reminderDatetime) {
-                let reminder = new Date(reminderDatetime);
-                setTimeout(() => {
-                    showModal("Reminder: Time to check your task!");
-                }, reminder.getTime() - Date.now());
-                showModal("Reminder set for " + reminder.toLocaleString());
+        function setMessageAsReminder() {
+            const reminderMessage = document.getElementById("reminderMessageInput").value;
+            const reminderTime = document.getElementById("reminderTimeInput").value;
+
+            if (reminderMessage && reminderTime) {
+                const reminderDatetime = new Date(reminderTime);
+                showModal("Reminder set for: " + reminderMessage);
+
+                const delay = reminderDatetime.getTime() - Date.now();
+                if (delay > 0) {
+                    setTimeout(() => {
+                        showModal("💡 Reminder: " + reminderMessage);
+                    }, delay);
+                } else {
+                    showModal("❌ Can't set a reminder in the past.");
+                }
+            } else {
+                showModal("Please enter both a reminder message and time.");
             }
         }
 
