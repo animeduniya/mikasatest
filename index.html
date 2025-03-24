@@ -58,13 +58,11 @@
             padding: 10px;
             position: relative;
             overflow-y: auto;
-            border: 5px solid transparent;
-            animation: borderAnimation 10s infinite alternate;
         }
 
         .header, .sub-header {
             text-align: center;
-            color: cyan; /* Default color for headers */
+            color: cyan;
             text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.5);
         }
 
@@ -79,7 +77,31 @@
             margin-bottom: 15px;
         }
 
-        /* Chat History */
+        /* Message Styles */
+        .message {
+            padding: 10px 15px;
+            border-radius: 20px;
+            margin: 5px 0;
+            max-width: 70%;
+            word-wrap: break-word;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* User Message Style */
+        .message.user {
+            background-color: #00ccff; /* User messages */
+            color: #000;
+            align-self: flex-end;
+            margin-left: auto; /* Align to right */
+        }
+
+        /* Bot Message Style */
+        .message.bot {
+            background-color: #4caf50; /* Bot responses */
+            color: #fff;
+            align-self: flex-start;
+        }
+
         .chat-history {
             flex: 0 1 20%;
             overflow-y: auto;
@@ -92,7 +114,7 @@
 
         .chat-history h3 {
             margin: 0;
-            color: cyan; /* Header color */
+            color: cyan; 
             text-align: center;
         }
 
@@ -103,7 +125,7 @@
 
         .chat-history li {
             background: rgba(0, 255, 240, 0.2);
-            color: cyan; /* List item color */
+            color: cyan; 
             margin: 5px 0;
             padding: 8px;
             border-radius: 8px;
@@ -139,10 +161,10 @@
             padding: 10px 15px;
             border-radius: 30px;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
             margin-left: 5px;
-            color: #ffffff; /* Text color should be white */
             background: cyan; /* Default button background */
+            color: #ffffff; /* Text color should be white */
+            transition: background 0.3s, transform 0.2s;
         }
 
         .user-input button:hover {
@@ -155,12 +177,12 @@
             width: 100%;
             padding: 12px;
             border-radius: 30px;
-            color: #ffffff; /* Text color should be white */
+            color: #ffffff; 
             font-weight: bold;
             font-size: 1.1em;
             text-align: center;
             margin-top: 10px;
-            background: cyan; /* Default button background */
+            background: cyan; 
             border: none;
             transition: all 0.3s;
         }
@@ -168,33 +190,6 @@
         .action-button:hover {
             background: #00c8e1;
             transform: scale(1.05);
-        }
-
-        /* New Feature - Quick Replies */
-        .quick-replies {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .quick-reply {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 20px;
-            padding: 10px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .quick-reply:hover {
-            background: rgba(255, 255, 255, 0.3);
-        }
-
-        /* Summary Button */
-        .summarize-button {
-            background: #ffcc00; /* Yellow Color */
-            color: #000;
-            font-weight: bold;
         }
 
         /* Emoji Picker Styles */
@@ -211,7 +206,7 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 1.5em; /* Larger size for emojis */
+            font-size: 1.5em;
         }
 
         /* Modal Styles */
@@ -239,7 +234,7 @@
             margin-top: 10px;
             display: block;
             font-weight: bold;
-            color: inherit; /* Inherit color from theme */
+            color: inherit; 
         }
 
         .modal-content input[type="text"],
@@ -263,7 +258,7 @@
             transition: background 0.3s ease;
             margin-top: 10px;
             width: 100%;
-            background: cyan; /* Modal button background */
+            background: cyan;
         }
 
         /* Scrollbar */
@@ -284,7 +279,7 @@
             color: #ff5722;
         }
         body.theme-color-1 .sub-header {
-            color: #ff5722; /* Dark Orange */
+            color: #ff5722; 
         }
         body.theme-color-1 .user-input button,
         body.theme-color-1 .modal-content button,
@@ -294,13 +289,13 @@
         }
 
         body.theme-color-2 {
-            color: #4caf50; /* Green */
+            color: #4caf50; 
         }
         body.theme-color-2 .header {
             color: #4caf50;
         }
         body.theme-color-2 .sub-header {
-            color: #4caf50; /* Green */
+            color: #4caf50; 
         }
         body.theme-color-2 .user-input button,
         body.theme-color-2 .modal-content button,
@@ -310,13 +305,13 @@
         }
 
         body.theme-color-3 {
-            color: #2196f3; /* Blue */
+            color: #2196f3; 
         }
         body.theme-color-3 .header {
             color: #2196f3;
         }
         body.theme-color-3 .sub-header {
-            color: #2196f3; /* Blue */
+            color: #2196f3; 
         }
         body.theme-color-3 .user-input button,
         body.theme-color-3 .modal-content button,
@@ -326,13 +321,13 @@
         }
 
         body.theme-color-4 {
-            color: #ffeb3b; /* Yellow */
+            color: #ffeb3b; 
         }
         body.theme-color-4 .header {
             color: #ffeb3b;
         }
         body.theme-color-4 .sub-header {
-            color: #ffeb3b; /* Yellow */
+            color: #ffeb3b; 
         }
         body.theme-color-4 .user-input button,
         body.theme-color-4 .modal-content button,
@@ -342,13 +337,13 @@
         }
 
         body.theme-color-5 {
-            color: #673ab7; /* Purple */
+            color: #673ab7; 
         }
         body.theme-color-5 .header {
             color: #673ab7;
         }
         body.theme-color-5 .sub-header {
-            color: #673ab7; /* Purple */
+            color: #673ab7; 
         }
         body.theme-color-5 .user-input button,
         body.theme-color-5 .modal-content button,
@@ -358,13 +353,13 @@
         }
 
         body.theme-color-6 {
-            color: #ff6a00; /* Orange */
+            color: #ff6a00; 
         }
         body.theme-color-6 .header {
             color: #ff6a00;
         }
         body.theme-color-6 .sub-header {
-            color: #ff6a00; /* Orange */
+            color: #ff6a00; 
         }
         body.theme-color-6 .user-input button,
         body.theme-color-6 .modal-content button,
@@ -381,7 +376,7 @@
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
             <button class="action-button" onclick="exportChat();">🎤 Export Chat</button>
-            <button class="action-button summarize-button" onclick="summarizeChat();">📝 Summarize Chat</button>
+            <button class="action-button" onclick="summarizeChat();">📝 Summarize Chat</button>
             <button class="action-button" onclick="resetChat();">🔄 Add New Chat</button>
         </div>
         <div class="chat-window">
@@ -394,6 +389,7 @@
                 <button onclick="openSettings()">⚙️</button>
                 <button onclick="toggleEmojiPicker()">😀</button>
                 <button onclick="startVoiceInput()">🎤</button>
+                <button onclick="copyToClipboard()">📋</button>
             </div>
             <div class="quick-replies">
                 <span class="quick-reply" onclick="chooseQuickReply('Hello')">Hello</span>
@@ -475,10 +471,10 @@
     <script src="https://js.puter.com/v2/"></script>
     <script>
         let chatbotName = "Rishab";
-        let voiceEnabled = true; // Default voice enabled
-        let messageCount = 0; // Tracks number of messages
-        const chatMessages = []; // Store chat messages for export and summary
-        const chatAnswers = []; // Store chat answers for export
+        let voiceEnabled = true;
+        let messageCount = 0;
+        const chatMessages = [];
+        const chatAnswers = [];
         const musicPlayer = document.getElementById('musicPlayer');
         let speechSynthesisInstance = window.speechSynthesis;
 
@@ -496,11 +492,10 @@
             }
 
             if (savedTheme) {
-                document.body.className = ''; // Reset classes
+                document.body.className = '';
                 document.body.classList.add(savedTheme);
             } else {
-                // Default to cyan theme on initial load
-                document.body.classList.add('default');
+                document.body.classList.add('default'); // Default theme
             }
 
             if (savedBotName) {
@@ -560,19 +555,16 @@
                 typingIndicator.innerHTML = "<em>🤖 Rishab is typing...</em>";
                 chatbox.appendChild(typingIndicator);
 
-                // Simulate thinking delay
                 try {
-                    await delayResponse();
+                    await delayResponse(); // Simulate thinking delay
                     let response;
-                    const query = userMessage;
 
-                    // Custom responses for specific queries
-                    if (/what's your name|who are you/i.test(query)) {
+                    if (/what's your name|who are you/i.test(userMessage)) {
                         response = `My name is ${chatbotName}.`;
-                    } else if (/who made you|your creator/i.test(query)) {
+                    } else if (/who made you|your creator/i.test(userMessage)) {
                         response = "I was made by Rishab.";
                     } else {
-                        response = await puter.ai.chat(query); // Call the AI service
+                        response = await puter.ai.chat(userMessage); // Use chat service
                     }
 
                     chatbox.removeChild(typingIndicator);
@@ -582,7 +574,6 @@
                     botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
                     chatbox.appendChild(botMessageDiv);
 
-                    // Store answer
                     chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
                     
                     speakResponse(response);
@@ -616,33 +607,27 @@
 
         function chooseQuickReply(reply) {
             const userInput = document.getElementById("userInput");
-            userInput.value += reply; // Append the quick reply to input
+            userInput.value += reply;
             sendMessage(); // Send the message
         }
 
-        function startVoiceInput() {
-            if (speechSynthesisInstance.speaking) {
-                speechSynthesisInstance.cancel();
+        function copyToClipboard() {
+            const lastMessageElement = document.getElementById("chatbox").lastChild;
+            if (lastMessageElement) {
+                const textToCopy = lastMessageElement.textContent;
+                navigator.clipboard.writeText(textToCopy).then(() => {
+                    alert("Copied to clipboard: " + textToCopy);
+                });
             }
-
-            const recognition = new webkitSpeechRecognition();
-            recognition.onresult = function (event) {
-                const userInput = document.getElementById("userInput");
-                userInput.value = event.results[0][0].transcript; // Set voice input to the text field
-            };
-            recognition.start();
         }
 
         function summarizeChat() {
             const summaryDiv = document.createElement("div");
             summaryDiv.className = "message bot";
-            const summaryText = "Chat Summary:\n" +
-                chatMessages.join("\n") + 
-                "\nTotal Messages: " + chatMessages.length;
+            const summaryText = `Chat Summary:\nOverview of your questions: ${chatMessages.join(", ")}.\nTotal Messages: ${chatMessages.length}`;
             summaryDiv.textContent = summaryText;
             document.getElementById("chatbox").appendChild(summaryDiv);
-            // Auto-scroll to the new message
-            document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;
+            document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight; 
         }
 
         function exportChat() {
@@ -668,9 +653,12 @@
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.className = ''; // Reset classes
+            document.body.className = ''; 
             document.body.classList.add(selectedTheme);
-            localStorage.setItem('theme', selectedTheme); // Save theme
+            localStorage.setItem('theme', selectedTheme);
+            if (selectedTheme === 'default') {
+                document.querySelector('.action-button').style.background = 'cyan'; 
+            }
         }
 
         function resetChat() {
@@ -679,8 +667,8 @@
             chatbox.innerHTML = "";
             chatList.innerHTML = "";
             messageCount = 0;
-            chatMessages.length = 0; // Clear messages
-            chatAnswers.length = 0; // Clear answers too
+            chatMessages.length = 0; 
+            chatAnswers.length = 0; 
         }
 
         function openSettings() {
