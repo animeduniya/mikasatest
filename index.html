@@ -36,6 +36,19 @@
             }
         }
 
+        /* Profile Icon Style */
+        .profile-icon {
+            background: url('https://via.placeholder.com/50') no-repeat center center / cover;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            cursor: pointer;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+        }
+
         /* Container Styles */
         .container {
             width: 95%;
@@ -51,33 +64,6 @@
             padding: 10px;
         }
 
-        /* Profile Icon */
-        #profileIcon {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            border-radius: 50%;
-            overflow: hidden;
-            background-color: rgba(0, 255, 240, 0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
-            transition: transform 0.3s;
-        }
-
-        #profileIcon:hover {
-            transform: scale(1.1);
-        }
-
-        #profileIcon img {
-            width: 100%;
-            height: 100%;
-        }
-
         /* Chat History */
         .chat-history {
             flex: 0 1 20%;
@@ -89,141 +75,51 @@
             box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.2);
         }
 
-        .chat-history h3 {
-            margin: 0;
-            color: #00fff0;
-            text-align: center;
-        }
-
-        .chat-history ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .chat-history li {
-            background: rgba(0, 255, 240, 0.2);
-            color: #00fff0;
-            margin: 5px 0;
-            padding: 8px;
-            border-radius: 8px;
-        }
-
         /* Chat Window */
         .chat-window {
             flex: 1;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: inset 0 5px 10px rgba(0, 0, 0, 0.25);
             display: flex;
             flex-direction: column;
-            padding: 10px;
-            position: relative;
-            overflow-y: auto;
         }
 
         .header {
-            font-size: 1.8em;
             font-weight: bold;
-            color: #00fff0;
-            text-align: center;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 5px rgba(0, 255, 255, 0.5);
-        }
-
-        .sub-header {
-            font-size: 1em;
-            color: #00fff0;
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 15px;
-            opacity: 0.8;
+            color: white;
         }
 
         .messages {
             flex: 1;
             overflow-y: auto;
-            margin-bottom: 10px;
-            padding-right: 10px;
+            margin: 10px 0;
+            color: white;
         }
 
-        .message {
-            padding: 10px 15px;
-            border-radius: 20px;
-            margin: 5px 0;
-            max-width: 70%;
-            animation: slideIn 0.5s forwards;
-        }
-
-        .message.user {
-            background-color: #00ccff;
-            color: #000;
-            align-self: flex-end;
-            margin-left: auto;
-        }
-
-        .message.bot {
-            background-color: #3f51b5;
-            color: #fff;
-            align-self: flex-start;
-        }
-
+        /* User Input Section */
         .user-input {
             display: flex;
             align-items: center;
-            padding: 10px 0;
         }
 
-        /* Styles for Input and Buttons */
-        .user-input input {
+        #userInput {
             flex: 1;
-            padding: 12px;
-            font-size: 1em;
-            border: 2px solid #00fff0;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            margin-right: 5px;
-            transition: border 0.3s;
-        }
-
-        .user-input input:focus {
-            outline: none;
-            border: 2px solid #00ccff;
-        }
-
-        .user-input button {
+            padding: 10px;
             border: none;
-            font-size: 1em;
-            padding: 10px 15px;
-            border-radius: 30px;
+            border-radius: 5px;
+            margin-right: 5px;
+            font-size: 16px;
+        }
+
+        button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            margin-left: 5px;
-            color: #0A0A0A;
-            background: #00fff0;
-        }
-
-        .user-input button:hover {
-            transform: scale(1.05);
-            background: #00ccff;
-        }
-
-        /* Epic Button Styles */
-        .action-button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 30px;
-            background: #00fff0;
-            color: #0A0A0A;
-            font-weight: bold;
-            font-size: 1em;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-
-        .action-button:hover {
-            background: #00ccff;
-            border: 2px solid #fff;
-            transform: scale(1.05);
+            background-color: #007bff;
+            color: white;
         }
 
         /* Modal Styles */
@@ -242,89 +138,30 @@
             overflow: hidden;
         }
 
-        .modal-content {
-            padding: 20px;
-            color: #ffffff;
-        }
-
-        .modal-header {
-            padding: 10px;
-            font-size: 1.5em;
-            background: #00fff0;
-            color: #0A0A0A;
-            text-align: center;
-            border-radius: 15px 15px 0 0;
-        }
-
-        .close-btn {
-            float: right;
-            cursor: pointer;
-            color: #00fff0;
-            padding: 0 10px;
-        }
-
-        input[type="email"],
-        input[type="password"],
-        input[type="text"],
-        input[type="file"],
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border: 2px solid #00fff0;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-        }
-
-        button {
-            background: #00fff0;
-            border: none;
-            color: #0A0A0A;
-            font-size: 1em;
-            padding: 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        button:hover {
-            background: #00ccff;
-            transform: scale(1.05);
-        }
-
-        /* Reminder styles */
-        #reminderToggle {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        #reminderToggle input {
-            margin-left: 10px;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #00fff0;
-            border-radius: 10px;
+        .hidden {
+            display: none;
         }
     </style>
+    <!-- Add Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
 </head>
 
 <body>
     <div class="container" id="chatContainer">
+        <!-- Profile Icon -->
+        <div class="profile-icon" onclick="toggleProfileMenu()"></div>
+        <div id="profileMenu" class="hidden">
+            <button onclick="login()">Login</button>
+            <button onclick="signup()">Sign Up</button>
+            <input type="file" id="profileImageUpload" accept="image/*" onchange="uploadProfileImage(event)" />
+        </div>
+
         <div class="chat-history">
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
             <button class="action-button" onclick="exportChat();">🎤 Export Chat</button>
-            <button class="action-button" onclick="summarizeChat();">📝 Summarize Chat</button>
             <button class="action-button" onclick="resetChat();">🔄 Add New Chat</button>
         </div>
         <div class="chat-window">
@@ -335,266 +172,101 @@
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
                 <button onclick="sendMessage()">📤</button>
                 <button onclick="openSettings()">⚙️</button>
-                <button onclick="toggleEmojiPicker()">😀</button>
                 <button onclick="startVoiceInput()">🎤</button>
             </div>
-            <div class="emoji-picker" id="emojiPicker">
-                <button onclick="addEmoji('😀')">😀</button>
-                <button onclick="addEmoji('😁')">😁</button>
-                <button onclick="addEmoji('😂')">😂</button>
-                <button onclick="addEmoji('😃')">😃</button>
-                <button onclick="addEmoji('😄')">😄</button>
-                <button onclick="addEmoji('😊')">😊</button>
-                <button onclick="addEmoji('😍')">😍</button>
-                <button onclick="addEmoji('😎')">😎</button>
-                <button onclick="addEmoji('😜')">😜</button>
-                <button onclick="addEmoji('😢')">😢</button>
-                <button onclick="addEmoji('😡')">😡</button>
-            </div>
-        </div>
-        <div id="profileIcon" onclick="openProfile()">
-            <img src="https://via.placeholder.com/40" alt="Profile">
         </div>
     </div>
 
-    <!-- Authentication Modal -->
-    <div id="authModal" class="modal">
-        <div class="modal-header">
-            <span class="close-btn" onclick="closeAuth()">×</span>
-            Auth
-        </div>
-        <div class="modal-content">
-            <label for="email">Email:</label>
-            <input type="email" id="email" placeholder="Enter your email" />
-            <label for="password">Password:</label>
-            <input type="password" id="password" placeholder="Enter your password" />
-            <button onclick="signup()">Signup</button>
-            <button onclick="login()">Login</button>
-            <input type="file" id="profileImageInput" accept="image/*" onchange="changeProfileImage(event)" />
-        </div>
-    </div>
-
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="modal">
-        <div class="modal-header">
-            <span class="close-btn" onclick="closeSettings()">×</span>
-            Settings
-        </div>
-        <div class="modal-content">
-            <label for="reminders">Enable Reminders</label>
-            <div id="reminderToggle">
-                <input type="checkbox" id="remindersToggle" onchange="toggleReminders()"/>
-            </div>
-            <button onclick="resetChat()">Reset Chat</button>
-        </div>
-    </div>
-
-    <audio id="musicPlayer" src="" preload="auto"></audio>
-
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
+    <!-- Firebase config -->
     <script>
+        // Replace with your own Firebase project configuration
         const firebaseConfig = {
-            // Your Firebase Config here
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
-
+        
+        // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+        const storage = firebase.storage();
 
-        let chatbotName = "Mikasa";
-        let voiceEnabled = true; // Default voice enabled
-        let messageCount = 0; // Tracks number of messages
-        const chatMessages = []; // Store chat messages for export and summary
-        const chatAnswers = []; // Store chat answers for export
-
-        window.onload = function () {
-            loadPreferences();
+        function toggleProfileMenu() {
+            const menu = document.getElementById("profileMenu");
+            menu.classList.toggle('hidden');
         }
 
-        function loadPreferences() {
-            const savedLang = localStorage.getItem('language');
-            const savedTheme = localStorage.getItem('theme');
-            const savedBotName = localStorage.getItem('botName');
-
-            if (savedLang) {
-                document.getElementById("language").value = savedLang;
-            }
-
-            if (savedTheme) {
-                changeTheme(savedTheme);
-            }
-
-            if (savedBotName) {
-                chatbotName = savedBotName;
-                document.getElementById("chatbotName").innerText = chatbotName + " - Your AI Companion";
-                document.getElementById("botNameInput").value = chatbotName;
+        async function signup() {
+            const email = prompt("Enter your email:");
+            const password = prompt("Enter your password:");
+            try {
+                await auth.createUserWithEmailAndPassword(email, password);
+                alert("Signup successful!");
+            } catch (error) {
+                alert(error.message);
             }
         }
 
-        function openProfile() {
-            document.getElementById('authModal').style.display = 'block';
+        async function login() {
+            const email = prompt("Enter your email:");
+            const password = prompt("Enter your password:");
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                alert("Login successful!");
+            } catch (error) {
+                alert(error.message);
+            }
         }
 
-        function closeAuth() {
-            document.getElementById('authModal').style.display = 'none';
-            document.getElementById("email").value = '';
-            document.getElementById("password").value = '';
-        }
-
-        function signup() {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            auth.createUserWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    alert("User signed up");
-                    closeAuth();
-                })
-                .catch(err => alert(err.message));
-        }
-
-        function login() {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-            auth.signInWithEmailAndPassword(email, password)
-                .then((userCredential) => {
-                    alert("User logged in");
-                    closeAuth();
-                })
-                .catch(err => alert(err.message));
-        }
-
-        function changeProfileImage(event) {
+        async function uploadProfileImage(event) {
             const file = event.target.files[0];
             if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    document.querySelector("#profileIcon img").src = e.target.result;
-                }
-                reader.readAsDataURL(file);
+                const userId = auth.currentUser.uid;
+                const storageRef = storage.ref();
+                const userImgRef = storageRef.child('profileImages/' + userId + '/' + file.name);
+                
+                await userImgRef.put(file);
+                const downloadURL = await userImgRef.getDownloadURL();
+                document.querySelector('.profile-icon').style.backgroundImage = `url(${downloadURL})`;
+                alert("Profile image updated!");
             }
         }
 
-        function openSettings() {
-            document.getElementById("settingsModal").style.display = "block";
-        }
+        let messageCount = 0; 
+        const chatMessages = []; 
+        const chatAnswers = []; 
 
-        function closeSettings() {
-            document.getElementById("settingsModal").style.display = "none";
-        }
-
-        function toggleReminders() {
-            const remindersEnabled = document.getElementById("remindersToggle").checked;
-            // Handle reminders logic here
-            alert("Reminders are now " + (remindersEnabled ? "enabled" : "disabled") + ".");
-        }
-
-        function loadMusic(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const url = URL.createObjectURL(file);
-                musicPlayer.src = url;
-            }
-        }
-
-        function playMusic() {
-            if (musicPlayer.paused) {
-                musicPlayer.play();
-            } else {
-                musicPlayer.pause();
-            }
-        }
-
-        function setVolume(value) {
-            musicPlayer.volume = value;
-        }
-
-        // Rest of the existing functions ...
-
-        async function sendMessage() {
+        function sendMessage() {
             const userInput = document.getElementById("userInput");
+            let message = userInput.value.trim();
+            if (!message) return;
+
+            // Display user's message
             const chatbox = document.getElementById("chatbox");
-            const chatList = document.getElementById("chatList");
+            const userMessageDiv = document.createElement("div");
+            userMessageDiv.textContent = "You: " + message;
+            chatbox.appendChild(userMessageDiv);
+            chatMessages.push(message); // Store user message
 
-            if (userInput.value.trim()) {
-                const userMessage = userInput.value.trim();
-                const userMessageDiv = document.createElement("div");
-                userMessageDiv.className = "message user";
-                userMessageDiv.textContent = "🧑: " + userMessage;
-                chatbox.appendChild(userMessageDiv);
-                chatList.appendChild(document.createElement("li")).textContent = userMessage;
-                chatMessages.push(userMessage); // Store question
+            // Simulated response from chatbot
+            const chatbotMessage = `Mikasa (AI): You just said, "${message}"`;
+            const chatbotMessageDiv = document.createElement("div");
+            chatbotMessageDiv.textContent = chatbotMessage;
+            chatbox.appendChild(chatbotMessageDiv);
+            chatAnswers.push(chatbotMessage); // Store chatbot answer
 
-                const typingIndicator = document.createElement("div");
-                typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
-                chatbox.appendChild(typingIndicator);
-
-                try {
-                    await delayResponse();
-                    let response;
-                    const query = userMessage;
-
-                    if (/what's your name|who are you/i.test(query)) {
-                        response = `My name is ${chatbotName}.`;
-                    } else if (/who made you|your creator/i.test(query)) {
-                        response = "I was made by Rishab.";
-                    } else {
-                        // Placeholder for chatbot response
-                        response = await puter.ai.chat(query);
-                    }
-
-                    chatbox.removeChild(typingIndicator);
-
-                    const botMessageDiv = document.createElement("div");
-                    botMessageDiv.className = "message bot";
-                    botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
-                    chatbox.appendChild(botMessageDiv);
-
-                    // Store answer
-                    chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
-
-                    // Uncomment this to enable voice response
-                    // speakResponse(response);
-                    messageCount++;
-                } catch (error) {
-                    const errorMessageDiv = document.createElement("div");
-                    errorMessageDiv.className = "message bot";
-                    errorMessageDiv.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
-                    chatbox.appendChild(errorMessageDiv);
-                }
-
-                chatbox.scrollTop = chatbox.scrollHeight;
-                userInput.value = ""; // Clear input
-            }
-        }
-
-        function delayResponse() {
-            return new Promise(resolve => setTimeout(resolve, 1000)); // Simulates typing delay
-        }
-
-        function addEmoji(emoji) {
-            const userInput = document.getElementById("userInput");
-            userInput.value += emoji;
-            document.getElementById('emojiPicker').style.display = 'none'; // Hide emoji picker
-        }
-        
-        function toggleEmojiPicker() {
-            const emojiPicker = document.getElementById('emojiPicker');
-            emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function startVoiceInput() {
-            const recognition = new webkitSpeechRecognition();
-            recognition.onresult = function (event) {
-                const userInput = document.getElementById("userInput");
-                userInput.value = event.results[0][0].transcript; // Set voice input to the text field
-            };
-            recognition.start();
+            // Clear input after sending
+            userInput.value = "";
+            chatbox.scrollTop = chatbox.scrollHeight; // Auto-scroll to the bottom
         }
 
         function exportChat() {
             let exportText = "";
             for (let i = 0; i < chatMessages.length; i++) {
-                exportText += `🧑: ${chatMessages[i]}\n${chatAnswers[i]}\n`;
+                exportText += `You: ${chatMessages[i]}\n${chatAnswers[i]}\n`;
             }
             const blob = new Blob([exportText], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
@@ -606,37 +278,21 @@
             document.body.removeChild(a);
         }
 
-        function summarizeChat() {
-            const summary = `Chat Summary:\nYou have exchanged ${chatMessages.length} messages.`;
-            alert(summary);
-        }
-
-        function changeLanguage() {
-            const selectedLanguage = document.getElementById("language").value;
-            localStorage.setItem('language', selectedLanguage);
-            alert("Language changed to: " + selectedLanguage);
-        }
-
-        function changeTheme() {
-            const selectedTheme = document.getElementById("theme").value;
-            document.body.className = ''; // Reset classes
-            document.body.classList.add(selectedTheme);
-            localStorage.setItem('theme', selectedTheme);
-        }
-
         function resetChat() {
             const chatbox = document.getElementById("chatbox");
-            const chatList = document.getElementById("chatList");
             chatbox.innerHTML = "";
-            chatList.innerHTML = "";
             messageCount = 0;
-            chatMessages.length = 0; // Clear messages
-            chatAnswers.length = 0; // Clear answers too
+            chatMessages.length = 0; 
+            chatAnswers.length = 0; 
         }
 
-        function toggleVoice() {
-            voiceEnabled = document.getElementById("voiceToggle").checked;
-            alert("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
+        function openSettings() {
+            // Open the settings modal logic (to be implemented if needed)
+            alert("Settings feature not implemented yet.");
+        }
+
+        function startVoiceInput() {
+            alert("Voice input feature to be implemented.");
         }
     </script>
 </body>
