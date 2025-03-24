@@ -2,10 +2,11 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rishab Chatbot</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mikasa Chatbot</title>
     <style>
+        /* Basic styles */
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
@@ -22,47 +23,18 @@
             0% {
                 background: url('https://wallpapercave.com/wp/wp9388551.jpg') center center / cover no-repeat;
             }
-
             25% {
                 background: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg') center center / cover no-repeat;
             }
-
             50% {
                 background: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg') center center / cover no-repeat;
             }
-
             75% {
                 background: url('https://wallpaperaccess.com/full/8583147.jpg') center center / cover no-repeat;
             }
-
             100% {
                 background: url('https://coolwallpapers.me/picsup/2503093-4k-hd-wallpaper-high-definition.jpg') center center / cover no-repeat;
             }
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 20px;
-            position: relative;
-        }
-
-        .profile {
-            background-color: cyan;
-            border: none;
-            border-radius: 30px;
-            padding: 10px 15px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-        }
-
-        .profile img {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            margin-right: 10px;
         }
 
         /* Container Styles */
@@ -78,101 +50,9 @@
             flex-direction: column;
             position: relative;
             padding: 10px;
-            border: 5px solid transparent; /* Initial border for RGB effect */
-            animation: rgbBorder 5s linear infinite; /* RGB border animation */
         }
 
-        /* Pop-Up Styles */
-        .popup {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(40, 40, 40, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-            width: 80%;
-            max-width: 500px;
-            padding: 20px;
-            text-align: center;
-            animation: popupAnimation 0.5s ease forwards;
-        }
-
-        @keyframes popupAnimation {
-            from {
-                opacity: 0;
-                transform: translate(-50%, -60%);
-            }
-
-            to {
-                opacity: 1;
-                transform: translate(-50%, -50%);
-            }
-        }
-
-        .popup h2 {
-            color: cyan;
-        }
-
-        /* Chat Window Styles */
-        .chat-window {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 10px;
-            position: relative;
-            overflow-y: auto;
-            border: 5px solid transparent; /* Same initial border for chat window */
-            animation: rgbBorder 5s linear infinite; /* Apply same RGB animation */
-        }
-
-        .header,
-        .sub-header {
-            text-align: center;
-            color: cyan;
-            text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.5);
-        }
-
-        .header {
-            font-size: 2.5em; /* Increased font sizes for better visibility */
-            font-weight: bold;
-        }
-
-        .sub-header {
-            font-size: 1.2em; /* Increased font sizes for better visibility */
-            opacity: 0.8;
-            margin-bottom: 15px;
-        }
-
-        /* Message Styles */
-        .message {
-            padding: 10px 15px;
-            border-radius: 20px;
-            margin: 5px 0;
-            max-width: 70%;
-            word-wrap: break-word;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s; /* Added transition for smooth hover effect */
-        }
-
-        /* User Message Style */
-        .message.user {
-            background-color: #00ccff; /* User messages */
-            color: #000;
-            align-self: flex-end; /* Align to right */
-            margin-left: auto;
-        }
-
-        /* Bot Message Style */
-        .message.bot {
-            background-color: #4caf50; /* Bot responses */
-            color: #fff;
-            align-self: flex-start;
-        }
-
-        /* Chat History Styles */
+        /* Chat History */
         .chat-history {
             flex: 0 1 20%;
             overflow-y: auto;
@@ -185,7 +65,7 @@
 
         .chat-history h3 {
             margin: 0;
-            color: cyan;
+            color: #00fff0;
             text-align: center;
         }
 
@@ -196,28 +76,84 @@
 
         .chat-history li {
             background: rgba(0, 255, 240, 0.2);
-            color: cyan;
+            color: #00fff0;
             margin: 5px 0;
             padding: 8px;
             border-radius: 8px;
         }
 
-        /* User Input Styles */
+        /* Chat Window */
+        .chat-window {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        .header {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #00fff0;
+            text-align: center;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 5px rgba(0, 255, 255, 0.5);
+        }
+
+        .sub-header {
+            font-size: 1em;
+            color: #00fff0;
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 15px;
+            opacity: 0.8;
+        }
+
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding-right: 10px;
+        }
+
+        .message {
+            padding: 10px 15px;
+            border-radius: 20px;
+            margin: 5px 0;
+            max-width: 70%;
+            animation: slideIn 0.5s forwards;
+        }
+
+        .message.user {
+            background-color: #00ccff;
+            color: #000;
+            align-self: flex-end;
+            margin-left: auto;
+        }
+
+        .message.bot {
+            background-color: #3f51b5;
+            color: #fff;
+            align-self: flex-start;
+        }
+
         .user-input {
             display: flex;
             align-items: center;
             padding: 10px 0;
         }
 
+        /* Styles for Input and Buttons */
         .user-input input {
             flex: 1;
             padding: 12px;
-            font-size: 1.1em;
-            border: 2px solid cyan;
+            font-size: 1em;
+            border: 2px solid #00fff0;
             border-radius: 30px;
             background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
-            margin-right: 10px;
+            margin-right: 5px;
             transition: border 0.3s;
         }
 
@@ -228,56 +164,40 @@
 
         .user-input button {
             border: none;
-            font-size: 1.1em;
+            font-size: 1em;
             padding: 10px 15px;
             border-radius: 30px;
             cursor: pointer;
-            margin-left: 5px;
-            background: cyan; /* Default button background */
-            color: #ffffff;
             transition: background 0.3s, transform 0.2s;
+            margin-left: 5px;
+            color: #0A0A0A;
+            background: #00fff0;
         }
 
         .user-input button:hover {
-            background: #00c8e1;
             transform: scale(1.05);
+            background: #00ccff;
         }
 
-        /* Action Button Styles */
+        /* Epic Button Styles */
         .action-button {
             width: 100%;
             padding: 12px;
             border-radius: 30px;
-            color: #ffffff;
+            background: #00fff0;
+            color: #0A0A0A;
             font-weight: bold;
-            font-size: 1.1em;
+            font-size: 1em;
             text-align: center;
-            margin-top: 10px;
-            background: cyan;
-            border: none;
+            border: 2px solid transparent;
             transition: all 0.3s;
+            margin-top: 10px;
         }
 
         .action-button:hover {
-            background: #00c8e1;
+            background: #00ccff;
+            border: 2px solid #fff;
             transform: scale(1.05);
-        }
-
-        /* Emoji Picker Styles */
-        .emoji-picker {
-            display: none;
-            background: rgba(0, 0, 0, 0.8);
-            position: absolute;
-            z-index: 1000;
-            border-radius: 10px;
-            padding: 5px;
-        }
-
-        .emoji-picker button {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.5em;
         }
 
         /* Modal Styles */
@@ -294,7 +214,6 @@
             width: 90%;
             max-width: 400px;
             overflow: hidden;
-            animation: rgbBorder 5s linear infinite; /* Same RGB animation */
         }
 
         .modal-content {
@@ -306,7 +225,7 @@
             margin-top: 10px;
             display: block;
             font-weight: bold;
-            color: inherit;
+            color: #00fff0;
         }
 
         .modal-content input[type="text"],
@@ -314,15 +233,16 @@
             width: 100%;
             padding: 10px;
             margin-top: 5px;
-            border: 1px solid cyan;
+            border: 1px solid #00fff0;
             border-radius: 5px;
             background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
         }
 
         .modal-content button {
+            background: #00fff0;
             border: none;
-            color: #ffffff;
+            color: #0A0A0A;
             font-size: 1em;
             padding: 10px;
             border-radius: 5px;
@@ -330,7 +250,10 @@
             transition: background 0.3s ease;
             margin-top: 10px;
             width: 100%;
-            background: cyan;
+        }
+
+        .modal-content button:hover {
+            background: #00ccff;
         }
 
         /* Scrollbar */
@@ -342,63 +265,16 @@
             background: #00fff0;
             border-radius: 10px;
         }
-
-        /* Theme Styles */
-        body.theme-color-1 {
-            color: #ff5722; /* Dark Orange */
-        }
-
-        body.theme-color-1 .header {
-            color: #ff5722;
-        }
-
-        body.theme-color-1 .sub-header {
-            color: #ff5722;
-        }
-
-        body.theme-color-1 .user-input button,
-        body.theme-color-1 .modal-content button,
-        body.theme-color-1 .action-button {
-            background: #ff5722;
-            color: #ffffff;
-        }
-
-        /* Sign-up/Log-in Modal Styles */
-        #authModal {
-            background: linear-gradient(45deg, #4a00e0, #8e2de2);
-            overflow: auto;
-            color: #ffffff;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-        }
-
-        /* Responsive Design for Modal */
-        @media (max-width: 600px) {
-            #authModal {
-                width: 95%;
-            }
-        }
-
     </style>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-auth.js"></script>
 </head>
 
-<body class="light-mode">
-    <div class="header">
-        <div class="title">Rishab Chatbot</div>
-        <button class="profile" onclick="openAuthModal()">
-            <img id="profileImage" src="default-profile.png" alt="Profile Image" />
-            Profile
-        </button>
-    </div>
-
-    <div class="popup" id="introPopup">
-        <h2>Welcome to Rishab Chatbot!</h2>
-        <p>This is your personalized assistant. Engage in delightful conversations and receive daily facts!</p>
-        <button onclick="closePopup()">Got it!</button>
-    </div>
-
+<body>
     <div class="container" id="chatContainer">
+        <div class="profile-icon" onclick="toggleProfileModal();">
+            <img src="default-profile.png" alt="Profile Picture" id="profileImage" style="width:50px; height:50px; border-radius:50%;" />
+        </div>
         <div class="chat-history">
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
@@ -407,7 +283,7 @@
             <button class="action-button" onclick="resetChat();">🔄 Add New Chat</button>
         </div>
         <div class="chat-window">
-            <div class="header" id="chatbotName">Rishab - Your AI Companion</div>
+            <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
             <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
             <div class="user-input">
@@ -416,12 +292,6 @@
                 <button onclick="openSettings()">⚙️</button>
                 <button onclick="toggleEmojiPicker()">😀</button>
                 <button onclick="startVoiceInput()">🎤</button>
-                <button onclick="copyToClipboard()">📋</button>
-            </div>
-            <div class="quick-replies">
-                <span class="quick-reply" onclick="chooseQuickReply('Hello')">Hello</span>
-                <span class="quick-reply" onclick="chooseQuickReply('Help')">Help</span>
-                <span class="quick-reply" onclick="chooseQuickReply('Goodbye')">Goodbye</span>
             </div>
             <div class="emoji-picker" id="emojiPicker">
                 <button onclick="addEmoji('😀')">😀</button>
@@ -455,147 +325,82 @@
                 <option value="fr">French</option>
                 <option value="de">German</option>
                 <option value="it">Italian</option>
-                <option value="jp">Japanese</option>
-                <option value="cn">Chinese</option>
             </select>
 
-            <div>
-                <label for="profileImageUpload">Change Profile Image:</label>
-                <input type="file" id="profileImageUpload" accept="image/*" onchange="changeProfileImage(event)" />
-            </div>
+            <label for="theme">Text Color Theme:</label>
+            <select id="theme" onchange="changeTheme()">
+                <option value="default">Default</option>
+                <option value="theme-color-1">Deep Orange</option>
+                <option value="theme-color-2">Green</option>
+                <option value="theme-color-3">Blue</option>
+                <option value="theme-color-4">Yellow</option>
+                <option value="theme-color-5">Purple</option>
+                <option value="theme-color-6">Orange</option>
+            </select>
 
-            <label class="example-checkbox">
-                <input type="checkbox" id="voiceToggle" onchange="toggleVoice()" checked>
-                Enable Voice
-            </label>
+            <label for="musicUpload">Upload Music:</label>
+            <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
+            <button onclick="playMusic()">Play/Pause Music</button>
+            <label>Volume:</label>
+            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)" />
 
-            <div>
-                <label for="dayCycle">Toggle Dark/Light Mode</label>
-                <input type="checkbox" id="dayCycle" onchange="toggleMode()">
-            </div>
+            <label for="voiceToggle">Enable Voice:</label>
+            <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
 
-            <button onclick="setReminder()">✅ Set Reminder</button>
-            <button onclick="showDailyFact()">🔍 Get Daily Fact/Quote</button>
-        </div>
-    </div>
+            <label for="feedback">Feedback:</label>
+            <select id="feedback" onchange="sendFeedback()">
+                <option value="">Select Feedback</option>
+                <option value="helpful">Helpful</option>
+                <option value="not_helpful">Not Helpful</option>
+            </select>
 
-    <!-- Authentication Modal -->
-    <div id="authModal" class="modal">
-        <div class="modal-content">
-            <span onclick="closeAuthModal()" style="float:right;cursor:pointer;color:#00fff0;">×</span>
-            <h2>Login / Register</h2>
-            <input type="email" id="email" placeholder="Email" />
-            <input type="password" id="password" placeholder="Password" />
-            <div class="action-button" id="signupButton" onclick="register()">Register</div>
-            <div class="action-button" id="loginButton" onclick="login()">Login</div>
-            <div class="action-button" id="logoutButton" onclick="logout()" style="display: none;">Logout</div>
+            <button onclick="resetChat()">Reset Chat</button>
         </div>
     </div>
 
     <audio id="musicPlayer" src="" preload="auto"></audio>
 
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <!-- Profile Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <span onclick="closeProfileModal()" style="float:right;cursor:pointer;color:#00fff0;">×</span>
+            <h2>Login / Sign Up</h2>
+            <input type="email" id="email" placeholder="Email" />
+            <input type="password" id="password" placeholder="Password" />
+            <button onclick="handleLogin()">Login</button>
+            <button onclick="handleSignUp()">Sign Up</button>
+            <label for="profileImageUpload">Upload Profile Image:</label>
+            <input type="file" id="profileImageUpload" accept="image/*" onchange="updateProfileImage(event)" />
+        </div>
+    </div>
+
     <script>
         // Firebase configuration
         const firebaseConfig = {
-            apiKey: "AIzaSyD0PGTsX1IJLm2qwh--7aKv3itQ7vrla-k",
-            authDomain: "mikasa-519d1.firebaseapp.com",
-            projectId: "mikasa-519d1",
-            storageBucket: "mikasa-519d1.firebasestorage.app",
-            messagingSenderId: "190611410740",
-            appId: "1:190611410740:web:d6c0e2e5a8b0e060c79f61"
+            apiKey: "AIzaSyD0PGTsX1IJLm2qwh--7aKv3itQ7vrla-k",  // Replace with your Firebase API key
+            authDomain: "mikasa-519d1.firebaseapp.com",  // Replace with your Firebase Auth domain
+            projectId: "mikasa-519d1",  // Replace with your Firebase project ID
+            storageBucket: "mikasa-519d1.firebasestorage.app",  // Replace with your Firebase storage bucket
+            messagingSenderId: "190611410740",  // Replace with your Firebase messaging sender ID
+            appId: "1:190611410740:web:d6c0e2e5a8b0e060c79f61"  // Replace with your Firebase app ID
         };
 
         // Initialize Firebase
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
+        const storage = firebase.storage();
 
-        let chatbotName = "Rishab";
-        let voiceEnabled = true;
-        let messageCount = 0;
-        const chatMessages = [];
-        const chatAnswers = [];
+        let chatbotName = "Mikasa";
+        let voiceEnabled = true; // Default voice enabled
+        let messageCount = 0; // Tracks number of messages
+        const chatMessages = []; // Store chat messages for export and summary
+        const chatAnswers = []; // Store chat answers for export
         const musicPlayer = document.getElementById('musicPlayer');
         let speechSynthesisInstance = window.speechSynthesis;
 
-        // Default profile image
-        document.getElementById("profileImage").src = "default-profile.png"; // Add a default profile image URL here
-
-        // List of daily facts
-        const facts = [
-            "Did you know? Honey never spoils!",
-            "Bananas are berries, but strawberries aren't.",
-            "The Eiffel Tower can be 15 cm taller during the summer.",
-            "A group of flamingos is called a 'flamboyance'.",
-            "Octopuses have three hearts.",
-            "Did you know that wombat poop is cube-shaped?",
-            "One teaspoon of honey is the life work of 12 bees.",
-            "An octopus has nine brains!",
-            "The longest wedding veil was longer than 63 football fields!",
-            "A day on Venus is longer than a year on Venus."
-        ];
-
         window.onload = function () {
             loadPreferences();
-            displayRandomFact();
-            document.getElementById("introPopup").style.display = "block"; // Show pop-up on load
-            document.getElementById("authModal").style.display = "block"; // Show auth modal on load
-
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    console.log('User logged in: ', user.email);
-                    document.getElementById("authModal").style.display = "none"; // Hide auth modal when logged in
-                    document.getElementById("logoutButton").style.display = "block"; // Show logout button
-                } else {
-                    console.log('User not logged in');
-                    document.getElementById("logoutButton").style.display = "none"; // Hide logout button
-                }
-            });
         };
-
-        function closePopup() {
-            document.getElementById("introPopup").style.display = "none"; // Close pop-up
-        }
-
-        function closeAuthModal() {
-            document.getElementById("authModal").style.display = "none"; // Close auth modal
-        }
-
-        function register() {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(() => {
-                    alert('Registration successful!');
-                    document.getElementById("authModal").style.display = "none"; // Close modal
-                })
-                .catch(error => {
-                    alert(error.message);
-                });
-        }
-
-        function login() {
-            const email = document.getElementById("email").value;
-            const password = document.getElementById("password").value;
-
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    alert('Login successful!');
-                    document.getElementById("authModal").style.display = "none"; // Hide auth modal on login
-                })
-                .catch(error => {
-                    alert(error.message);
-                });
-        }
-
-        function logout() {
-            auth.signOut().then(() => {
-                alert('Logged out successfully!');
-                document.getElementById("authModal").style.display = "block"; // Show auth modal again
-            });
-        }
 
         function loadPreferences() {
             const savedLang = localStorage.getItem('language');
@@ -606,11 +411,8 @@
                 document.getElementById("language").value = savedLang;
             }
 
-            // Load theme
             if (savedTheme) {
-                document.body.className = savedTheme;
-            } else {
-                document.body.classList.add('light-mode');
+                changeTheme(savedTheme);
             }
 
             if (savedBotName) {
@@ -618,31 +420,104 @@
                 document.getElementById("chatbotName").innerText = chatbotName + " - Your AI Companion";
                 document.getElementById("botNameInput").value = chatbotName;
             }
+
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    document.getElementById("profileImage").src = user.photoURL || 'default-profile.png';
+                    document.getElementById("loginModal").style.display = "none"; // Close the modal if logged in
+                } else {
+                    document.getElementById("profileImage").src = 'default-profile.png'; // Reset profile pic if logged out
+                }
+            });
         }
 
-        function displayRandomFact() {
-            const randomFact = facts[Math.floor(Math.random() * facts.length)];
-            document.getElementById("dailyFact").textContent = randomFact;
+        function toggleProfileModal() {
+            const modal = document.getElementById('loginModal');
+            modal.style.display = modal.style.display === 'block' ? 'none' : 'block';
         }
 
-        function toggleMode() {
-            if (document.body.classList.contains('light-mode')) {
-                document.body.className = 'dark-mode';
-                localStorage.setItem('theme', 'dark-mode');
-            } else {
-                document.body.className = 'light-mode';
-                localStorage.setItem('theme', 'light-mode');
+        function closeProfileModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('email').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function handleLogin() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    alert('Logged in successfully!');
+                    closeProfileModal();
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+        }
+
+        function handleSignUp() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(() => {
+                    alert('Signed up successfully! Please log in.');
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+        }
+
+        function updateProfileImage(event) {
+            const file = event.target.files[0];
+            const user = auth.currentUser;
+
+            if (file && user) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById('profileImage').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+
+                // Upload the profile picture to Firebase Storage
+                const storageRef = storage.ref(`profile_images/${user.uid}/profile.jpg`);
+                storageRef.put(file).then(() => {
+                    // Get the download URL and update the user's profile
+                    storageRef.getDownloadURL().then((url) => {
+                        user.updateProfile({ photoURL: url }).then(() => {
+                            console.log('Profile updated successfully!');
+                        }).catch((error) => {
+                            console.error(error);
+                        });
+                    });
+                });
             }
         }
 
-        function changeProfileImage(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    document.getElementById("profileImage").src = e.target.result;
-                }
-                reader.readAsDataURL(file);
+        function exportChat() {
+            let exportText = "";
+            for (let i = 0; i < chatMessages.length; i++) {
+                exportText += `🧑: ${chatMessages[i]}\n${chatAnswers[i]}\n`;
+            }
+            const blob = new Blob([exportText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'chat_history.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function summarizeChat() {
+            const summary = `Chat Summary:\nYou have exchanged ${chatMessages.length} messages.`;
+            alert(summary);
+        }
+
+        function playMusic() {
+            if (musicPlayer.paused) {
+                musicPlayer.play();
+            } else {
+                musicPlayer.pause();
             }
         }
 
@@ -654,19 +529,49 @@
             }
         }
 
-        function playMusic() {
-            if (musicPlayer.paused) {
-                musicPlayer.play();
-            } else {
-                musicPlayer.pause();
-            }
-        }
-
         function setVolume(value) {
             musicPlayer.volume = value;
         }
 
+        function changeLanguage() {
+            const selectedLanguage = document.getElementById("language").value;
+            localStorage.setItem('language', selectedLanguage);
+            alert("Language changed to: " + selectedLanguage);
+        }
+
+        function changeTheme() {
+            const selectedTheme = document.getElementById("theme").value;
+            document.body.className = ''; // Reset classes
+            document.body.classList.add(selectedTheme);
+            localStorage.setItem('theme', selectedTheme);
+        }
+
+        function resetChat() {
+            const chatbox = document.getElementById("chatbox");
+            const chatList = document.getElementById("chatList");
+            chatbox.innerHTML = "";
+            chatList.innerHTML = "";
+            messageCount = 0;
+            chatMessages.length = 0; // Clear messages
+            chatAnswers.length = 0; // Clear answers too
+        }
+
+        function openSettings() {
+            document.getElementById("settingsModal").style.display = "block";
+        }
+
+        function closeSettings() {
+            const newBotName = document.getElementById("botNameInput").value;
+            if (newBotName) {
+                chatbotName = newBotName;
+                document.getElementById("chatbotName").innerText = chatbotName + " - Your AI Companion";
+                localStorage.setItem('botName', chatbotName);
+            }
+            document.getElementById("settingsModal").style.display = "none";
+        }
+
         function speakResponse(response) {
+            // Stop previous speech if any
             if (speechSynthesisInstance.speaking) {
                 speechSynthesisInstance.cancel();
             }
@@ -690,28 +595,23 @@
                 userMessageDiv.textContent = "🧑: " + userMessage;
                 chatbox.appendChild(userMessageDiv);
                 chatList.appendChild(document.createElement("li")).textContent = userMessage;
-
                 chatMessages.push(userMessage); // Store question
 
                 const typingIndicator = document.createElement("div");
-                typingIndicator.innerHTML = "<em>🤖 Rishab is typing...</em>";
+                typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
                 chatbox.appendChild(typingIndicator);
 
                 try {
-                    await delayResponse(); // Simulate thinking delay
+                    await delayResponse();
                     let response;
+                    const query = userMessage;
 
-                    // Dynamic response based on user input
-                    if (/what's your name|who are you/i.test(userMessage)) {
+                    if (/what's your name|who are you/i.test(query)) {
                         response = `My name is ${chatbotName}.`;
-                    } else if (/who made you|your creator/i.test(userMessage)) {
+                    } else if (/who made you|your creator/i.test(query)) {
                         response = "I was made by Rishab.";
-                    } else if (/help/i.test(userMessage)) {
-                        response = "You can ask me anything! Type 'random fact' for interesting facts.";
-                    } else if (/fact/i.test(userMessage)) {
-                        response = facts[Math.floor(Math.random() * facts.length)];
                     } else {
-                        response = "I'm still learning!"; // Static response
+                        response = await puter.ai.chat(query); // Call your AI response logic here
                     }
 
                     chatbox.removeChild(typingIndicator);
@@ -721,8 +621,9 @@
                     botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
                     chatbox.appendChild(botMessageDiv);
 
+                    // Store answer
                     chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
-
+                    
                     speakResponse(response);
                     messageCount++;
                 } catch (error) {
@@ -731,9 +632,6 @@
                     errorMessageDiv.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
                     chatbox.appendChild(errorMessageDiv);
                 }
-
-                // Save the message to local storage
-                localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
 
                 chatbox.scrollTop = chatbox.scrollHeight;
                 userInput.value = ""; // Clear input
@@ -755,75 +653,13 @@
             emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
         }
 
-        function chooseQuickReply(reply) {
-            const userInput = document.getElementById("userInput");
-            userInput.value += reply; // Append the quick reply to input
-            sendMessage(); // Send the message
-        }
-
-        function copyToClipboard() {
-            const lastMessageElement = document.getElementById("chatbox").lastChild;
-            if (lastMessageElement) {
-                const textToCopy = lastMessageElement.textContent;
-                navigator.clipboard.writeText(textToCopy).then(() => {
-                    alert("Copied to clipboard: " + textToCopy);
-                });
-            }
-        }
-
-        function summarizeChat() {
-            const summaryDiv = document.createElement("div");
-            summaryDiv.className = "message bot";
-            const summaryText = `Chat Summary:\nOverview of your questions: ${chatMessages.join(", ")}.\nTotal Messages: ${chatMessages.length}`;
-            summaryDiv.textContent = summaryText;
-            document.getElementById("chatbox").appendChild(summaryDiv);
-            document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;
-        }
-
-        function exportChat() {
-            let exportText = "";
-            for (let i = 0; i < chatMessages.length; i++) {
-                exportText += `🧑: ${chatMessages[i]}\n${chatAnswers[i]}\n`;
-            }
-            const blob = new Blob([exportText], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'chat_history.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        function changeLanguage() {
-            const selectedLanguage = document.getElementById("language").value;
-            localStorage.setItem('language', selectedLanguage);
-            alert("Language changed to: " + selectedLanguage);
-        }
-
-        function resetChat() {
-            const chatbox = document.getElementById("chatbox");
-            const chatList = document.getElementById("chatList");
-            chatbox.innerHTML = "";
-            chatList.innerHTML = "";
-            messageCount = 0;
-            chatMessages.length = 0;
-            chatAnswers.length = 0;
-            localStorage.removeItem('chatMessages'); // Clear stored messages
-        }
-
-        function openSettings() {
-            document.getElementById("settingsModal").style.display = "block";
-        }
-
-        function closeSettings() {
-            const newBotName = document.getElementById("botNameInput").value;
-            if (newBotName) {
-                chatbotName = newBotName;
-                document.getElementById("chatbotName").innerText = chatbotName + " - Your AI Companion";
-                localStorage.setItem('botName', chatbotName);
-            }
-            document.getElementById("settingsModal").style.display = "none";
+        function startVoiceInput() {
+            const recognition = new webkitSpeechRecognition();
+            recognition.onresult = function (event) {
+                const userInput = document.getElementById("userInput");
+                userInput.value = event.results[0][0].transcript; // Set voice input to the text field
+            };
+            recognition.start();
         }
 
         function toggleVoice() {
@@ -831,51 +667,12 @@
             alert("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
         }
 
-        function setReminder() {
-            const reminderText = prompt("What would you like to be reminded about? (Using setTimeout for demo)");
-            if (reminderText) {
-                setTimeout(() => {
-                    alert(`Reminder: ${reminderText}`);
-                }, 10000); // Remind after 10 seconds for demonstration purposes
-                alert("Reminder set! You will be alerted in 10 seconds.");
-            }
-        }
-
-        function showDailyFact() {
-            const randomFact = facts[Math.floor(Math.random() * facts.length)];
-            alert(`Daily Fact: ${randomFact}`);
-        }
-
         function sendFeedback() {
-            const feedback = prompt("Rate my response: (1-5)");
+            const feedback = document.getElementById("feedback").value;
             if (feedback) {
                 alert("Thank you for your feedback: " + feedback);
+                document.getElementById("feedback").value = "";
             }
-        }
-
-        function openAuthModal() {
-            document.getElementById("authModal").style.display = "block";
-        }
-
-        function closeAuthModal() {
-            document.getElementById("authModal").style.display = "none"; // Close auth modal
-        }
-
-        function startVoiceInput() {
-            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-            recognition.lang = 'en-US';
-            recognition.interimResults = false;
-            recognition.onresult = function (event) {
-                const transcript = event.results[0][0].transcript;
-                document.getElementById("userInput").value = transcript;
-                sendMessage(); // Automatically send the message
-            };
-
-            recognition.onerror = function (event) {
-                console.error(event.error);
-            };
-
-            recognition.start();
         }
     </script>
 </body>
