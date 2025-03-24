@@ -5,14 +5,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mikasa Chatbot</title>
-
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.1.0/firebase-storage.js"></script>
-
     <style>
-        /* Default Theme */
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
@@ -26,25 +19,36 @@
         }
 
         @keyframes backgroundAnimation {
-            0% { background: url('https://wallpapercave.com/wp/wp9388551.jpg'); }
-            25% { background: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg'); }
-            50% { background: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg'); }
-            75% { background: url('https://wallpaperaccess.com/full/8583147.jpg'); }
-            100% { background: url('https://coolwallpapers.me/picsup/2503093-4k-hd-wallpaper-high-definition.jpg'); }
+            0% {
+                background: url('https://wallpapercave.com/wp/wp9388551.jpg') center center / cover no-repeat;
+            }
+            25% {
+                background: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg') center center / cover no-repeat;
+            }
+            50% {
+                background: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg') center center / cover no-repeat;
+            }
+            75% {
+                background: url('https://wallpaperaccess.com/full/8583147.jpg') center center / cover no-repeat;
+            }
+            100% {
+                background: url('https://coolwallpapers.me/picsup/2503093-4k-hd-wallpaper-high-definition.jpg') center center / cover no-repeat;
+            }
         }
 
+        /* Container Styles */
         .container {
             width: 95%;
             max-width: 800px;
             height: 90vh;
-            overflow: hidden;
+            overflow-y: auto;
             background-color: rgba(30, 30, 30, 0.9);
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
             position: relative;
-            padding: 20px;
+            padding: 10px;
         }
 
         /* Profile Icon */
@@ -72,77 +76,6 @@
         #profileIcon img {
             width: 100%;
             height: 100%;
-        }
-
-        /* Modal Styles */
-        #authModal,
-        #settingsModal,
-        #messageModal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(40, 40, 40, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-            width: 90%;
-            max-width: 500px;
-            overflow: hidden;
-            color: #ffffff;
-        }
-
-        .modal-header {
-            padding: 10px;
-            font-size: 1.5em;
-            background: #00fff0;
-            color: #0A0A0A;
-            text-align: center;
-            border-radius: 15px 15px 0 0;
-        }
-
-        .close-btn {
-            float: right;
-            cursor: pointer;
-            color: #00fff0;
-            padding: 0 10px;
-        }
-
-        .modal-content {
-            padding: 20px;
-        }
-
-        input[type="email"],
-        input[type="password"],
-        input[type="text"],
-        input[type="file"],
-        select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 10px;
-            border: 2px solid #00fff0;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-        }
-
-        button {
-            background: #00fff0;
-            border: none;
-            color: #0A0A0A;
-            font-size: 1em;
-            padding: 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease, transform 0.2s ease;
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        button:hover {
-            background: #00ccff;
-            transform: scale(1.05);
         }
 
         /* Chat History */
@@ -180,7 +113,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 10px; /* Increased for better spacing */
+            padding: 10px;
             position: relative;
             overflow-y: auto;
         }
@@ -258,7 +191,7 @@
         .user-input button {
             border: none;
             font-size: 1em;
-            padding: 12px;
+            padding: 10px 15px;
             border-radius: 30px;
             cursor: pointer;
             transition: background 0.3s, transform 0.2s;
@@ -272,67 +205,121 @@
             background: #00ccff;
         }
 
-        /* Pop-up Message Style */
-        .popup-message {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            width: 80%;
-            max-width: 400px;
-            padding: 20px;
-            background-color: rgba(0, 255, 255, 0.8);
-            border-radius: 15px;
+        /* Epic Button Styles */
+        .action-button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 30px;
+            background: #00fff0;
             color: #0A0A0A;
-            animation: popin 0.5s forwards;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            font-weight: bold;
+            font-size: 1em;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            margin-top: 10px;
         }
 
-        @keyframes popin {
-            from { opacity: 0; transform: translate(-50%, -30%); }
-            to { opacity: 1; transform: translate(-50%, 0); }
+        .action-button:hover {
+            background: #00ccff;
+            border: 2px solid #fff;
+            transform: scale(1.05);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(40, 40, 40, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 400px;
+            overflow: hidden;
+        }
+
+        .modal-content {
+            padding: 20px;
+            color: #ffffff;
+        }
+
+        .modal-header {
+            padding: 10px;
+            font-size: 1.5em;
+            background: #00fff0;
+            color: #0A0A0A;
+            text-align: center;
+            border-radius: 15px 15px 0 0;
+        }
+
+        .close-btn {
+            float: right;
+            cursor: pointer;
+            color: #00fff0;
+            padding: 0 10px;
+        }
+
+        input[type="email"],
+        input[type="password"],
+        input[type="text"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 10px;
+            border: 2px solid #00fff0;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        button {
+            background: #00fff0;
+            border: none;
+            color: #0A0A0A;
+            font-size: 1em;
+            padding: 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #00ccff;
+            transform: scale(1.05);
+        }
+
+        /* Reminder styles */
+        #reminderToggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        #reminderToggle input {
+            margin-left: 10px;
         }
 
         /* Scrollbar */
-        ::-webkit-scrollbar { width: 10px; }
-        ::-webkit-scrollbar-thumb { background: #00fff0; border-radius: 10px; }
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
 
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            body {
-                height: auto;
-                overflow-y: auto;
-            }
-
-            .header {
-                font-size: 1.5em;
-            }
-
-            .sub-header {
-                font-size: 0.9em;
-            }
-
-            .user-input input {
-                padding: 10px;
-                font-size: 0.9em;
-            }
-
-            .user-input button {
-                padding: 10px;
-                font-size: 0.9em;
-            }
+        ::-webkit-scrollbar-thumb {
+            background: #00fff0;
+            border-radius: 10px;
         }
     </style>
 </head>
 
 <body>
     <div class="container" id="chatContainer">
-        <div id="profileIcon" onclick="toggleAuthModal();">
-            <img src="profile-placeholder.png" alt="Profile Icon" />
-        </div>
-
         <div class="chat-history">
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
@@ -340,202 +327,188 @@
             <button class="action-button" onclick="summarizeChat();">📝 Summarize Chat</button>
             <button class="action-button" onclick="resetChat();">🔄 Add New Chat</button>
         </div>
-
         <div class="chat-window">
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
             <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
-
             <div class="user-input">
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
                 <button onclick="sendMessage()">📤</button>
+                <button onclick="openSettings()">⚙️</button>
+                <button onclick="toggleEmojiPicker()">😀</button>
                 <button onclick="startVoiceInput()">🎤</button>
-                <button onclick="toggleSettingsModal()">⚙️</button>
             </div>
+            <div class="emoji-picker" id="emojiPicker">
+                <button onclick="addEmoji('😀')">😀</button>
+                <button onclick="addEmoji('😁')">😁</button>
+                <button onclick="addEmoji('😂')">😂</button>
+                <button onclick="addEmoji('😃')">😃</button>
+                <button onclick="addEmoji('😄')">😄</button>
+                <button onclick="addEmoji('😊')">😊</button>
+                <button onclick="addEmoji('😍')">😍</button>
+                <button onclick="addEmoji('😎')">😎</button>
+                <button onclick="addEmoji('😜')">😜</button>
+                <button onclick="addEmoji('😢')">😢</button>
+                <button onclick="addEmoji('😡')">😡</button>
+            </div>
+        </div>
+        <div id="profileIcon" onclick="openProfile()">
+            <img src="https://via.placeholder.com/40" alt="Profile">
         </div>
     </div>
 
     <!-- Authentication Modal -->
-    <div id="authModal">
-        <div class="modal-header"><span class="close-btn" onclick="toggleAuthModal()">×</span>Sign Up / Login</div>
+    <div id="authModal" class="modal">
+        <div class="modal-header">
+            <span class="close-btn" onclick="closeAuth()">×</span>
+            Auth
+        </div>
         <div class="modal-content">
-            <input type="email" id="email" placeholder="Email" required />
-            <input type="password" id="password" placeholder="Password" required />
-            <button onclick="logIn()">Login</button>
-            <button onclick="signUp()">Sign Up</button>
-            <input type="file" id="imageUpload" onchange="uploadImage(event)" style="margin-top: 10px;" />
-            <button onclick="changeProfileImage()">Change Profile Image</button>
+            <label for="email">Email:</label>
+            <input type="email" id="email" placeholder="Enter your email" />
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter your password" />
+            <button onclick="signup()">Signup</button>
+            <button onclick="login()">Login</button>
+            <input type="file" id="profileImageInput" accept="image/*" onchange="changeProfileImage(event)" />
         </div>
     </div>
 
     <!-- Settings Modal -->
-    <div id="settingsModal">
-        <div class="modal-header"><span class="close-btn" onclick="toggleSettingsModal()">×</span>Settings</div>
+    <div id="settingsModal" class="modal">
+        <div class="modal-header">
+            <span class="close-btn" onclick="closeSettings()">×</span>
+            Settings
+        </div>
         <div class="modal-content">
-            <label for="reminder">Set Reminder:</label>
-            <input type="text" id="reminder" placeholder="Enter your reminder..." />
-            <button onclick="setReminder()">Set Reminder</button>
-            <hr>
-            <label for="language">Language:</label>
-            <select id="language">
-                <option value="en">English</option>
-                <option value="es">Spanish</option>
-                <option value="fr">French</option>
-            </select>
-            <br>
-            <label for="themeSelect">Select Theme:</label>
-            <select id="themeSelect" onchange="changeTheme(this.value)">
-                <option value="">Default</option>
-                <option value="theme-color-2">Green</option>
-                <option value="theme-color-3">Blue</option>
-                <option value="theme-color-4">Yellow</option>
-                <option value="theme-color-5">Purple</option>
-                <option value="theme-color-6">Orange</option>
-            </select>
-            <br>
-
-            <!-- Music Controls moved to Settings -->
-            <label for="musicUpload">Upload Music:</label>
-            <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" required />
-            <button onclick="playMusic()">Play/Pause Music</button>
-            <label>Volume:</label>
-            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)" />
-
-            <label for="feedback">Send Feedback:</label>
-            <input type="text" id="feedback" placeholder="Enter your feedback..." />
-            <button onclick="sendFeedback()">Send Feedback</button>
-            <label for="botName">Change Bot Name:</label>
-            <input type="text" id="botName" placeholder="New Bot Name" />
-            <button onclick="changeBotName()">Change Name</button>
-            <br>
-            <label for="voiceSelect">Select Voice:</label>
-            <select id="voiceSelect" onchange="selectVoice(this.value)">
-                <option value="">Select Voice</option>
-                <option value="Google US English">Google US English</option>
-                <option value="Google UK English Female">Google UK English Female</option>
-                <option value="Google UK English Male">Google UK English Male</option>
-            </select>
-            <button onclick="savePreferences()">Save Preferences</button>
+            <label for="reminders">Enable Reminders</label>
+            <div id="reminderToggle">
+                <input type="checkbox" id="remindersToggle" onchange="toggleReminders()"/>
+            </div>
+            <button onclick="resetChat()">Reset Chat</button>
         </div>
     </div>
 
-    <!-- Popup Message -->
-    <div id="messageModal" class="popup-message"></div>
-
     <audio id="musicPlayer" src="" preload="auto"></audio>
 
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.1.2/firebase-auth.js"></script>
     <script>
-        // Firebase configuration (replace these with your actual Firebase project credentials)
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            // Your Firebase Config here
         };
 
         const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
-        const storage = firebase.storage();
+
+        let chatbotName = "Mikasa";
+        let voiceEnabled = true; // Default voice enabled
+        let messageCount = 0; // Tracks number of messages
+        const chatMessages = []; // Store chat messages for export and summary
+        const chatAnswers = []; // Store chat answers for export
 
         window.onload = function () {
-            showMessage("Welcome to the Mikasa Chatbot! Your AI companion is ready to assist you!");
             loadPreferences();
-        }
-
-        function showMessage(msg) {
-            const messageModal = document.getElementById("messageModal");
-            messageModal.textContent = msg;
-            messageModal.style.display = "block";
-            setTimeout(() => { messageModal.style.display = "none"; }, 4000);
         }
 
         function loadPreferences() {
             const savedLang = localStorage.getItem('language');
             const savedTheme = localStorage.getItem('theme');
+            const savedBotName = localStorage.getItem('botName');
+
             if (savedLang) {
                 document.getElementById("language").value = savedLang;
             }
+
             if (savedTheme) {
                 changeTheme(savedTheme);
-                document.getElementById("themeSelect").value = savedTheme;
+            }
+
+            if (savedBotName) {
+                chatbotName = savedBotName;
+                document.getElementById("chatbotName").innerText = chatbotName + " - Your AI Companion";
+                document.getElementById("botNameInput").value = chatbotName;
             }
         }
 
-        function changeTheme(theme) {
-            document.body.className = ''; // Reset all classes
-            if (theme) {
-                document.body.classList.add(theme);
-                localStorage.setItem('theme', theme); // Save selected theme
-            } else {
-                localStorage.removeItem('theme'); // Remove theme if default
-            }
+        function openProfile() {
+            document.getElementById('authModal').style.display = 'block';
         }
 
-        function toggleAuthModal() {
-            const modal = document.getElementById("authModal");
-            modal.style.display = modal.style.display === "block" ? "none" : "block";
+        function closeAuth() {
+            document.getElementById('authModal').style.display = 'none';
+            document.getElementById("email").value = '';
+            document.getElementById("password").value = '';
         }
 
-        function toggleSettingsModal() {
-            const modal = document.getElementById("settingsModal");
-            modal.style.display = modal.style.display === "block" ? "none" : "block";
-        }
-
-        function signUp() {
+        function signup() {
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
-
             auth.createUserWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    showMessage("Sign up successful!");
-                    toggleAuthModal();
+                .then((userCredential) => {
+                    alert("User signed up");
+                    closeAuth();
                 })
-                .catch(error => {
-                    showMessage(`Error: ${error.message}`);
-                });
+                .catch(err => alert(err.message));
         }
 
-        function logIn() {
+        function login() {
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
-
             auth.signInWithEmailAndPassword(email, password)
-                .then(userCredential => {
-                    showMessage("Login successful!");
-                    toggleAuthModal();
+                .then((userCredential) => {
+                    alert("User logged in");
+                    closeAuth();
                 })
-                .catch(error => {
-                    showMessage(`Error: ${error.message}`);
-                });
+                .catch(err => alert(err.message));
         }
 
-        function uploadImage(event) {
+        function changeProfileImage(event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function () {
-                    document.querySelector('#profileIcon img').src = reader.result; // preview the image
+                reader.onload = function (e) {
+                    document.querySelector("#profileIcon img").src = e.target.result;
                 }
                 reader.readAsDataURL(file);
             }
         }
 
-        function changeProfileImage() {
-            const imageUpload = document.getElementById("imageUpload");
-            if (!imageUpload.files[0]) {
-                showMessage("Please select an image first!");
-                return;
-            }
-            const file = imageUpload.files[0];
-            const storageRef = storage.ref().child('profile_images/' + firebase.auth().currentUser.uid + '.jpg');
-            storageRef.put(file).then(() => {
-                showMessage("Profile image uploaded successfully.");
-            }).catch(error => {
-                showMessage(`Error: ${error.message}`);
-            });
+        function openSettings() {
+            document.getElementById("settingsModal").style.display = "block";
         }
+
+        function closeSettings() {
+            document.getElementById("settingsModal").style.display = "none";
+        }
+
+        function toggleReminders() {
+            const remindersEnabled = document.getElementById("remindersToggle").checked;
+            // Handle reminders logic here
+            alert("Reminders are now " + (remindersEnabled ? "enabled" : "disabled") + ".");
+        }
+
+        function loadMusic(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                musicPlayer.src = url;
+            }
+        }
+
+        function playMusic() {
+            if (musicPlayer.paused) {
+                musicPlayer.play();
+            } else {
+                musicPlayer.pause();
+            }
+        }
+
+        function setVolume(value) {
+            musicPlayer.volume = value;
+        }
+
+        // Rest of the existing functions ...
 
         async function sendMessage() {
             const userInput = document.getElementById("userInput");
@@ -549,6 +522,7 @@
                 userMessageDiv.textContent = "🧑: " + userMessage;
                 chatbox.appendChild(userMessageDiv);
                 chatList.appendChild(document.createElement("li")).textContent = userMessage;
+                chatMessages.push(userMessage); // Store question
 
                 const typingIndicator = document.createElement("div");
                 typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
@@ -559,28 +533,32 @@
                     let response;
                     const query = userMessage;
 
-                    // Simple bot responses
                     if (/what's your name|who are you/i.test(query)) {
-                        response = `My name is Mikasa.`;
+                        response = `My name is ${chatbotName}.`;
                     } else if (/who made you|your creator/i.test(query)) {
-                        response = "I was made by Rishab, Ansh, and Abhi.";
-                    } else if (/hello|hi|hey/i.test(query)) {
-                        response = "Hello! How can I help you today?";
+                        response = "I was made by Rishab.";
                     } else {
-                        response = "I'm still learning! But I will do my best!";
+                        // Placeholder for chatbot response
+                        response = await puter.ai.chat(query);
                     }
 
                     chatbox.removeChild(typingIndicator);
 
                     const botMessageDiv = document.createElement("div");
                     botMessageDiv.className = "message bot";
-                    botMessageDiv.textContent = `🤖 Mikasa: ${response || "I'm still learning!"}`;
+                    botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
                     chatbox.appendChild(botMessageDiv);
 
+                    // Store answer
+                    chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
+
+                    // Uncomment this to enable voice response
+                    // speakResponse(response);
+                    messageCount++;
                 } catch (error) {
                     const errorMessageDiv = document.createElement("div");
                     errorMessageDiv.className = "message bot";
-                    errorMessageDiv.textContent = `🤖 Mikasa: Oops! Something went wrong. Please try again.`;
+                    errorMessageDiv.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
                     chatbox.appendChild(errorMessageDiv);
                 }
 
@@ -591,6 +569,17 @@
 
         function delayResponse() {
             return new Promise(resolve => setTimeout(resolve, 1000)); // Simulates typing delay
+        }
+
+        function addEmoji(emoji) {
+            const userInput = document.getElementById("userInput");
+            userInput.value += emoji;
+            document.getElementById('emojiPicker').style.display = 'none'; // Hide emoji picker
+        }
+        
+        function toggleEmojiPicker() {
+            const emojiPicker = document.getElementById('emojiPicker');
+            emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
         }
 
         function startVoiceInput() {
@@ -604,10 +593,8 @@
 
         function exportChat() {
             let exportText = "";
-            const chatMessages = Array.from(document.querySelectorAll('.chat-history li')).map(li => li.textContent);
-            const chatAnswers = Array.from(document.querySelectorAll('.messages .bot')).map(botMessage => botMessage.textContent);
             for (let i = 0; i < chatMessages.length; i++) {
-                exportText += `🧑: ${chatMessages[i]}\n\n🤖: ${chatAnswers[i] || ''}\n\n`;
+                exportText += `🧑: ${chatMessages[i]}\n${chatAnswers[i]}\n`;
             }
             const blob = new Blob([exportText], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
@@ -620,95 +607,37 @@
         }
 
         function summarizeChat() {
-            const summary = `Chat Summary:\nYou have exchanged messages.`;
-            showMessage(summary);
+            const summary = `Chat Summary:\nYou have exchanged ${chatMessages.length} messages.`;
+            alert(summary);
         }
 
-        function setReminder() {
-            const reminder = document.getElementById("reminder").value;
-            if (reminder) {
-                showMessage(`Reminder set: ${reminder}`);
-                document.getElementById("reminder").value = ""; // Clear input
-            } else {
-                showMessage("Please enter a reminder!");
-            }
+        function changeLanguage() {
+            const selectedLanguage = document.getElementById("language").value;
+            localStorage.setItem('language', selectedLanguage);
+            alert("Language changed to: " + selectedLanguage);
         }
 
-        function savePreferences() {
-            const language = document.getElementById("language").value;
-            const theme = document.getElementById("themeSelect").value;
-            localStorage.setItem('language', language);
-            localStorage.setItem('theme', theme);
-            showMessage(`Preferences saved! Language set to ${language} and theme updated.`);
-            toggleSettingsModal();
-            changeTheme(theme); // Ensure the theme is applied immediately
+        function changeTheme() {
+            const selectedTheme = document.getElementById("theme").value;
+            document.body.className = ''; // Reset classes
+            document.body.classList.add(selectedTheme);
+            localStorage.setItem('theme', selectedTheme);
         }
 
-        // Music Player Functions
-        let musicPlayer = document.getElementById("musicPlayer");
-
-        function loadMusic(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const url = URL.createObjectURL(file);
-                musicPlayer.src = url;
-                showMessage("Music loaded. You can now play it.");
-            } else {
-                showMessage("Please upload a valid audio file.");
-            }
+        function resetChat() {
+            const chatbox = document.getElementById("chatbox");
+            const chatList = document.getElementById("chatList");
+            chatbox.innerHTML = "";
+            chatList.innerHTML = "";
+            messageCount = 0;
+            chatMessages.length = 0; // Clear messages
+            chatAnswers.length = 0; // Clear answers too
         }
 
-        function playMusic() {
-            if (musicPlayer.src) {
-                if (musicPlayer.paused) {
-                    musicPlayer.play().then(() => {
-                        showMessage("Playing music...");
-                    }).catch(error => {
-                        showMessage("Error: Unable to play music. Ensure the file is valid and try again.");
-                    });
-                } else {
-                    musicPlayer.pause();
-                    showMessage("Music paused.");
-                }
-            } else {
-                showMessage("Please upload music first.");
-            }
+        function toggleVoice() {
+            voiceEnabled = document.getElementById("voiceToggle").checked;
+            alert("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
         }
-
-        function setVolume(value) {
-            musicPlayer.volume = value;
-            showMessage(`Volume set to ${value * 100}%`);
-        }
-
-        // Feedback Function
-        function sendFeedback() {
-            const feedback = document.getElementById("feedback").value;
-            if (feedback) {
-                showMessage(`Feedback received: "${feedback}"`);
-                document.getElementById("feedback").value = ""; // Clear input
-            } else {
-                showMessage("Please enter your feedback!");
-            }
-        }
-
-        // Change Bot Name Function
-        function changeBotName() {
-            const newName = document.getElementById("botName").value;
-            if (newName) {
-                document.getElementById("chatbotName").textContent = newName;
-                showMessage(`Bot name changed to: ${newName}`);
-                document.getElementById("botName").value = ""; // Clear input
-            } else {
-                showMessage("Please enter a new bot name!");
-            }
-        }
-
-        // Change Voice Function
-        function selectVoice(voice) {
-            // Placeholder for voice changing functionality.
-            showMessage(`Voice changed! Selected: ${voice}`);
-        }
-
     </script>
 </body>
 
