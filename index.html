@@ -29,15 +29,19 @@
             0% {
                 background: url('https://wallpapercave.com/wp/wp9388551.jpg') center center / cover no-repeat;
             }
+
             25% {
                 background: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg') center center / cover no-repeat;
             }
+
             50% {
                 background: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg') center center / cover no-repeat;
             }
+
             75% {
                 background: url('https://wallpaperaccess.com/full/8583147.jpg') center center / cover no-repeat;
             }
+
             100% {
                 background: url('https://coolwallpapers.me/picsup/2503093-4k-hd-wallpaper-high-definition.jpg') center center / cover no-repeat;
             }
@@ -60,11 +64,21 @@
         }
 
         @keyframes rgbBorder {
-            0% { border-color: red; }
-            25% { border-color: blue; }
-            50% { border-color: green; }
-            75% { border-color: yellow; }
-            100% { border-color: pink; }
+            0% {
+                border-color: red;
+            }
+            25% {
+                border-color: blue;
+            }
+            50% {
+                border-color: green;
+            }
+            75% {
+                border-color: yellow;
+            }
+            100% {
+                border-color: pink;
+            }
         }
 
         #profileIcon {
@@ -94,7 +108,9 @@
         }
 
         /* Modal Styles */
-        #authModal, #settingsModal, #messageModal {
+        #authModal,
+        #settingsModal,
+        #messageModal {
             display: none;
             position: fixed;
             z-index: 1000;
@@ -256,44 +272,20 @@
 
         .user-input input {
             flex: 1;
-            padding: 12px;
-            font-size: 1em;
+            padding: 16px; /* Increased padding for a larger input box */
+            font-size: 1.2em; /* Increased font size */
             border: 2px solid #00fff0;
-            border-radius: 30px;
+            border-radius: 30px; /* More rounded corners for a premium look */
             background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
             margin-right: 5px;
             transition: border 0.3s;
+            height: 50px; /* Increased height for a more premium feel */
         }
 
         .user-input input:focus {
             outline: none;
             border: 2px solid #00ccff;
-        }
-
-        /* Emoji Picker Style */
-        .emoji-picker {
-            display: flex;
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            margin-top: 5px;
-            padding: 10px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-        }
-
-        .emoji-picker button {
-            border: none;
-            background: none;
-            font-size: 2em;
-            cursor: pointer;
-            margin-right: 5px;
-            transition: transform 0.2s;
-        }
-
-        .emoji-picker button:hover {
-            transform: scale(1.2);
         }
 
         /* Pop-up Message Style */
@@ -319,6 +311,7 @@
                 opacity: 0;
                 transform: translate(-50%, -30%);
             }
+
             to {
                 opacity: 1;
                 transform: translate(-50%, 0);
@@ -339,10 +332,12 @@
         body.theme-color-2 {
             color: #4caf50; /* Green */
         }
+
         body.theme-color-2 .header,
         body.theme-color-2 .sub-header {
             color: #4caf50;
         }
+
         body.theme-color-2 .user-input button,
         body.theme-color-2 .modal-content button,
         body.theme-color-2 .action-button {
@@ -354,10 +349,12 @@
         body.theme-color-3 {
             color: #2196f3; /* Blue */
         }
+
         body.theme-color-3 .header,
         body.theme-color-3 .sub-header {
             color: #2196f3;
         }
+
         body.theme-color-3 .user-input button,
         body.theme-color-3 .modal-content button,
         body.theme-color-3 .action-button {
@@ -369,10 +366,12 @@
         body.theme-color-4 {
             color: #ffeb3b; /* Yellow */
         }
+
         body.theme-color-4 .header,
         body.theme-color-4 .sub-header {
             color: #ffeb3b;
         }
+
         body.theme-color-4 .user-input button,
         body.theme-color-4 .modal-content button,
         body.theme-color-4 .action-button {
@@ -384,10 +383,12 @@
         body.theme-color-5 {
             color: #673ab7; /* Purple */
         }
+
         body.theme-color-5 .header,
         body.theme-color-5 .sub-header {
             color: #673ab7;
         }
+
         body.theme-color-5 .user-input button,
         body.theme-color-5 .modal-content button,
         body.theme-color-5 .action-button {
@@ -399,10 +400,12 @@
         body.theme-color-6 {
             color: #ff6a00; /* Orange */
         }
+
         body.theme-color-6 .header,
         body.theme-color-6 .sub-header {
             color: #ff6a00;
         }
+
         body.theme-color-6 .user-input button,
         body.theme-color-6 .modal-content button,
         body.theme-color-6 .action-button {
@@ -433,22 +436,8 @@
             <div class="user-input">
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
                 <button onclick="sendMessage()">📤</button>
-                <button onclick="toggleSettingsModal()">⚙️</button>
-                <button onclick="toggleEmojiPicker()">😀</button>
                 <button onclick="startVoiceInput()">🎤</button>
-            </div>
-            <div class="emoji-picker" id="emojiPicker">
-                <button onclick="addEmoji('😀')">😀</button>
-                <button onclick="addEmoji('😁')">😁</button>
-                <button onclick="addEmoji('😂')">😂</button>
-                <button onclick="addEmoji('😃')">😃</button>
-                <button onclick="addEmoji('😄')">😄</button>
-                <button onclick="addEmoji('😊')">😊</button>
-                <button onclick="addEmoji('😍')">😍</button>
-                <button onclick="addEmoji('😎')">😎</button>
-                <button onclick="addEmoji('😜')">😜</button>
-                <button onclick="addEmoji('😢')">😢</button>
-                <button onclick="addEmoji('😡')">😡</button>
+                <button onclick="toggleSettingsModal()">⚙️</button>
             </div>
         </div>
     </div>
@@ -686,17 +675,6 @@
 
         function delayResponse() {
             return new Promise(resolve => setTimeout(resolve, 1000)); // Simulates typing delay
-        }
-
-        function addEmoji(emoji) {
-            const userInput = document.getElementById("userInput");
-            userInput.value += emoji;
-            document.getElementById('emojiPicker').style.display = 'none'; // Hide emoji picker
-        }
-
-        function toggleEmojiPicker() {
-            const emojiPicker = document.getElementById('emojiPicker');
-            emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
         }
 
         function startVoiceInput() {
