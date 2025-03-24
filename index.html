@@ -26,11 +26,11 @@
         }
 
         @keyframes backgroundAnimation {
-            0% { background: url('https://wallpapercave.com/wp/wp9388551.jpg') center center / cover no-repeat; }
-            25% { background: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg') center center / cover no-repeat; }
-            50% { background: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg') center center / cover no-repeat; }
-            75% { background: url('https://wallpaperaccess.com/full/8583147.jpg') center center / cover no-repeat; }
-            100% { background: url('https://coolwallpapers.me/picsup/2503093-4k-hd-wallpaper-high-definition.jpg') center center / cover no-repeat; }
+            0% { background: url('https://wallpapercave.com/wp/wp9388551.jpg'); }
+            25% { background: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg'); }
+            50% { background: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg'); }
+            75% { background: url('https://wallpaperaccess.com/full/8583147.jpg'); }
+            100% { background: url('https://coolwallpapers.me/picsup/2503093-4k-hd-wallpaper-high-definition.jpg'); }
         }
 
         .container {
@@ -180,7 +180,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 10px; /* Added padding for more space */
+            padding: 10px; /* Increased for better spacing */
             position: relative;
             overflow-y: auto;
         }
@@ -208,7 +208,6 @@
             overflow-y: auto;
             margin-bottom: 10px;
             padding-right: 10px;
-            position: relative; /* Ensuring proper layering inside the window */
         }
 
         .message {
@@ -235,28 +234,25 @@
         .user-input {
             display: flex;
             align-items: center;
-            padding: 10px 0; /* Space above input */
-            border-top: 2px solid #00fff0; /* Border to separate it from messages */
-            background-color: rgba(255, 255, 255, 0.1); /* Background for the input area */
+            padding: 10px 0;
         }
 
+        /* Styles for Input and Buttons */
         .user-input input {
             flex: 1;
-            padding: 15px; /* Increased for better feel */
-            font-size: 1.2em; /* Increased font size */
+            padding: 12px;
+            font-size: 1em;
             border: 2px solid #00fff0;
-            border-radius: 30px; /* More rounded corners for a premium look */
-            background: rgba(255, 255, 255, 0.2); /* Input background */
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
             margin-right: 5px;
-            transition: border 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: border 0.3s;
         }
 
         .user-input input:focus {
             outline: none;
             border: 2px solid #00ccff;
-            box-shadow: 0 0 10px rgba(0, 204, 255, 0.5);
         }
 
         .user-input button {
@@ -303,6 +299,31 @@
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-thumb { background: #00fff0; border-radius: 10px; }
 
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            body {
+                height: auto;
+                overflow-y: auto;
+            }
+
+            .header {
+                font-size: 1.5em;
+            }
+
+            .sub-header {
+                font-size: 0.9em;
+            }
+
+            .user-input input {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            .user-input button {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+        }
     </style>
 </head>
 
@@ -437,7 +458,7 @@
                 document.getElementById("language").value = savedLang;
             }
             if (savedTheme) {
-                document.body.classList.add(savedTheme);
+                changeTheme(savedTheme);
                 document.getElementById("themeSelect").value = savedTheme;
             }
         }
@@ -620,6 +641,7 @@
             localStorage.setItem('theme', theme);
             showMessage(`Preferences saved! Language set to ${language} and theme updated.`);
             toggleSettingsModal();
+            changeTheme(theme); // Ensure the theme is applied immediately
         }
 
         // Music Player Functions
