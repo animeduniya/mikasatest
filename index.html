@@ -4,27 +4,38 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mikasa Chatbot</title>
+    <title>Mikasa - Your AI Companion</title>
     <style>
         /* General Styles */
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
             overflow: hidden;
-            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #1c1c1c;
+            height: 100vh;
+            background: linear-gradient(135deg, #1c1c1c, #3a3a3a);
             animation: backgroundAnimation 20s ease-in-out infinite;
+            color: #fff;
         }
 
         @keyframes backgroundAnimation {
             0% {
-                background: url('https://wallpapercave.com/wp/wp9388551.jpg') center center / cover no-repeat;
+                background: linear-gradient(135deg, #1c1c1c, #3a3a3a);
             }
-
-            /* Add additional backgrounds if necessary as per your designs */
+            25% {
+                background: linear-gradient(135deg, #3f51b5, #00bcd4);
+            }
+            50% {
+                background: linear-gradient(135deg, #673ab7, #ff5722);
+            }
+            75% {
+                background: linear-gradient(135deg, #4caf50, #ffeb3b);
+            }
+            100% {
+                background: linear-gradient(135deg, #1c1c1c, #3a3a3a);
+            }
         }
 
         /* Container Styles */
@@ -33,13 +44,13 @@
             max-width: 800px;
             height: 90vh;
             overflow-y: auto;
-            background-color: rgba(30, 30, 30, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            background: rgba(50, 50, 50, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
             display: flex;
             flex-direction: column;
             position: relative;
-            padding: 10px;
+            padding: 20px;
             border: 3px solid transparent;
             animation: borderColorChange 5s infinite;
         }
@@ -70,16 +81,18 @@
             flex: 0 1 20%;
             overflow-y: auto;
             padding: 10px;
-            border-radius: 10px;
+            border-radius: 12px;
             margin-bottom: 10px;
             background: rgba(255, 255, 255, 0.1);
-            box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+            animation: fadeIn 0.5s;
         }
 
         .chat-history h3 {
             margin: 0;
-            color: #00fff0;
             text-align: center;
+            color: #00fff0;
+            text-shadow: 1px 1px 10px rgba(0, 255, 240, 0.5);
         }
 
         .chat-history ul {
@@ -93,30 +106,10 @@
             margin: 5px 0;
             padding: 8px;
             border-radius: 8px;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        /* Chat Window */
-        .chat-window {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 10px;
-            position: relative;
-            overflow-y: auto;
         }
 
         .header {
-            font-size: 2em;
+            font-size: 2.5em;
             font-weight: bold;
             color: #00fff0;
             text-align: center;
@@ -125,27 +118,40 @@
         }
 
         .sub-header {
-            font-size: 1.2em;
+            font-size: 1.5em;
             color: #00fff0;
             text-align: center;
-            margin-top: 0;
-            margin-bottom: 15px;
+            margin: 0;
             opacity: 0.8;
+            margin-bottom: 15px;
+            transition: transform 0.5s;
+        }
+
+        .chat-window {
+            flex: 1;
+            padding: 10px;
+            position: relative;
+            overflow-y: auto;
+            border-radius: 12px;
+            background: rgba(30, 30, 30, 0.7);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
         }
 
         .messages {
-            flex: 1;
-            overflow-y: auto;
             margin-bottom: 10px;
-            padding-right: 10px;
         }
 
         .message {
             padding: 10px 15px;
-            border-radius: 20px;
+            border-radius: 15px;
             margin: 5px 0;
             max-width: 70%;
             animation: slideIn 0.5s forwards;
+            transition: transform 0.2s;
+        }
+
+        .message:hover {
+            transform: scale(1.02);
         }
 
         .message.user {
@@ -167,39 +173,45 @@
             padding: 10px 0;
         }
 
-        /* Styles for Input and Buttons */
         .user-input input {
             flex: 1;
-            padding: 12px;
+            padding: 15px;
             font-size: 1em;
-            border: 2px solid #00fff0;
+            border: none;
             border-radius: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            margin-right: 5px;
-            transition: border 0.3s;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff; 
+            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        .user-input input::placeholder {
+            color: #fff;
+            opacity: 0.7;
         }
 
         .user-input input:focus {
             outline: none;
-            border: 2px solid #00ccff;
+            background: rgba(255, 255, 255, 0.4);
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
         }
 
         .user-input button {
             border: none;
             font-size: 1em;
-            padding: 10px 15px;
+            padding: 12px 20px;
             border-radius: 30px;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
             margin-left: 5px;
             color: #0A0A0A;
-            background: #00fff0;
+            background: linear-gradient(135deg, #00fff0, #00ccff);
+            box-shadow: 0 5px 20px rgba(0, 204, 255, 0.5);
+            transition: transform 0.3s;
         }
 
         .user-input button:hover {
             transform: scale(1.05);
-            background: #00ccff;
+            background: linear-gradient(135deg, #00ccff, #00fff0);
         }
 
         /* Modal Styles */
@@ -224,6 +236,7 @@
                 opacity: 0;
                 transform: translate(-50%, -60%);
             }
+
             to {
                 opacity: 1;
                 transform: translate(-50%, -50%);
@@ -235,14 +248,13 @@
             color: #ffffff;
         }
 
-        .modal-content h2,
-        .modal-content h3 {
+        .modal-content h2 {
             text-align: center;
             margin: 0;
         }
 
         .modal-content button {
-            background: #00fff0;
+            background: linear-gradient(135deg, #00fff0, #00ccff);
             border: none;
             color: #0A0A0A;
             font-size: 1em;
@@ -255,139 +267,58 @@
         }
 
         .modal-content button:hover {
-            background: #00ccff;
+            background: linear-gradient(135deg, #00ccff, #00fff0);
         }
 
-        /* Theme Styles */
-        /* Theme 1 */
-        body.theme-color-1 {
-            color: #ff5722; /* Dark Orange */
+        /* Settings Styles */
+        .settings {
+            width: 300px; 
+            margin: auto;
+            text-align: center;
+            color: #fff;
         }
 
-        body.theme-color-1 .header,
-        body.theme-color-1 .sub-header {
-            color: #ff5722;
+        .settings input, .settings select {
+            padding: 10px;
+            margin: 10px auto;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            width: 100%;
+            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.3);
         }
 
-        body.theme-color-1 .user-input button,
-        body.theme-color-1 .modal-content button {
-            background: #ff5722;
-            color: #ffffff;
+        .settings select {
+            cursor: pointer;
         }
 
-        /* Theme 2 */
-        body.theme-color-2 {
-            color: #4caf50; /* Green */
+        /* More Global Styles */
+        button {
+            transition: transform 0.2s;
         }
 
-        body.theme-color-2 .header,
-        body.theme-color-2 .sub-header {
-            color: #4caf50;
+        button:hover {
+            transform: translateY(-2px) scale(1.05);
         }
 
-        body.theme-color-2 .user-input button,
-        body.theme-color-2 .modal-content button {
-            background: #4caf50;
-            color: #ffffff;
-        }
-
-        /* Theme 3 */
-        body.theme-color-3 {
-            color: #2196f3; /* Blue */
-        }
-
-        body.theme-color-3 .header,
-        body.theme-color-3 .sub-header {
-            color: #2196f3;
-        }
-
-        body.theme-color-3 .user-input button,
-        body.theme-color-3 .modal-content button {
-            background: #2196f3;
-            color: #ffffff;
-        }
-
-        /* Theme 4 */
-        body.theme-color-4 {
-            color: #ffeb3b; /* Yellow */
-        }
-
-        body.theme-color-4 .header,
-        body.theme-color-4 .sub-header {
-            color: #ffeb3b;
-        }
-
-        body.theme-color-4 .user-input button,
-        body.theme-color-4 .modal-content button {
-            background: #ffeb3b;
-            color: #000000;
-        }
-
-        /* Theme 5 */
-        body.theme-color-5 {
-            color: #673ab7; /* Purple */
-        }
-
-        body.theme-color-5 .header,
-        body.theme-color-5 .sub-header {
-            color: #673ab7;
-        }
-
-        body.theme-color-5 .user-input button,
-        body.theme-color-5 .modal-content button {
-            background: #673ab7;
-            color: #ffffff;
-        }
-
-        /* Theme 6 */
-        body.theme-color-6 {
-            color: #ff6a00; /* Orange */
-        }
-
-        body.theme-color-6 .header,
-        body.theme-color-6 .sub-header {
-            color: #ff6a00;
-        }
-
-        body.theme-color-6 .user-input button,
-        body.theme-color-6 .modal-content button {
-            background: #ff6a00;
-            color: #ffffff;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #00fff0;
-            border-radius: 10px;
-        }
-
-        /* Responsive Styles */
         @media (max-width: 768px) {
-            body {
-                height: auto;
-                overflow-y: auto;
-            }
-
             .header {
-                font-size: 1.5em;
+                font-size: 1.8em;
             }
 
             .sub-header {
-                font-size: 0.9em;
+                font-size: 1em;
             }
 
             .user-input input {
                 padding: 10px;
-                font-size: 0.9em;
+                font-size: 0.8em;
             }
 
             .user-input button {
-                padding: 10px;
-                font-size: 0.9em;
+                padding: 8px;
+                font-size: 0.8em;
             }
         }
     </style>
@@ -398,23 +329,21 @@
         <div class="chat-history">
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
-            <button class="action-button" onclick="resetChat();">🔄 New Chat</button>
-            <button class="action-button" onclick="exportChat();">🎤 Export Chat</button>
         </div>
         <div class="chat-window">
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
             <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
-            <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
+            <div class="messages" id="chatbox"></div>
             <div class="user-input">
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
                 <button onclick="sendMessage()">📤</button>
-                <button onclick="setReminder()">⏰ Set Reminder</button>
+                <button onclick="setMessageAsReminder()">⏰ Reminder</button>
                 <button onclick="openSettings()">⚙️</button>
             </div>
         </div>
     </div>
 
-    <div id="settingsModal" class="modal">
+    <div id="settingsModal" class="modal" style="display: none;">
         <div class="modal-content">
             <span onclick="closeSettings()" style="float:right;cursor:pointer;color:#00fff0;">×</span>
             <h2>Settings</h2>
@@ -443,29 +372,21 @@
 
             <label for="musicUpload">Upload Music:</label>
             <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
-            <button onclick="playMusic()">Play Music</button>
-            <button onclick="pauseMusic()">Pause Music</button>
 
             <label for="voiceToggle">Enable Voice:</label>
             <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
 
-            <label for="reminder">Set Message as Reminder:</label>
-            <input type="text" id="reminderMessageInput" placeholder="Enter reminder message" />
+            <label for="reminderMessage">Reminder Message:</label>
+            <input type="text" id="reminderMessageInput" placeholder="Enter message" />
             <input type="datetime-local" id="reminderTimeInput" />
-            <button onclick="setMessageAsReminder()">Set Reminder</button>
 
-            <label for="feedback">Feedback:</label>
-            <select id="feedback" onchange="sendFeedback()">
-                <option value="">Select Feedback</option>
-                <option value="helpful">Helpful</option>
-                <option value="not_helpful">Not Helpful</option>
-            </select>
+            <button onclick="setMessageAsReminder()">Set Reminder</button>
 
             <button onclick="resetChat()">Reset Chat</button>
         </div>
     </div>
 
-    <div id="welcomeModal" class="modal">
+    <div id="welcomeModal" class="modal" style="display: none;">
         <div class="modal-content">
             <h2>Welcome to Mikasa!</h2>
             <p>Your AI Companion designed to chat with you and assist with your queries. Feel free to ask me anything!</p>
@@ -523,7 +444,7 @@
             if (file) {
                 const url = URL.createObjectURL(file);
                 musicPlayer.src = url;
-                showModal("Music Loaded!");
+                alert("Music Loaded!");
             }
         }
 
@@ -569,8 +490,9 @@
 
                 try {
                     await delayResponse();
-                    let response = userMessage; // Default echo the user message
-                    // Include any AI response logic here
+                    let response = userMessage; // Default: echo user message.
+                    // Insert AI response logic here, if applicable.
+
                     chatbox.removeChild(typingIndicator);
                     const botMessageDiv = document.createElement("div");
                     botMessageDiv.className = "message bot";
@@ -587,7 +509,7 @@
                     chatbox.appendChild(errorMessageDiv);
                 }
 
-                chatbox.scrollTop = chatbox.scrollHeight;
+                chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
                 userInput.value = ""; // Clear input
             }
         }
@@ -599,7 +521,7 @@
         function changeLanguage() {
             const selectedLanguage = document.getElementById("language").value;
             localStorage.setItem('language', selectedLanguage);
-            showModal("Language changed to: " + selectedLanguage);
+            alert("Language changed to: " + selectedLanguage);
         }
 
         function changeTheme() {
@@ -634,7 +556,7 @@
 
         function toggleVoice() {
             voiceEnabled = document.getElementById("voiceToggle").checked;
-            showModal("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
+            alert("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
         }
 
         function setMessageAsReminder() {
@@ -643,41 +565,19 @@
 
             if (reminderMessage && reminderTime) {
                 const reminderDatetime = new Date(reminderTime);
-                showModal("Reminder set for: " + reminderMessage);
+                alert("Reminder set for: " + reminderMessage);
 
                 const delay = reminderDatetime.getTime() - Date.now();
                 if (delay > 0) {
                     setTimeout(() => {
-                        showModal("💡 Reminder: " + reminderMessage);
+                        alert("💡 Reminder: " + reminderMessage);
                     }, delay);
                 } else {
-                    showModal("❌ Can't set a reminder in the past.");
+                    alert("❌ Can't set a reminder in the past.");
                 }
             } else {
-                showModal("Please enter both a reminder message and time.");
+                alert("Please enter both a reminder message and time.");
             }
-        }
-
-        function sendFeedback() {
-            const feedback = document.getElementById("feedback").value;
-            if (feedback) {
-                showModal("Thank you for your feedback: " + feedback);
-                document.getElementById("feedback").value = "";
-            }
-        }
-
-        function showModal(message) {
-            const modal = document.createElement("div");
-            modal.className = "modal";
-            modal.innerHTML = `
-                <div class="modal-content">
-                    <h2>Notification</h2>
-                    <p>${message}</p>
-                    <button onclick="this.parentElement.parentElement.remove();">Close</button>
-                </div>
-            `;
-            document.body.appendChild(modal);
-            modal.style.display = "block";
         }
     </script>
 </body>
