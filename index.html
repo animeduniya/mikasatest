@@ -36,6 +36,7 @@
             }
         }
 
+        /* Container Styles */
         .container {
             width: 95%;
             max-width: 800px;
@@ -50,6 +51,7 @@
             padding: 10px;
         }
 
+        /* Chat History */
         .chat-history {
             flex: 0 1 20%;
             overflow-y: auto;
@@ -79,6 +81,7 @@
             border-radius: 8px;
         }
 
+        /* Chat Window */
         .chat-window {
             flex: 1;
             display: flex;
@@ -89,7 +92,7 @@
         }
 
         .header {
-            font-size: 1.8em;
+            font-size: 2em;
             font-weight: bold;
             color: #00fff0;
             text-align: center;
@@ -98,7 +101,7 @@
         }
 
         .sub-header {
-            font-size: 1em;
+            font-size: 1.2em;
             color: #00fff0;
             text-align: center;
             margin-top: 0;
@@ -140,6 +143,7 @@
             padding: 10px 0;
         }
 
+        /* Styles for Input and Buttons */
         .user-input input {
             flex: 1;
             padding: 12px;
@@ -174,26 +178,20 @@
             background: #00ccff;
         }
 
-        .action-button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 30px;
-            background: #00fff0;
-            color: #0A0A0A;
-            font-weight: bold;
-            font-size: 1em;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s;
+        /* Music Controls */
+        .music-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             margin-top: 10px;
         }
 
-        .action-button:hover {
-            background: #00ccff;
-            border: 2px solid #fff;
-            transform: scale(1.05);
+        .music-controls button {
+            flex: 1;
+            margin-right: 5px;
         }
 
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -204,7 +202,7 @@
             background-color: rgba(40, 40, 40, 0.95);
             border-radius: 15px;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-            width: 90%;
+            width: 80%;
             max-width: 400px;
             overflow: hidden;
             animation: modalFadeIn 0.5s;
@@ -226,7 +224,7 @@
             color: #ffffff;
         }
 
-        .modal-content h2 {
+        .modal-content h2, .modal-content h3 {
             text-align: center;
             margin: 0;
         }
@@ -248,6 +246,42 @@
             background: #00ccff;
         }
 
+        /* UI Theme Styles */
+        body.theme-color-1 {
+            color: #ff5722; /* Dark Orange */
+        }
+
+        body.theme-color-2 {
+            color: #4caf50; /* Green */
+        }
+
+        body.theme-color-3 {
+            color: #2196f3; /* Blue */
+        }
+
+        body.theme-color-4 {
+            color: #ffeb3b; /* Yellow */
+        }
+
+        body.theme-color-5 {
+            color: #673ab7; /* Purple */
+        }
+
+        body.theme-color-6 {
+            color: #ff6a00; /* Orange */
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00fff0;
+            border-radius: 10px;
+        }
+
+        /* Responsive Styles */
         @media (max-width: 768px) {
             body {
                 height: auto;
@@ -272,15 +306,6 @@
                 font-size: 0.9em;
             }
         }
-
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #00fff0;
-            border-radius: 10px;
-        }
     </style>
 </head>
 
@@ -299,8 +324,12 @@
             <div class="user-input">
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
                 <button onclick="sendMessage()">📤</button>
+                <button onclick="toggleVoice()">🔊</button>
                 <button onclick="openSettings()">⚙️</button>
-                <button onclick="startVoiceInput()">🎤</button>
+            </div>
+            <div class="music-controls">
+                <button onclick="playMusic()">Play Music</button>
+                <button onclick="pauseMusic()">Pause Music</button>
             </div>
         </div>
     </div>
@@ -309,7 +338,6 @@
         <div class="modal-content">
             <span onclick="closeSettings()" style="float:right;cursor:pointer;color:#00fff0;">×</span>
             <h2>Settings</h2>
-
             <label for="botName">Chatbot Name:</label>
             <input type="text" id="botNameInput" value="Mikasa" />
 
@@ -335,12 +363,14 @@
 
             <label for="musicUpload">Upload Music:</label>
             <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
-            <button onclick="playMusic()">Play/Pause Music</button>
-            <label>Volume:</label>
-            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)" />
+            <button onclick="playMusic()">Play Music</button>
+            <button onclick="pauseMusic()">Pause Music</button>
 
             <label for="voiceToggle">Enable Voice:</label>
             <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
+
+            <label for="reminder">Set a Reminder:</label>
+            <input type="datetime-local" id="reminder" onchange="setReminder()">
 
             <label for="feedback">Feedback:</label>
             <select id="feedback" onchange="sendFeedback()">
@@ -415,11 +445,13 @@
         }
 
         function playMusic() {
-            if (musicPlayer.paused) {
+            if (musicPlayer.src) {
                 musicPlayer.play();
-            } else {
-                musicPlayer.pause();
             }
+        }
+
+        function pauseMusic() {
+            musicPlayer.pause();
         }
 
         function setVolume(value) {
@@ -450,7 +482,7 @@
                 userMessageDiv.textContent = "🧑: " + userMessage;
                 chatbox.appendChild(userMessageDiv);
                 chatList.appendChild(document.createElement("li")).textContent = userMessage;
-                chatMessages.push(userMessage); // Store question
+                chatMessages.push(userMessage);
 
                 const typingIndicator = document.createElement("div");
                 typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
@@ -470,12 +502,10 @@
                     }
 
                     chatbox.removeChild(typingIndicator);
-
                     const botMessageDiv = document.createElement("div");
                     botMessageDiv.className = "message bot";
                     botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
                     chatbox.appendChild(botMessageDiv);
-
                     chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
                     
                     speakResponse(response);
@@ -505,7 +535,9 @@
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
             document.body.className = ''; // Reset classes
-            document.body.classList.add(selectedTheme);
+            if (selectedTheme !== "default") {
+                document.body.classList.add(selectedTheme);
+            }
             localStorage.setItem('theme', selectedTheme);
         }
 
@@ -515,8 +547,8 @@
             chatbox.innerHTML = "";
             chatList.innerHTML = "";
             messageCount = 0;
-            chatMessages.length = 0; // Clear messages
-            chatAnswers.length = 0; // Clear answers too
+            chatMessages.length = 0;
+            chatAnswers.length = 0;
         }
 
         function openSettings() {
@@ -536,6 +568,17 @@
         function toggleVoice() {
             voiceEnabled = document.getElementById("voiceToggle").checked;
             showModal("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
+        }
+
+        function setReminder() {
+            const reminderDatetime = document.getElementById("reminder").value;
+            if (reminderDatetime) {
+                let reminder = new Date(reminderDatetime);
+                setTimeout(() => {
+                    showModal("Reminder: Time to check your task!");
+                }, reminder.getTime() - Date.now());
+                showModal("Reminder set for " + reminder.toLocaleString());
+            }
         }
 
         function sendFeedback() {
