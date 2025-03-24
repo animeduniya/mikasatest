@@ -271,19 +271,29 @@
             border: 2px solid #00ccff;
         }
 
+        /* Emoji Picker Style */
         .emoji-picker {
             display: flex;
-            flex-wrap: wrap;
-            justify-content: flex-start;
+            flex-wrap: nowrap;
+            overflow-x: auto;
             margin-top: 5px;
+            padding: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .emoji-picker button {
             border: none;
             background: none;
-            font-size: 1.5em;
+            font-size: 2em;
             cursor: pointer;
             margin-right: 5px;
+            transition: transform 0.2s;
+        }
+
+        .emoji-picker button:hover {
+            transform: scale(1.2);
         }
 
         /* Pop-up Message Style */
@@ -409,19 +419,6 @@
             <img src="profile-placeholder.png" alt="Profile Icon" />
         </div>
 
-        <!-- Theme Selector -->
-        <div style="margin: 10px;">
-            <label for="themeSelect" style="color:#00fff0;">Select Theme:</label>
-            <select id="themeSelect" onchange="changeTheme(this.value)">
-                <option value="">Default</option>
-                <option value="theme-color-2">Green</option>
-                <option value="theme-color-3">Blue</option>
-                <option value="theme-color-4">Yellow</option>
-                <option value="theme-color-5">Purple</option>
-                <option value="theme-color-6">Orange</option>
-            </select>
-        </div>
-
         <div class="chat-history">
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
@@ -483,6 +480,36 @@
                 <option value="es">Spanish</option>
                 <option value="fr">French</option>
             </select>
+            <br>
+            <label for="themeSelect">Select Theme:</label>
+            <select id="themeSelect" onchange="changeTheme(this.value)">
+                <option value="">Default</option>
+                <option value="theme-color-2">Green</option>
+                <option value="theme-color-3">Blue</option>
+                <option value="theme-color-4">Yellow</option>
+                <option value="theme-color-5">Purple</option>
+                <option value="theme-color-6">Orange</option>
+            </select>
+            <br>
+            <label for="musicUpload">Upload Music:</label>
+            <input type="file" id="musicUpload" accept="audio/*" onchange="loadMusic(event)" />
+            <button onclick="playMusic()">Play</button>
+            <button onclick="pauseMusic()">Pause</button>
+            <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume(this.value)" style="width: 100%;" />
+            <label for="feedback">Send Feedback:</label>
+            <input type="text" id="feedback" placeholder="Enter your feedback..." />
+            <button onclick="sendFeedback()">Send Feedback</button>
+            <label for="botName">Change Bot Name:</label>
+            <input type="text" id="botName" placeholder="New Bot Name" />
+            <button onclick="changeBotName()">Change Name</button>
+            <br>
+            <label for="voiceSelect">Select Voice:</label>
+            <select id="voiceSelect" onchange="selectVoice(this.value)">
+                <option value="">Select Voice</option>
+                <option value="Google US English">Google US English</option>
+                <option value="Google UK English Female">Google UK English Female</option>
+                <option value="Google UK English Male">Google UK English Male</option>
+            </select>
             <button onclick="savePreferences()">Save Preferences</button>
         </div>
     </div>
@@ -493,7 +520,7 @@
     <audio id="musicPlayer" src="" preload="auto"></audio>
 
     <script>
-        // Firebase configuration
+        // Firebase configuration (replace these with your actual Firebase project credentials)
         const firebaseConfig = {
             apiKey: "YOUR_API_KEY",
             authDomain: "YOUR_AUTH_DOMAIN",
@@ -715,9 +742,62 @@
 
         function savePreferences() {
             const language = document.getElementById("language").value;
+            const theme = document.getElementById("themeSelect").value;
             localStorage.setItem('language', language);
-            showMessage(`Preferences saved! Language set to ${language}.`);
+            localStorage.setItem('theme', theme);
+            showMessage(`Preferences saved! Language set to ${language} and theme updated.`);
             toggleSettingsModal();
+        }
+
+        // Music Player Functions
+        let musicPlayer = document.getElementById("musicPlayer");
+
+        function loadMusic(event) {
+            const file = event.target.files[0];
+            const url = URL.createObjectURL(file);
+            musicPlayer.src = url;
+            musicPlayer.play();
+        }
+
+        function playMusic() {
+            musicPlayer.play();
+        }
+
+        function pauseMusic() {
+            musicPlayer.pause();
+        }
+
+        function changeVolume(value) {
+            musicPlayer.volume = value;
+        }
+
+        // Feedback Function
+        function sendFeedback() {
+            const feedback = document.getElementById("feedback").value;
+            if (feedback) {
+                showMessage(`Feedback received: "${feedback}"`);
+                document.getElementById("feedback").value = ""; // Clear input
+            } else {
+                showMessage("Please enter your feedback!");
+            }
+        }
+
+        // Change Bot Name Function
+        function changeBotName() {
+            const newName = document.getElementById("botName").value;
+            if (newName) {
+                document.getElementById("chatbotName").textContent = newName;
+                showMessage(`Bot name changed to: ${newName}`);
+                document.getElementById("botName").value = ""; // Clear input
+            } else {
+                showMessage("Please enter a new bot name!");
+            }
+        }
+
+        // Change Voice Function
+        function selectVoice(voice) {
+            // Placeholder for voice changing functionality.
+            showMessage(`Voice changed! Selected: ${voice}`);
         }
 
     </script>
