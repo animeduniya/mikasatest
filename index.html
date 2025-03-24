@@ -58,8 +58,7 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            padding: 20px; /* Enhanced padding for premium feel */
-            border: 5px solid transparent;
+            padding: 20px;
         }
 
         /* Profile Icon */
@@ -255,10 +254,10 @@
 
         .user-input input {
             flex: 1;
-            padding: 12px;
-            font-size: 1em;
+            padding: 12px; /* Padding style from your request */
+            font-size: 1em; /* Font size from your request */
             border: 2px solid #00fff0;
-            border-radius: 30px;
+            border-radius: 30px; /* Rounded corners for a premium look */
             background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
             margin-right: 5px;
@@ -268,6 +267,23 @@
         .user-input input:focus {
             outline: none;
             border: 2px solid #00ccff;
+        }
+
+        .user-input button {
+            border: none;
+            font-size: 1em; /* Font size from your request */
+            padding: 10px 15px; /* Consistent padding */
+            border-radius: 30px; /* Rounded corners */
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            margin-left: 5px;
+            color: #0A0A0A;
+            background: #00fff0;
+        }
+
+        .user-input button:hover {
+            transform: scale(1.05);
+            background: #00ccff;
         }
 
         /* Pop-up Message Style */
@@ -411,16 +427,21 @@
             <button class="action-button" onclick="summarizeChat();">📝 Summarize Chat</button>
             <button class="action-button" onclick="resetChat();">🔄 Add New Chat</button>
         </div>
+        
         <div class="chat-window">
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
             <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
+            
             <div class="user-input">
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
                 <button onclick="sendMessage()">📤</button>
                 <button onclick="startVoiceInput()">🎤</button>
                 <button onclick="toggleSettingsModal()">⚙️</button>
             </div>
+
+            <label for="musicUpload">Upload Music:</label>
+            <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
         </div>
     </div>
 
@@ -463,7 +484,7 @@
             </select>
             <br>
             <label for="musicUpload">Upload Music:</label>
-            <input type="file" id="musicUpload" accept="audio/*" onchange="loadMusic(event)" />
+            <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
             <button onclick="playMusic()">Play</button>
             <button onclick="pauseMusic()">Pause</button>
             <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume(this.value)" style="width: 100%;" />
@@ -770,7 +791,7 @@
 
         // Change Voice Function
         function selectVoice(voice) {
-            // Placeholder for voice changing functionality. 
+            // Placeholder for voice changing functionality.
             showMessage(`Voice changed! Selected: ${voice}`);
         }
 
