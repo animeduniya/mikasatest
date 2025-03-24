@@ -58,29 +58,11 @@
             display: flex;
             flex-direction: column;
             position: relative;
-            padding: 10px;
+            padding: 20px; /* Enhanced padding for premium feel */
             border: 5px solid transparent;
-            animation: rgbBorder 3s infinite alternate;
         }
 
-        @keyframes rgbBorder {
-            0% {
-                border-color: red;
-            }
-            25% {
-                border-color: blue;
-            }
-            50% {
-                border-color: green;
-            }
-            75% {
-                border-color: yellow;
-            }
-            100% {
-                border-color: pink;
-            }
-        }
-
+        /* Profile Icon */
         #profileIcon {
             position: absolute;
             top: 20px;
@@ -213,7 +195,7 @@
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 10px;
+            padding: 10px; /* Added padding for more space */
             position: relative;
             overflow-y: auto;
         }
@@ -241,6 +223,7 @@
             overflow-y: auto;
             margin-bottom: 10px;
             padding-right: 10px;
+            position: relative; /* Ensuring proper layering inside the window */
         }
 
         .message {
@@ -267,7 +250,7 @@
         .user-input {
             display: flex;
             align-items: center;
-            padding: 10px 0;
+            padding-top: 10px; /* Space above input */
         }
 
         .user-input input {
@@ -280,7 +263,7 @@
             color: #ffffff;
             margin-right: 5px;
             transition: border 0.3s;
-            height: 50px; /* Increased height for a more premium feel */
+            height: 50px;
         }
 
         .user-input input:focus {
@@ -732,17 +715,31 @@
 
         function loadMusic(event) {
             const file = event.target.files[0];
-            const url = URL.createObjectURL(file);
-            musicPlayer.src = url;
-            musicPlayer.play();
+            if (file) {
+                const url = URL.createObjectURL(file);
+                musicPlayer.src = url;
+                showMessage("Music loaded. You can now play it.");
+            } else {
+                showMessage("Please upload a valid audio file.");
+            }
         }
 
         function playMusic() {
-            musicPlayer.play();
+            if (musicPlayer.src) {
+                musicPlayer.play();
+                showMessage("Playing music...");
+            } else {
+                showMessage("Please upload music first.");
+            }
         }
 
         function pauseMusic() {
-            musicPlayer.pause();
+            if (musicPlayer.src) {
+                musicPlayer.pause();
+                showMessage("Music paused.");
+            } else {
+                showMessage("No music is playing.");
+            }
         }
 
         function changeVolume(value) {
@@ -774,7 +771,7 @@
 
         // Change Voice Function
         function selectVoice(voice) {
-            // Placeholder for voice changing functionality.
+            // Placeholder for voice changing functionality. 
             showMessage(`Voice changed! Selected: ${voice}`);
         }
 
