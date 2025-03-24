@@ -35,6 +35,58 @@
             }
         }
 
+        /* Pop-Up Styles */
+        .popup {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(40, 40, 40, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            width: 80%;
+            max-width: 500px;
+            padding: 20px;
+            text-align: center;
+            animation: popupAnimation 0.5s ease forwards;
+        }
+
+        @keyframes popupAnimation {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -60%);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
+        }
+
+        .popup h2 {
+            color: cyan; 
+        }
+
+        .popup p {
+            color: white;
+            margin: 1em 0;
+        }
+
+        .popup button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: cyan;
+            color: black;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .popup button:hover {
+            background-color: #00c8e1;
+        }
+
         /* Container Styles */
         .container {
             width: 95%;
@@ -81,12 +133,12 @@
         }
 
         .header {
-            font-size: 2em;
+            font-size: 2.5em; /* Increased font sizes for better visibility */
             font-weight: bold;
         }
 
         .sub-header {
-            font-size: 1em;
+            font-size: 1.2em; /* Increased font sizes for better visibility */
             opacity: 0.8;
             margin-bottom: 15px;
         }
@@ -99,6 +151,7 @@
             max-width: 70%;
             word-wrap: break-word;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s; /* Added transition for smooth hover effect */
         }
 
         /* User Message Style */
@@ -388,6 +441,13 @@
     </style>
 </head>
 <body>
+    <div class="popup" id="introPopup">
+        <h2>Welcome to Rishab Chatbot!</h2>
+        <p>This is your personalized assistant. Engage in delightful conversations and receive daily facts!</p>
+        <p id="dailyFact"></p>
+        <button onclick="closePopup()">Got it!</button>
+    </div>
+
     <div class="container" id="chatContainer">
         <div class="chat-history">
             <h3>Chat History</h3>
@@ -500,8 +560,24 @@
         const musicPlayer = document.getElementById('musicPlayer');
         let speechSynthesisInstance = window.speechSynthesis;
 
+        // List of daily facts
+        const facts = [
+            "Did you know? Honey never spoils!",
+            "Bananas are berries, but strawberries aren't.",
+            "The Eiffel Tower can be 15 cm taller during the summer.",
+            "A group of flamingos is called a 'flamboyance'.",
+            "Octopuses have three hearts.",
+            "Did you know that wombat poop is cube-shaped?",
+            "One teaspoon of honey is the life work of 12 bees.",
+            "An octopus has nine brains!",
+            "The longest wedding veil was longer than 63 football fields!",
+            "A day on Venus is longer than a year on Venus."
+        ];
+
         window.onload = function () {
             loadPreferences();
+            displayRandomFact();
+            document.getElementById("introPopup").style.display = "block"; // Show pop-up on load
         };
 
         function loadPreferences() {
@@ -525,6 +601,11 @@
                 document.getElementById("chatbotName").innerText = chatbotName + " - Your AI Companion";
                 document.getElementById("botNameInput").value = chatbotName;
             }
+        }
+
+        function displayRandomFact() {
+            const randomFact = facts[Math.floor(Math.random() * facts.length)];
+            document.getElementById("dailyFact").textContent = randomFact;
         }
 
         function loadMusic(event) {
@@ -723,20 +804,12 @@
         }
 
         function showDailyFact() {
-            const facts = [
-                "Did you know? Honey never spoils!",
-                "Bananas are berries, but strawberries aren't.",
-                "The Eiffel Tower can be 15 cm taller during the summer.",
-                "A group of flamingos is called a 'flamboyance'.",
-                "Octopuses have three hearts.",
-                "Did you know that wombat poop is cube-shaped?",
-                "One teaspoon of honey is the life work of 12 bees.",
-                "An octopus has nine brains!",
-                "The longest wedding veil was longer than 63 football fields!",
-                "A day on Venus is longer than a year on Venus."
-            ];
             const randomFact = facts[Math.floor(Math.random() * facts.length)];
             alert(`Daily Fact: ${randomFact}`);
+        }
+
+        function closePopup() {
+            document.getElementById("introPopup").style.display = "none"; // Close the introductory popup
         }
 
         function sendFeedback() {
