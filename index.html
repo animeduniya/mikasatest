@@ -262,7 +262,7 @@
         .user-input button {
             border: none;
             font-size: 1em;
-            padding: 10px 15px;
+            padding: 12px;
             border-radius: 30px;
             cursor: pointer;
             transition: background 0.3s, transform 0.2s;
@@ -274,29 +274,6 @@
         .user-input button:hover {
             transform: scale(1.05);
             background: #00ccff;
-        }
-
-        /* Music Controls */
-        #musicControls {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-
-        .music-button {
-            background: #00fff0;
-            border: none;
-            color: #0A0A0A;
-            padding: 10px 15px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            margin-right: 10px; /* Margin between buttons */
-        }
-
-        .music-button:hover {
-            background: #00ccff;
-            transform: scale(1.05);
         }
 
         /* Pop-up Message Style */
@@ -354,15 +331,6 @@
                 <button onclick="startVoiceInput()">🎤</button>
                 <button onclick="toggleSettingsModal()">⚙️</button>
             </div>
-
-            <!-- Music Controls -->
-            <div id="musicControls">
-                <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
-                <button class="music-button" onclick="playMusic()">🎵 Play</button>
-                <button class="music-button" onclick="pauseMusic()">⏸️ Pause</button>
-                <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume(this.value)" style="width: 100px;" />
-                <label for="volumeControl" style="color: white;">Volume</label>
-            </div>
         </div>
     </div>
 
@@ -404,11 +372,14 @@
                 <option value="theme-color-6">Orange</option>
             </select>
             <br>
+
+            <!-- Music Controls moved to Settings -->
             <label for="musicUpload">Upload Music:</label>
-            <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
-            <button onclick="playMusic()">Play</button>
-            <button onclick="pauseMusic()">Pause</button>
-            <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume(this.value)" style="width: 100%;" />
+            <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" required />
+            <button onclick="playMusic()">Play/Pause Music</button>
+            <label>Volume:</label>
+            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)" />
+
             <label for="feedback">Send Feedback:</label>
             <input type="text" id="feedback" placeholder="Enter your feedback..." />
             <button onclick="sendFeedback()">Send Feedback</button>
@@ -667,26 +638,22 @@
 
         function playMusic() {
             if (musicPlayer.src) {
-                musicPlayer.play().then(() => {
-                    showMessage("Playing music...");
-                }).catch(error => {
-                    showMessage("Error: Unable to play music. Ensure the file is valid and try again.");
-                });
+                if (musicPlayer.paused) {
+                    musicPlayer.play().then(() => {
+                        showMessage("Playing music...");
+                    }).catch(error => {
+                        showMessage("Error: Unable to play music. Ensure the file is valid and try again.");
+                    });
+                } else {
+                    musicPlayer.pause();
+                    showMessage("Music paused.");
+                }
             } else {
                 showMessage("Please upload music first.");
             }
         }
 
-        function pauseMusic() {
-            if (musicPlayer.src) {
-                musicPlayer.pause();
-                showMessage("Music paused.");
-            } else {
-                showMessage("No music is playing.");
-            }
-        }
-
-        function changeVolume(value) {
+        function setVolume(value) {
             musicPlayer.volume = value;
             showMessage(`Volume set to ${value * 100}%`);
         }
