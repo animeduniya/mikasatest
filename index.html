@@ -10,211 +10,155 @@
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(135deg, #1c1c1c, #3a3a3a);
-            animation: backgroundAnimation 20s ease-in-out infinite;
+            background: linear-gradient(135deg, #1a202c, #2d3748);
             color: #fff;
+            overflow: hidden; /* Prevents scrolling */
+            animation: backgroundAnimation 30s ease-in-out infinite alternate;
         }
 
         @keyframes backgroundAnimation {
             0% {
-                background: linear-gradient(135deg, #1c1c1c, #3a3a3a);
+                background: linear-gradient(135deg, #1a202c, #2d3748);
             }
             25% {
-                background: linear-gradient(135deg, #3f51b5, #00bcd4);
+                background: linear-gradient(135deg, #2f855a, #2b6cb0);
             }
             50% {
-                background: linear-gradient(135deg, #673ab7, #ff5722);
+                background: linear-gradient(135deg, #805ad5, #f6ad55);
             }
             75% {
-                background: linear-gradient(135deg, #4caf50, #ffeb3b);
+                background: linear-gradient(135deg, #d69e2e, #e53e3e);
             }
             100% {
-                background: linear-gradient(135deg, #1c1c1c, #3a3a3a);
+                background: linear-gradient(135deg, #1a202c, #2d3748);
             }
         }
 
-        /* Container Styles */
+        /* Main container */
         .container {
-            width: 95%;
-            max-width: 800px;
+            width: 90%;
+            max-width: 900px;
             height: 90vh;
-            overflow-y: auto;
-            background: rgba(50, 50, 50, 0.8);
+            background: rgba(40, 40, 40, 0.8);
             border-radius: 20px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+            position: relative;
             display: flex;
             flex-direction: column;
-            position: relative;
-            padding: 20px;
-            border: 3px solid transparent;
-            animation: borderColorChange 5s infinite;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
-        @keyframes borderColorChange {
-            0% {
-                border-color: rgba(255, 0, 0, 0.5);
-            }
-            20% {
-                border-color: rgba(0, 255, 0, 0.5);
-            }
-            40% {
-                border-color: rgba(0, 0, 255, 0.5);
-            }
-            60% {
-                border-color: rgba(255, 255, 0, 0.5);
-            }
-            80% {
-                border-color: rgba(255, 0, 255, 0.5);
-            }
-            100% {
-                border-color: rgba(0, 255, 255, 0.5);
-            }
-        }
-
-        /* Chat History */
-        .chat-history {
-            flex: 0 1 20%;
-            overflow-y: auto;
-            padding: 10px;
-            border-radius: 12px;
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-            animation: fadeIn 0.5s;
-        }
-
-        .chat-history h3 {
-            margin: 0;
-            text-align: center;
-            color: #00fff0;
-            text-shadow: 1px 1px 10px rgba(0, 255, 240, 0.5);
-        }
-
-        .chat-history ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .chat-history li {
-            background: rgba(0, 255, 240, 0.2);
-            color: #00fff0;
-            margin: 5px 0;
-            padding: 8px;
-            border-radius: 8px;
-        }
-
+        /* Header styles */
         .header {
-            font-size: 2.5em;
+            font-size: 3em;
             font-weight: bold;
-            color: #00fff0;
+            color: #00bcd4;
             text-align: center;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 5px rgba(0, 255, 255, 0.5);
+            margin: 20px 0;
+            text-shadow: 1px 1px 15px rgba(0, 188, 212, 0.6);
         }
 
-        .sub-header {
-            font-size: 1.5em;
-            color: #00fff0;
-            text-align: center;
-            margin: 0;
-            opacity: 0.8;
-            margin-bottom: 15px;
-            transition: transform 0.5s;
-        }
-
+        /* Chat Window */
         .chat-window {
             flex: 1;
-            padding: 10px;
-            position: relative;
+            padding: 20px;
             overflow-y: auto;
-            border-radius: 12px;
-            background: rgba(30, 30, 30, 0.7);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+            background: rgba(50, 50, 50, 0.5);
+            border-radius: 20px;
+            box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .messages {
-            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
+        /* Message styles */
         .message {
-            padding: 10px 15px;
+            padding: 15px;
             border-radius: 15px;
-            margin: 5px 0;
-            max-width: 70%;
-            animation: slideIn 0.5s forwards;
-            transition: transform 0.2s;
-        }
-
-        .message:hover {
-            transform: scale(1.02);
+            max-width: 75%;
+            animation: popIn 0.3s;  /* Animation on message */
+            position: relative; /* Allows for the tooltip position */
         }
 
         .message.user {
-            background-color: #00ccff;
-            color: #000;
+            background: #007bff;
+            color: #fff;
             align-self: flex-end;
-            margin-left: auto;
+            box-shadow: 0 4px 8px rgba(0, 123, 255, 0.3);
         }
 
         .message.bot {
-            background-color: #3f51b5;
+            background: #28a745;
             color: #fff;
             align-self: flex-start;
+            box-shadow: 0 4px 8px rgba(40, 167, 69, 0.3);
         }
 
+        @keyframes popIn {
+            from {
+                transform: scale(0);
+            }
+            to {
+                transform: scale(1);
+            }
+        }
+
+        /* User Input Area */
         .user-input {
             display: flex;
             align-items: center;
-            padding: 10px 0;
+            padding: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            margin: 10px;
+            backdrop-filter: blur(10px);
         }
 
         .user-input input {
             flex: 1;
             padding: 15px;
-            font-size: 1em;
+            font-size: 1.1em;
             border: none;
-            border-radius: 30px;
+            border-radius: 20px;
+            margin-right: 10px;
             background: rgba(255, 255, 255, 0.2);
-            color: #fff; 
-            box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
-            transition: background 0.3s, box-shadow 0.3s;
-        }
-
-        .user-input input::placeholder {
             color: #fff;
-            opacity: 0.7;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.5);
+            transition: all 0.3s ease;
         }
 
         .user-input input:focus {
             outline: none;
-            background: rgba(255, 255, 255, 0.4);
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.25);
         }
 
         .user-input button {
+            background: #ff4081;
             border: none;
-            font-size: 1em;
             padding: 12px 20px;
             border-radius: 30px;
+            color: #fff;
+            font-size: 1.1em;
             cursor: pointer;
-            margin-left: 5px;
-            color: #0A0A0A;
-            background: linear-gradient(135deg, #00fff0, #00ccff);
-            box-shadow: 0 5px 20px rgba(0, 204, 255, 0.5);
-            transition: transform 0.3s;
+            transition: background 0.3s, transform 0.2s;
+            box-shadow: 0 5px 15px rgba(255, 64, 129, 0.5);
         }
 
         .user-input button:hover {
-            transform: scale(1.05);
-            background: linear-gradient(135deg, #00ccff, #00fff0);
+            background: #d81b60;
+            transform: translateY(-2px);
         }
 
-        /* Modal Styles */
+        /* Settings Modal */
         .modal {
             display: none;
             position: fixed;
@@ -222,21 +166,21 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: rgba(40, 40, 40, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            background-color: rgba(50, 50, 50, 0.9);
+            border-radius: 20px;
             width: 80%;
-            max-width: 400px;
+            max-width: 500px;
+            padding: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+            animation: modalIn 0.5s;
             overflow: hidden;
-            animation: modalFadeIn 0.5s;
         }
 
-        @keyframes modalFadeIn {
+        @keyframes modalIn {
             from {
                 opacity: 0;
                 transform: translate(-50%, -60%);
             }
-
             to {
                 opacity: 1;
                 transform: translate(-50%, -50%);
@@ -244,339 +188,122 @@
         }
 
         .modal-content {
-            padding: 20px;
-            color: #ffffff;
+            color: #fff;
+            text-align: center;
         }
 
         .modal-content h2 {
-            text-align: center;
-            margin: 0;
+            margin-bottom: 15px;
+            font-size: 2rem;
+            color: #ff4081;
+            text-shadow: 1px 1px 12px rgba(255, 64, 129, 0.5);
+        }
+
+        .modal-content input, .modal-content select {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.5);
         }
 
         .modal-content button {
-            background: linear-gradient(135deg, #00fff0, #00ccff);
+            background: #00bcd4;
             border: none;
-            color: #0A0A0A;
-            font-size: 1em;
-            padding: 10px;
+            padding: 10px 15px;
             border-radius: 5px;
             cursor: pointer;
-            transition: background 0.3s ease;
-            margin-top: 10px;
+            transition: background 0.3s;
             width: 100%;
         }
 
         .modal-content button:hover {
-            background: linear-gradient(135deg, #00ccff, #00fff0);
+            background: #0097a7;
         }
 
-        /* Settings Styles */
-        .settings {
-            width: 300px; 
-            margin: auto;
-            text-align: center;
-            color: #fff;
-        }
-
-        .settings input, .settings select {
-            padding: 10px;
-            margin: 10px auto;
-            border: none;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            width: 100%;
-            box-shadow: 0 2px 5px rgba(255, 255, 255, 0.3);
-        }
-
-        .settings select {
-            cursor: pointer;
-        }
-
-        /* More Global Styles */
-        button {
-            transition: transform 0.2s;
-        }
-
-        button:hover {
-            transform: translateY(-2px) scale(1.05);
-        }
-
+        /* Responsive Styles */
         @media (max-width: 768px) {
             .header {
-                font-size: 1.8em;
+                font-size: 2.5em;
             }
-
-            .sub-header {
-                font-size: 1em;
-            }
-
             .user-input input {
                 padding: 10px;
-                font-size: 0.8em;
+                font-size: 0.9em;
             }
-
             .user-input button {
                 padding: 8px;
-                font-size: 0.8em;
+                font-size: 0.9em;
+            }
+            .modal-content h2 {
+                font-size: 1.8rem;
             }
         }
     </style>
 </head>
 
 <body>
-    <div class="container" id="chatContainer">
-        <div class="chat-history">
-            <h3>Chat History</h3>
-            <ul id="chatList"></ul>
-        </div>
+    <div class="container">
+        <div class="header">Mikasa - Your AI Companion</div>
         <div class="chat-window">
-            <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
-            <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
             <div class="messages" id="chatbox"></div>
-            <div class="user-input">
-                <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
-                <button onclick="sendMessage()">📤</button>
-                <button onclick="setMessageAsReminder()">⏰ Reminder</button>
-                <button onclick="openSettings()">⚙️</button>
-            </div>
+        </div>
+        <div class="user-input">
+            <input type="text" id="userInput" placeholder="Type a message..." autofocus onkeydown="if(event.key === 'Enter') sendMessage();" />
+            <button onclick="sendMessage()">Send</button>
         </div>
     </div>
 
-    <div id="settingsModal" class="modal" style="display: none;">
+    <div id="settingsModal" class="modal">
         <div class="modal-content">
-            <span onclick="closeSettings()" style="float:right;cursor:pointer;color:#00fff0;">×</span>
+            <span onclick="closeSettings()" style="cursor:pointer;color:#ff4081; position:absolute; top:10px; right:10px;">×</span>
             <h2>Settings</h2>
-            <label for="botName">Chatbot Name:</label>
-            <input type="text" id="botNameInput" value="Mikasa" />
-
-            <label for="language">Language:</label>
+            <input type="text" id="botNameInput" placeholder="Enter Chatbot Name" value="Mikasa" />
             <select id="language" onchange="changeLanguage()">
                 <option value="en">English</option>
                 <option value="es">Spanish</option>
                 <option value="fr">French</option>
-                <option value="de">German</option>
-                <option value="it">Italian</option>
             </select>
-
-            <label for="theme">Text Color Theme:</label>
-            <select id="theme" onchange="changeTheme()">
-                <option value="default">Default</option>
-                <option value="theme-color-1">Dark Orange</option>
-                <option value="theme-color-2">Green</option>
-                <option value="theme-color-3">Blue</option>
-                <option value="theme-color-4">Yellow</option>
-                <option value="theme-color-5">Purple</option>
-                <option value="theme-color-6">Bright Orange</option>
-            </select>
-
-            <label for="musicUpload">Upload Music:</label>
-            <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
-
-            <label for="voiceToggle">Enable Voice:</label>
-            <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
-
-            <label for="reminderMessage">Reminder Message:</label>
-            <input type="text" id="reminderMessageInput" placeholder="Enter message" />
-            <input type="datetime-local" id="reminderTimeInput" />
-
-            <button onclick="setMessageAsReminder()">Set Reminder</button>
-
-            <button onclick="resetChat()">Reset Chat</button>
+            <button onclick="closeSettings()">Save</button>
         </div>
     </div>
 
-    <div id="welcomeModal" class="modal" style="display: none;">
-        <div class="modal-content">
-            <h2>Welcome to Mikasa!</h2>
-            <p>Your AI Companion designed to chat with you and assist with your queries. Feel free to ask me anything!</p>
-            <button onclick="closeWelcomeModal()">Got it!</button>
-        </div>
-    </div>
-
-    <audio id="musicPlayer" src="" preload="auto"></audio>
-
-    <script src="https://js.puter.com/v2/"></script>
     <script>
-        let chatbotName = "Mikasa";
-        let voiceEnabled = true; // Default voice enabled
-        let messageCount = 0; // Tracks number of messages
-        const chatMessages = []; // Store chat messages for export and summary
-        const chatAnswers = []; // Store chat answers for export
-        const musicPlayer = document.getElementById('musicPlayer');
-        let speechSynthesisInstance = window.speechSynthesis;
-
-        window.onload = function () {
-            loadPreferences();
-            showWelcomeModal(); // Show welcome popup on load
-        }
-
-        function loadPreferences() {
-            const savedLang = localStorage.getItem('language');
-            const savedTheme = localStorage.getItem('theme');
-            const savedBotName = localStorage.getItem('botName');
-
-            if (savedLang) {
-                document.getElementById("language").value = savedLang;
-            }
-
-            if (savedTheme) {
-                changeTheme(savedTheme);
-            }
-
-            if (savedBotName) {
-                chatbotName = savedBotName;
-                document.getElementById("chatbotName").innerText = chatbotName + " - Your AI Companion";
-                document.getElementById("botNameInput").value = chatbotName;
-            }
-        }
-
-        function showWelcomeModal() {
-            document.getElementById("welcomeModal").style.display = "block";
-        }
-
-        function closeWelcomeModal() {
-            document.getElementById("welcomeModal").style.display = "none";
-        }
-
-        function loadMusic(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const url = URL.createObjectURL(file);
-                musicPlayer.src = url;
-                alert("Music Loaded!");
-            }
-        }
-
-        function playMusic() {
-            if (musicPlayer.src) {
-                musicPlayer.play();
-            }
-        }
-
-        function pauseMusic() {
-            musicPlayer.pause();
-        }
-
-        function speakResponse(response) {
-            if (speechSynthesisInstance.speaking) {
-                speechSynthesisInstance.cancel();
-            }
-
-            if (voiceEnabled) {
-                const utterance = new SpeechSynthesisUtterance(response);
-                utterance.lang = "en-US";
-                speechSynthesisInstance.speak(utterance);
-            }
-        }
-
-        async function sendMessage() {
-            const userInput = document.getElementById("userInput");
-            const chatbox = document.getElementById("chatbox");
-            const chatList = document.getElementById("chatList");
-
-            if (userInput.value.trim()) {
-                const userMessage = userInput.value.trim();
-                const userMessageDiv = document.createElement("div");
-                userMessageDiv.className = "message user";
-                userMessageDiv.textContent = "🧑: " + userMessage;
-                chatbox.appendChild(userMessageDiv);
-                chatList.appendChild(document.createElement("li")).textContent = userMessage;
-                chatMessages.push(userMessage);
-
-                const typingIndicator = document.createElement("div");
-                typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
-                chatbox.appendChild(typingIndicator);
-
-                try {
-                    await delayResponse();
-                    let response = userMessage; // Default: echo user message.
-                    // Insert AI response logic here, if applicable.
-
-                    chatbox.removeChild(typingIndicator);
-                    const botMessageDiv = document.createElement("div");
-                    botMessageDiv.className = "message bot";
-                    botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
-                    chatbox.appendChild(botMessageDiv);
-                    chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
-
-                    speakResponse(response);
-                    messageCount++;
-                } catch (error) {
-                    const errorMessageDiv = document.createElement("div");
-                    errorMessageDiv.className = "message bot";
-                    errorMessageDiv.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
-                    chatbox.appendChild(errorMessageDiv);
-                }
-
-                chatbox.scrollTop = chatbox.scrollHeight; // Scroll to the bottom
-                userInput.value = ""; // Clear input
-            }
-        }
-
-        function delayResponse() {
-            return new Promise(resolve => setTimeout(resolve, 1000)); // Simulates typing delay
-        }
-
-        function changeLanguage() {
-            const selectedLanguage = document.getElementById("language").value;
-            localStorage.setItem('language', selectedLanguage);
-            alert("Language changed to: " + selectedLanguage);
-        }
-
-        function changeTheme() {
-            const selectedTheme = document.getElementById("theme").value;
-            document.body.className = 'theme-color-' + selectedTheme.charAt(selectedTheme.length - 1);
-            localStorage.setItem('theme', selectedTheme);
-        }
-
-        function resetChat() {
-            const chatbox = document.getElementById("chatbox");
-            const chatList = document.getElementById("chatList");
-            chatbox.innerHTML = "";
-            chatList.innerHTML = "";
-            messageCount = 0;
-            chatMessages.length = 0; // Clear messages
-            chatAnswers.length = 0; // Clear answers too
-        }
-
+        // Show Settings Modal
         function openSettings() {
             document.getElementById("settingsModal").style.display = "block";
         }
 
+        // Close Settings Modal
         function closeSettings() {
-            const newBotName = document.getElementById("botNameInput").value;
-            if (newBotName) {
-                chatbotName = newBotName;
-                document.getElementById("chatbotName").innerText = chatbotName + " - Your AI Companion";
-                localStorage.setItem('botName', chatbotName);
-            }
+            const botName = document.getElementById("botNameInput").value;
+            alert("Chatbot Name set to: " + botName);
             document.getElementById("settingsModal").style.display = "none";
         }
 
-        function toggleVoice() {
-            voiceEnabled = document.getElementById("voiceToggle").checked;
-            alert("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
-        }
+        // Send Message Functionality
+        function sendMessage() {
+            const userInput = document.getElementById("userInput");
+            const chatbox = document.getElementById("chatbox");
 
-        function setMessageAsReminder() {
-            const reminderMessage = document.getElementById("reminderMessageInput").value;
-            const reminderTime = document.getElementById("reminderTimeInput").value;
+            if (userInput.value.trim()) {
+                const userMessage = document.createElement("div");
+                userMessage.className = "message user";
+                userMessage.textContent = userInput.value;
+                chatbox.appendChild(userMessage);
 
-            if (reminderMessage && reminderTime) {
-                const reminderDatetime = new Date(reminderTime);
-                alert("Reminder set for: " + reminderMessage);
+                // Simulating a delay for the bot's response
+                setTimeout(() => {
+                    const botMessage = document.createElement("div");
+                    botMessage.className = "message bot";
+                    botMessage.textContent = "🤖 " + userInput.value; // Echoing user's message from the bot
+                    chatbox.appendChild(botMessage);
+                }, 1000);
 
-                const delay = reminderDatetime.getTime() - Date.now();
-                if (delay > 0) {
-                    setTimeout(() => {
-                        alert("💡 Reminder: " + reminderMessage);
-                    }, delay);
-                } else {
-                    alert("❌ Can't set a reminder in the past.");
-                }
-            } else {
-                alert("Please enter both a reminder message and time.");
+                userInput.value = ""; // Clear input
+                chatbox.scrollTop = chatbox.scrollHeight; // Autoscroll
             }
         }
     </script>
