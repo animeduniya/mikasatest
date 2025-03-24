@@ -254,11 +254,11 @@
 
         .user-input input {
             flex: 1;
-            padding: 12px; /* Padding style from your request */
-            font-size: 1em; /* Font size from your request */
+            padding: 12px; /* Padding style */
+            font-size: 1em; /* Font size */
             border: 2px solid #00fff0;
-            border-radius: 30px; /* Rounded corners for a premium look */
-            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px; /* More rounded corners for a premium look */
+            background: rgba(255, 255, 255, 0.2); /* Updated background for better visibility */
             color: #ffffff;
             margin-right: 5px;
             transition: border 0.3s;
@@ -271,9 +271,9 @@
 
         .user-input button {
             border: none;
-            font-size: 1em; /* Font size from your request */
-            padding: 10px 15px; /* Consistent padding */
-            border-radius: 30px; /* Rounded corners */
+            font-size: 1em;
+            padding: 10px 15px;
+            border-radius: 30px;
             cursor: pointer;
             transition: background 0.3s, transform 0.2s;
             margin-left: 5px;
@@ -439,9 +439,6 @@
                 <button onclick="startVoiceInput()">🎤</button>
                 <button onclick="toggleSettingsModal()">⚙️</button>
             </div>
-
-            <label for="musicUpload">Upload Music:</label>
-            <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
         </div>
     </div>
 
@@ -746,8 +743,11 @@
 
         function playMusic() {
             if (musicPlayer.src) {
-                musicPlayer.play();
-                showMessage("Playing music...");
+                musicPlayer.play().then(() => {
+                    showMessage("Playing music...");
+                }).catch(error => {
+                    showMessage("Error: Unable to play music.");
+                });
             } else {
                 showMessage("Please upload music first.");
             }
