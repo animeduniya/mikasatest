@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -51,7 +50,7 @@
             padding: 10px;
             border: 5px solid transparent;
             background-clip: padding-box;
-            animation: borderAnimation 2s infinite alternate;
+            animation: borderAnimation 3s infinite alternate; /* Slowed down RGB transition */
         }
 
         @keyframes borderAnimation {
@@ -70,6 +69,85 @@
             100% {
                 border-color: rgba(255, 0, 255, 0.8);
             }
+        }
+
+        /* Settings Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(40, 40, 40, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 400px;
+            overflow: hidden;
+            animation: fadeIn 0.5s;
+            border: 5px solid transparent;
+            background-clip: padding-box;
+            animation: settingsBorderAnimation 3s infinite alternate; /* Slowed down RGB transition */
+        }
+
+        @keyframes settingsBorderAnimation {
+            0% {
+                border-color: rgba(255, 0, 0, 0.8);
+            }
+            25% {
+                border-color: rgba(0, 255, 0, 0.8);
+            }
+            50% {
+                border-color: rgba(0, 0, 255, 0.8);
+            }
+            75% {
+                border-color: rgba(255, 255, 0, 0.8);
+            }
+            100% {
+                border-color: rgba(255, 0, 255, 0.8);
+            }
+        }
+
+        /* Modal Content Styles */
+        .modal-content {
+            padding: 20px;
+            color: #ffffff;
+        }
+
+        .modal-content label {
+            margin-top: 10px;
+            display: block;
+            font-weight: bold;
+            color: #00fff0;
+        }
+
+        .modal-content input[type="text"],
+        .modal-content select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #00fff0;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .modal-content button {
+            background: #00fff0;
+            border: none;
+            color: #0A0A0A;
+            font-size: 1em;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 10px;
+            width: 100%;
+        }
+
+        .modal-content button:hover {
+            background: #00ccff;
         }
 
         /* Chat History */
@@ -102,7 +180,7 @@
             border-radius: 8px;
         }
 
-        /* Chat Window */
+        /* Chat Window Styles */
         .chat-window {
             flex: 1;
             display: flex;
@@ -112,7 +190,7 @@
             overflow-y: auto;
             border: 5px solid transparent;
             background-clip: padding-box;
-            animation: borderAnimation 2s infinite alternate;
+            animation: borderAnimation 3s infinite alternate; /* Slowed down RGB transition */
         }
 
         .header {
@@ -144,7 +222,7 @@
             padding: 10px 15px;
             border-radius: 20px;
             margin: 5px 0;
-            max-width: 100%;
+            max-width: 70%;
             animation: slideIn 0.5s forwards;
         }
 
@@ -153,14 +231,14 @@
             color: #000;
             align-self: flex-end;
             margin-left: auto;
-            max-width: 70%; /* Wider user message */
+            max-width: 70%;
         }
 
         .message.bot {
             background-color: #3f51b5;
             color: #fff;
             align-self: flex-start;
-            max-width: 70%; /* Wider bot response message */
+            max-width: 70%;
         }
 
         .user-input {
@@ -223,72 +301,6 @@
             background: #00ccff;
             border: 2px solid #fff;
             transform: scale(1.05);
-        }
-
-        /* Settings Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(40, 40, 40, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-            width: 90%;
-            max-width: 400px;
-            overflow: hidden;
-            animation: fadeIn 0.5s;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        .modal-content {
-            padding: 20px;
-            color: #ffffff;
-        }
-
-        .modal-content label {
-            margin-top: 10px;
-            display: block;
-            font-weight: bold;
-            color: #00fff0;
-        }
-
-        .modal-content input[type="text"],
-        .modal-content select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #00fff0;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-        }
-
-        .modal-content button {
-            background: #00fff0;
-            border: none;
-            color: #0A0A0A;
-            font-size: 1em;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            margin-top: 10px;
-            width: 100%;
-        }
-
-        .modal-content button:hover {
-            background: #00ccff;
         }
 
         /* Epic Enable Voice Toggle */
@@ -365,9 +377,106 @@
             background: #00fff0;
             border-radius: 10px;
         }
+
+        /* Theme Styles */
+        /* Theme 1 */
+        body.theme-color-1 {
+            color: #ff5722; /* Dark Orange */
+        }
+        body.theme-color-1 .header,
+        body.theme-color-1 .sub-header,
+        body.theme-color-1 .action-button {
+            color: #ff5722;
+            background: #ff5722;
+        }
+        body.theme-color-1 .user-input button,
+        body.theme-color-1 .modal-content button {
+            background: #ff5722;
+            color: #ffffff;
+        }
+
+        /* Theme 2 */
+        body.theme-color-2 {
+            color: #4caf50; /* Green */
+        }
+        body.theme-color-2 .header,
+        body.theme-color-2 .sub-header,
+        body.theme-color-2 .action-button {
+            color: #4caf50;
+            background: #4caf50;
+        }
+        body.theme-color-2 .user-input button,
+        body.theme-color-2 .modal-content button {
+            background: #4caf50;
+            color: #ffffff;
+        }
+
+        /* Theme 3 */
+        body.theme-color-3 {
+            color: #2196f3; /* Blue */
+        }
+        body.theme-color-3 .header,
+        body.theme-color-3 .sub-header,
+        body.theme-color-3 .action-button {
+            color: #2196f3;
+            background: #2196f3;
+        }
+        body.theme-color-3 .user-input button,
+        body.theme-color-3 .modal-content button {
+            background: #2196f3;
+            color: #ffffff;
+        }
+
+        /* Theme 4 */
+        body.theme-color-4 {
+            color: #ffeb3b; /* Yellow */
+        }
+        body.theme-color-4 .header,
+        body.theme-color-4 .sub-header,
+        body.theme-color-4 .action-button {
+            color: #ffeb3b;
+            background: #ffeb3b;
+        }
+        body.theme-color-4 .user-input button,
+        body.theme-color-4 .modal-content button {
+            background: #ffeb3b;
+            color: #000000;
+        }
+
+        /* Theme 5 */
+        body.theme-color-5 {
+            color: #673ab7; /* Purple */
+        }
+        body.theme-color-5 .header,
+        body.theme-color-5 .sub-header,
+        body.theme-color-5 .action-button {
+            color: #673ab7;
+            background: #673ab7;
+        }
+        body.theme-color-5 .user-input button,
+        body.theme-color-5 .modal-content button {
+            background: #673ab7;
+            color: #ffffff;
+        }
+
+        /* Theme 6 */
+        body.theme-color-6 {
+            color: #ff6a00; /* Orange */
+        }
+        body.theme-color-6 .header,
+        body.theme-color-6 .sub-header,
+        body.theme-color-6 .action-button {
+            color: #ff6a00;
+            background: #ff6a00;
+        }
+        body.theme-color-6 .user-input button,
+        body.theme-color-6 .modal-content button {
+            background: #ff6a00;
+            color: #ffffff;
+        }
+
     </style>
 </head>
-
 <body>
     <div class="container" id="chatContainer">
         <div class="chat-history">
@@ -483,7 +592,8 @@
             }
 
             if (savedTheme) {
-                changeTheme(savedTheme);
+                document.body.className = ''; // Reset classes
+                document.body.classList.add(savedTheme);
             }
 
             if (savedBotName) {
@@ -514,7 +624,6 @@
         }
 
         function speakResponse(response) {
-            // Stop previous speech if any
             if (speechSynthesisInstance.speaking) {
                 speechSynthesisInstance.cancel();
             }
@@ -597,7 +706,6 @@
         }
 
         function startVoiceInput() {
-            // Stop speech synthesis when starting voice input
             if (speechSynthesisInstance.speaking) {
                 speechSynthesisInstance.cancel();
             }
@@ -676,5 +784,4 @@
         }
     </script>
 </body>
-
 </html>
