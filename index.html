@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rishab Chatbot</title>
     <style>
         body {
@@ -48,30 +48,173 @@
             flex-direction: column;
             position: relative;
             padding: 10px;
+        }
+
+        /* Chat Window Styles */
+        .chat-window {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            position: relative;
+            overflow-y: auto;
             border: 5px solid transparent;
-            background-clip: padding-box;
-            animation: borderAnimation 10s infinite alternate; /* Slowed down RGB transition */
+            animation: borderAnimation 10s infinite alternate;
         }
 
-        @keyframes borderAnimation {
-            0% {
-                border-color: rgba(255, 0, 0, 0.8);
-            }
-            25% {
-                border-color: rgba(0, 255, 0, 0.8);
-            }
-            50% {
-                border-color: rgba(0, 0, 255, 0.8);
-            }
-            75% {
-                border-color: rgba(255, 255, 0, 0.8);
-            }
-            100% {
-                border-color: rgba(255, 0, 255, 0.8);
-            }
+        .header, .sub-header {
+            text-align: center;
+            color: cyan; /* Default color for headers */
+            text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.5);
         }
 
-        /* Settings Modal */
+        .header {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .sub-header {
+            font-size: 1em;
+            opacity: 0.8;
+            margin-bottom: 15px;
+        }
+
+        /* Chat History */
+        .chat-history {
+            flex: 0 1 20%;
+            overflow-y: auto;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-history h3 {
+            margin: 0;
+            color: cyan; /* Header color */
+            text-align: center;
+        }
+
+        .chat-history ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .chat-history li {
+            background: rgba(0, 255, 240, 0.2);
+            color: cyan; /* List item color */
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .user-input {
+            display: flex;
+            align-items: center;
+            padding: 10px 0;
+        }
+
+        /* Styles for Input and Buttons */
+        .user-input input {
+            flex: 1;
+            padding: 12px;
+            font-size: 1.1em;
+            border: 2px solid cyan;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            margin-right: 10px;
+            transition: border 0.3s;
+        }
+
+        .user-input input:focus {
+            outline: none;
+            border: 2px solid #00ccff;
+        }
+
+        .user-input button {
+            border: none;
+            font-size: 1.1em;
+            padding: 10px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            margin-left: 5px;
+            color: #ffffff; /* Text color should be white */
+            background: cyan; /* Default button background */
+        }
+
+        .user-input button:hover {
+            background: #00c8e1;
+            transform: scale(1.05);
+        }
+
+        /* Action Button Styles */
+        .action-button {
+            width: 100%;
+            padding: 12px;
+            border-radius: 30px;
+            color: #ffffff; /* Text color should be white */
+            font-weight: bold;
+            font-size: 1.1em;
+            text-align: center;
+            margin-top: 10px;
+            background: cyan; /* Default button background */
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .action-button:hover {
+            background: #00c8e1;
+            transform: scale(1.05);
+        }
+
+        /* New Feature - Quick Replies */
+        .quick-replies {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .quick-reply {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .quick-reply:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Summary Button */
+        .summarize-button {
+            background: #ffcc00; /* Yellow Color */
+            color: #000;
+            font-weight: bold;
+        }
+
+        /* Emoji Picker Styles */
+        .emoji-picker {
+            display: none;
+            background: rgba(0, 0, 0, 0.8);
+            position: absolute;
+            z-index: 1000;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .emoji-picker button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em; /* Larger size for emojis */
+        }
+
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -85,31 +228,8 @@
             width: 90%;
             max-width: 400px;
             overflow: hidden;
-            animation: fadeIn 0.5s;
-            border: 5px solid transparent;
-            background-clip: padding-box;
-            animation: settingsBorderAnimation 10s infinite alternate; /* Slowed down RGB transition */
         }
 
-        @keyframes settingsBorderAnimation {
-            0% {
-                border-color: rgba(255, 0, 0, 0.8);
-            }
-            25% {
-                border-color: rgba(0, 255, 0, 0.8);
-            }
-            50% {
-                border-color: rgba(0, 0, 255, 0.8);
-            }
-            75% {
-                border-color: rgba(255, 255, 0, 0.8);
-            }
-            100% {
-                border-color: rgba(255, 0, 255, 0.8);
-            }
-        }
-
-        /* Modal Content Styles */
         .modal-content {
             padding: 20px;
             color: #ffffff;
@@ -127,7 +247,7 @@
             width: 100%;
             padding: 10px;
             margin-top: 5px;
-            border: 1px solid #00fff0;
+            border: 1px solid cyan;
             border-radius: 5px;
             background: rgba(255, 255, 255, 0.1);
             color: #ffffff;
@@ -143,224 +263,20 @@
             transition: background 0.3s ease;
             margin-top: 10px;
             width: 100%;
+            background: cyan; /* Modal button background */
         }
 
-        /* Chat History */
-        .chat-history {
-            flex: 0 1 20%;
-            overflow-y: auto;
-            padding: 10px;
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00fff0;
             border-radius: 10px;
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.2);
-        }
-
-        .chat-history h3 {
-            margin: 0;
-            color: #00fff0; /* Fixed header color */
-            text-align: center;
-        }
-
-        .chat-history ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .chat-history li {
-            background: rgba(0, 255, 240, 0.2);
-            color: #00fff0; /* Fixed list item color */
-            margin: 5px 0;
-            padding: 8px;
-            border-radius: 8px;
-        }
-
-        /* Chat Window Styles */
-        .chat-window {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 10px;
-            position: relative;
-            overflow-y: auto;
-            border: 5px solid transparent;
-            background-clip: padding-box;
-            animation: borderAnimation 10s infinite alternate; /* Slowed down RGB transition */
-        }
-
-        .header {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: inherit; /* Inherit text color according to theme */
-            text-align: center;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 5px rgba(0, 255, 255, 0.5);
-        }
-
-        .sub-header {
-            font-size: 1em;
-            color: inherit; /* Inherit text color according to theme */
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 15px;
-            opacity: 0.8;
-        }
-
-        .messages {
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: 10px;
-            padding-right: 10px;
-        }
-
-        .message {
-            padding: 10px 15px;
-            border-radius: 20px;
-            margin: 5px 0;
-            max-width: 70%;
-            animation: slideIn 0.5s forwards;
-        }
-
-        .message.user {
-            background-color: #00ccff;
-            color: #000;
-            align-self: flex-end;
-            margin-left: auto;
-            max-width: 70%;
-        }
-
-        .message.bot {
-            background-color: #3f51b5;
-            color: #fff;
-            align-self: flex-start;
-            max-width: 70%;
-        }
-
-        .user-input {
-            display: flex;
-            align-items: center;
-            padding: 10px 0;
-        }
-
-        /* Styles for Input and Buttons */
-        .user-input input {
-            flex: 1;
-            padding: 12px;
-            font-size: 1em;
-            border: 2px solid #00fff0;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            margin-right: 5px;
-            transition: border 0.3s;
-        }
-
-        .user-input input:focus {
-            outline: none;
-            border: 2px solid #00ccff;
-        }
-
-        .user-input button {
-            border: none;
-            font-size: 1em;
-            padding: 10px 15px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            margin-left: 5px;
-            color: #ffffff; /* Text color should be white */
-        }
-
-        .user-input button:hover {
-            transform: scale(1.05);
-            background: #00ccff;
-        }
-
-        /* Epic Button Styles */
-        .action-button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 30px;
-            color: #ffffff; /* Text color should be white */
-            font-weight: bold;
-            font-size: 1em;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-
-        .action-button:hover {
-            transform: scale(1.05);
-        }
-
-        /* Epic Enable Voice Toggle */
-        #voiceToggle.example-checkbox {
-            display: inline-flex;
-            align-items: center;
-            cursor: pointer;
-        }
-
-        #voiceToggle.example-checkbox input {
-            display: none;
-        }
-
-        #voiceToggle.example-checkbox .switch {
-            width: 52px;
-            height: 26px;
-            border-radius: 50px;
-            position: relative;
-            background: #ccc;
-            transition: background 0.4s;
-        }
-
-        #voiceToggle.example-checkbox input:checked + .switch {
-            background: #00ccff;
-        }
-
-        #voiceToggle.example-checkbox .circle {
-            width: 22px;
-            height: 22px;
-            background: white;
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: left 0.4s;
-        }
-
-        #voiceToggle.example-checkbox input:checked + .switch .circle {
-            left: 28px;
-        }
-
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            body {
-                height: auto;
-                overflow-y: auto;
-            }
-
-            .header {
-                font-size: 1.5em;
-            }
-
-            .sub-header {
-                font-size: 0.9em;
-            }
-
-            .user-input input {
-                padding: 10px;
-                font-size: 0.9em;
-            }
-
-            .user-input button {
-                padding: 10px;
-                font-size: 0.9em;
-            }
         }
 
         /* Theme Styles */
-        /* Theme 1 */
         body.theme-color-1 {
             color: #ff5722; /* Dark Orange */
         }
@@ -377,7 +293,6 @@
             color: #ffffff;
         }
 
-        /* Theme 2 */
         body.theme-color-2 {
             color: #4caf50; /* Green */
         }
@@ -394,7 +309,6 @@
             color: #ffffff;
         }
 
-        /* Theme 3 */
         body.theme-color-3 {
             color: #2196f3; /* Blue */
         }
@@ -411,7 +325,6 @@
             color: #ffffff;
         }
 
-        /* Theme 4 */
         body.theme-color-4 {
             color: #ffeb3b; /* Yellow */
         }
@@ -428,7 +341,6 @@
             color: #000000;
         }
 
-        /* Theme 5 */
         body.theme-color-5 {
             color: #673ab7; /* Purple */
         }
@@ -445,7 +357,6 @@
             color: #ffffff;
         }
 
-        /* Theme 6 */
         body.theme-color-6 {
             color: #ff6a00; /* Orange */
         }
@@ -462,15 +373,6 @@
             color: #ffffff;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #00fff0;
-            border-radius: 10px;
-        }
     </style>
 </head>
 <body>
@@ -479,6 +381,7 @@
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
             <button class="action-button" onclick="exportChat();">🎤 Export Chat</button>
+            <button class="action-button summarize-button" onclick="summarizeChat();">📝 Summarize Chat</button>
             <button class="action-button" onclick="resetChat();">🔄 Add New Chat</button>
         </div>
         <div class="chat-window">
@@ -491,6 +394,11 @@
                 <button onclick="openSettings()">⚙️</button>
                 <button onclick="toggleEmojiPicker()">😀</button>
                 <button onclick="startVoiceInput()">🎤</button>
+            </div>
+            <div class="quick-replies">
+                <span class="quick-reply" onclick="chooseQuickReply('Hello')">Hello</span>
+                <span class="quick-reply" onclick="chooseQuickReply('Help')">Help</span>
+                <span class="quick-reply" onclick="chooseQuickReply('Goodbye')">Goodbye</span>
             </div>
             <div class="emoji-picker" id="emojiPicker">
                 <button onclick="addEmoji('😀')">😀</button>
@@ -528,13 +436,13 @@
 
             <label for="theme">Text Color Theme:</label>
             <select id="theme" onchange="changeTheme()">
-                <option value="default">Default</option>
-                <option value="theme-color-1">Deep Orange</option>
+                <option value="theme-color-1">Dark Orange</option>
                 <option value="theme-color-2">Green</option>
                 <option value="theme-color-3">Blue</option>
                 <option value="theme-color-4">Yellow</option>
                 <option value="theme-color-5">Purple</option>
                 <option value="theme-color-6">Orange</option>
+                <option value="default">Cyan (Default)</option>
             </select>
 
             <label for="musicUpload">Upload Music:</label>
@@ -590,6 +498,9 @@
             if (savedTheme) {
                 document.body.className = ''; // Reset classes
                 document.body.classList.add(savedTheme);
+            } else {
+                // Default to cyan theme on initial load
+                document.body.classList.add('default');
             }
 
             if (savedBotName) {
@@ -649,17 +560,19 @@
                 typingIndicator.innerHTML = "<em>🤖 Rishab is typing...</em>";
                 chatbox.appendChild(typingIndicator);
 
+                // Simulate thinking delay
                 try {
                     await delayResponse();
                     let response;
                     const query = userMessage;
 
+                    // Custom responses for specific queries
                     if (/what's your name|who are you/i.test(query)) {
                         response = `My name is ${chatbotName}.`;
                     } else if (/who made you|your creator/i.test(query)) {
                         response = "I was made by Rishab.";
                     } else {
-                        response = await puter.ai.chat(query);
+                        response = await puter.ai.chat(query); // Call the AI service
                     }
 
                     chatbox.removeChild(typingIndicator);
@@ -701,6 +614,12 @@
             emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
         }
 
+        function chooseQuickReply(reply) {
+            const userInput = document.getElementById("userInput");
+            userInput.value += reply; // Append the quick reply to input
+            sendMessage(); // Send the message
+        }
+
         function startVoiceInput() {
             if (speechSynthesisInstance.speaking) {
                 speechSynthesisInstance.cancel();
@@ -712,6 +631,18 @@
                 userInput.value = event.results[0][0].transcript; // Set voice input to the text field
             };
             recognition.start();
+        }
+
+        function summarizeChat() {
+            const summaryDiv = document.createElement("div");
+            summaryDiv.className = "message bot";
+            const summaryText = "Chat Summary:\n" +
+                chatMessages.join("\n") + 
+                "\nTotal Messages: " + chatMessages.length;
+            summaryDiv.textContent = summaryText;
+            document.getElementById("chatbox").appendChild(summaryDiv);
+            // Auto-scroll to the new message
+            document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;
         }
 
         function exportChat() {
@@ -739,6 +670,7 @@
             const selectedTheme = document.getElementById("theme").value;
             document.body.className = ''; // Reset classes
             document.body.classList.add(selectedTheme);
+            localStorage.setItem('theme', selectedTheme); // Save theme
         }
 
         function resetChat() {
