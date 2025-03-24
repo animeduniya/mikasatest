@@ -253,6 +253,7 @@
         <div class="user-input">
             <input type="text" id="userInput" placeholder="Type a message..." autofocus onkeydown="if(event.key === 'Enter') sendMessage();" />
             <button onclick="sendMessage()">Send</button>
+            <button onclick="openSettings()">⚙️</button> <!-- Settings button -->
         </div>
     </div>
 
@@ -271,6 +272,9 @@
     </div>
 
     <script>
+        let chatBotName = "Mikasa"; // Default Chatbot Name
+        let language = "en"; // Default Language
+        
         // Show Settings Modal
         function openSettings() {
             document.getElementById("settingsModal").style.display = "block";
@@ -279,8 +283,23 @@
         // Close Settings Modal
         function closeSettings() {
             const botName = document.getElementById("botNameInput").value;
-            alert("Chatbot Name set to: " + botName);
+            if (botName) {
+                chatBotName = botName;
+                alert("Chatbot Name set to: " + chatBotName);
+            }
             document.getElementById("settingsModal").style.display = "none";
+        }
+
+        // Change Language (currently no functionality, just present for expansion)
+        function changeLanguage() {
+            language = document.getElementById("language").value;
+            alert("Language changed to: " + language);
+        }
+
+        // Simulated response from the bot
+        function getBotResponse(userInput) {
+            // You can implement your bot's logic here. For now, it returns a simple response.
+            return "You said: " + userInput;
         }
 
         // Send Message Functionality
@@ -296,9 +315,10 @@
 
                 // Simulating a delay for the bot's response
                 setTimeout(() => {
+                    const botResponse = getBotResponse(userInput.value); // Get bot response
                     const botMessage = document.createElement("div");
                     botMessage.className = "message bot";
-                    botMessage.textContent = "🤖 " + userInput.value; // Echoing user's message from the bot
+                    botMessage.textContent = `${chatBotName}: ${botResponse}`;
                     chatbox.appendChild(botMessage);
                 }, 1000);
 
