@@ -242,19 +242,21 @@
 
         .user-input input {
             flex: 1;
-            padding: 12px; /* Padding for a better feel */
-            font-size: 1em; /* Font size */
+            padding: 15px; /* Increased for better feel */
+            font-size: 1.2em; /* Increased font size */
             border: 2px solid #00fff0;
             border-radius: 30px; /* More rounded corners for a premium look */
             background: rgba(255, 255, 255, 0.2); /* Input background */
             color: #ffffff;
             margin-right: 5px;
-            transition: border 0.3s;
+            transition: border 0.3s, box-shadow 0.3s;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
 
         .user-input input:focus {
             outline: none;
             border: 2px solid #00ccff;
+            box-shadow: 0 0 10px rgba(0, 204, 255, 0.5);
         }
 
         .user-input button {
@@ -272,6 +274,29 @@
         .user-input button:hover {
             transform: scale(1.05);
             background: #00ccff;
+        }
+
+        /* Music Controls */
+        #musicControls {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .music-button {
+            background: #00fff0;
+            border: none;
+            color: #0A0A0A;
+            padding: 10px 15px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            margin-right: 10px; /* Margin between buttons */
+        }
+
+        .music-button:hover {
+            background: #00ccff;
+            transform: scale(1.05);
         }
 
         /* Pop-up Message Style */
@@ -301,9 +326,6 @@
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-thumb { background: #00fff0; border-radius: 10px; }
 
-        /* Theme Styles Below... */
-        /* Your theme styles remain unchanged */
-
     </style>
 </head>
 
@@ -320,17 +342,26 @@
             <button class="action-button" onclick="summarizeChat();">📝 Summarize Chat</button>
             <button class="action-button" onclick="resetChat();">🔄 Add New Chat</button>
         </div>
-        
+
         <div class="chat-window">
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
             <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
-            
+
             <div class="user-input">
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
                 <button onclick="sendMessage()">📤</button>
                 <button onclick="startVoiceInput()">🎤</button>
                 <button onclick="toggleSettingsModal()">⚙️</button>
+            </div>
+
+            <!-- Music Controls -->
+            <div id="musicControls">
+                <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
+                <button class="music-button" onclick="playMusic()">🎵 Play</button>
+                <button class="music-button" onclick="pauseMusic()">⏸️ Pause</button>
+                <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5" onchange="changeVolume(this.value)" style="width: 100px;" />
+                <label for="volumeControl" style="color: white;">Volume</label>
             </div>
         </div>
     </div>
@@ -506,7 +537,7 @@
                 return;
             }
             const file = imageUpload.files[0];
-            const storageRef = storage.ref().child('profile_images/' + firebase.auth().currentUser.uid + '.jpg'); // Create reference with user ID
+            const storageRef = storage.ref().child('profile_images/' + firebase.auth().currentUser.uid + '.jpg');
             storageRef.put(file).then(() => {
                 showMessage("Profile image uploaded successfully.");
             }).catch(error => {
@@ -657,6 +688,7 @@
 
         function changeVolume(value) {
             musicPlayer.volume = value;
+            showMessage(`Volume set to ${value * 100}%`);
         }
 
         // Feedback Function
@@ -684,8 +716,8 @@
 
         // Change Voice Function
         function selectVoice(voice) {
-          // Placeholder for voice changing functionality.
-          showMessage(`Voice changed! Selected: ${voice}`);
+            // Placeholder for voice changing functionality.
+            showMessage(`Voice changed! Selected: ${voice}`);
         }
 
     </script>
