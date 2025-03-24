@@ -40,6 +40,21 @@
             }
         }
 
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+
+        .profile {
+            background-color: cyan;
+            border: none;
+            border-radius: 30px;
+            padding: 10px 15px;
+            cursor: pointer;
+        }
+
         /* Pop-Up Styles */
         .popup {
             display: none;
@@ -74,25 +89,6 @@
             color: cyan;
         }
 
-        .popup p {
-            color: white;
-            margin: 1em 0;
-        }
-
-        .popup button {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            background-color: cyan;
-            color: black;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .popup button:hover {
-            background-color: #00c8e1;
-        }
-
         /* Container Styles */
         .container {
             width: 95%;
@@ -106,40 +102,8 @@
             flex-direction: column;
             position: relative;
             padding: 10px;
-            border: 5px solid transparent;
-            /* Initial border for RGB effect */
-            animation: rgbBorder 5s linear infinite;
-            /* RGB border animation */
-        }
-
-        @keyframes rgbBorder {
-            0% {
-                border-color: red;
-            }
-
-            16.67% {
-                border-color: orange;
-            }
-
-            33.33% {
-                border-color: yellow;
-            }
-
-            50% {
-                border-color: green;
-            }
-
-            66.67% {
-                border-color: blue;
-            }
-
-            83.33% {
-                border-color: indigo;
-            }
-
-            100% {
-                border-color: violet;
-            }
+            border: 5px solid transparent; /* Initial border for RGB effect */
+            animation: rgbBorder 5s linear infinite; /* RGB border animation */
         }
 
         /* Chat Window Styles */
@@ -150,30 +114,13 @@
             padding: 10px;
             position: relative;
             overflow-y: auto;
-            border: 5px solid transparent;
-            /* Same initial border for chat window */
-            animation: rgbBorder 5s linear infinite;
-            /* Apply same RGB animation */
+            border: 5px solid transparent; /* Same initial border for chat window */
+            animation: rgbBorder 5s linear infinite; /* Apply same RGB animation */
         }
 
-        .header,
         .sub-header {
             text-align: center;
             color: cyan;
-            text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.5);
-        }
-
-        .header {
-            font-size: 2.5em;
-            /* Increased font sizes for better visibility */
-            font-weight: bold;
-        }
-
-        .sub-header {
-            font-size: 1.2em;
-            /* Increased font sizes for better visibility */
-            opacity: 0.8;
-            margin-bottom: 15px;
         }
 
         /* Message Styles */
@@ -185,55 +132,21 @@
             word-wrap: break-word;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
             transition: all 0.3s;
-            /* Added transition for smooth hover effect */
         }
 
         /* User Message Style */
         .message.user {
             background-color: #00ccff;
-            /* User messages */
             color: #000;
             align-self: flex-end;
-            margin-left: auto;
-            /* Align to right */
+            margin-left: auto; /* Align to right */
         }
 
         /* Bot Message Style */
         .message.bot {
             background-color: #4caf50;
-            /* Bot responses */
             color: #fff;
             align-self: flex-start;
-        }
-
-        /* Chat History Styles */
-        .chat-history {
-            flex: 0 1 20%;
-            overflow-y: auto;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.2);
-        }
-
-        .chat-history h3 {
-            margin: 0;
-            color: cyan;
-            text-align: center;
-        }
-
-        .chat-history ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .chat-history li {
-            background: rgba(0, 255, 240, 0.2);
-            color: cyan;
-            margin: 5px 0;
-            padding: 8px;
-            border-radius: 8px;
         }
 
         /* User Input Styles */
@@ -268,14 +181,8 @@
             cursor: pointer;
             margin-left: 5px;
             background: cyan;
-            /* Default button background */
             color: #ffffff;
             transition: background 0.3s, transform 0.2s;
-        }
-
-        .user-input button:hover {
-            background: #00c8e1;
-            transform: scale(1.05);
         }
 
         /* Action Button Styles */
@@ -298,6 +205,45 @@
             transform: scale(1.05);
         }
 
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(40, 40, 40, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 400px;
+            overflow: hidden;
+            animation: rgbBorder 5s linear infinite; /* Same RGB animation */
+        }
+
+        /* More styles... */
+       
+        /* Chat History Styles */
+        .chat-history {
+            flex: 0 1 20%;
+            overflow-y: auto;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Scrollbar Customization */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00fff0;
+            border-radius: 10px;
+        }
+
         /* Emoji Picker Styles */
         .emoji-picker {
             display: none;
@@ -315,195 +261,38 @@
             font-size: 1.5em;
         }
 
-        /* Modal Styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(40, 40, 40, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-            width: 90%;
-            max-width: 400px;
-            overflow: hidden;
-            border: 5px solid transparent;
-            /* Border for RGB effect */
-            animation: rgbBorder 5s linear infinite;
-            /* Same RGB animation */
-        }
-
-        .modal-content {
-            padding: 20px;
-            color: #ffffff;
-        }
-
-        .modal-content label {
-            margin-top: 10px;
-            display: block;
-            font-weight: bold;
-            color: inherit;
-        }
-
-        .modal-content input[type="text"],
-        .modal-content select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid cyan;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-        }
-
-        .modal-content button {
-            border: none;
-            color: #ffffff;
-            font-size: 1em;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            margin-top: 10px;
-            width: 100%;
-            background: cyan;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #00fff0;
-            border-radius: 10px;
-        }
-
         /* Theme Styles */
         body.theme-color-1 {
             color: #ff5722;
-            /* Dark Orange */
         }
 
-        body.theme-color-1 .header {
-            color: #ff5722;
-        }
-
-        body.theme-color-1 .sub-header {
-            color: #ff5722;
-        }
-
-        body.theme-color-1 .user-input button,
-        body.theme-color-1 .modal-content button,
-        body.theme-color-1 .action-button {
-            background: #ff5722;
-            color: #ffffff;
-        }
-
-        body.theme-color-2 {
-            color: #4caf50;
-        }
-
-        body.theme-color-2 .header {
-            color: #4caf50;
-        }
-
-        body.theme-color-2 .sub-header {
-            color: #4caf50;
-        }
-
-        body.theme-color-2 .user-input button,
-        body.theme-color-2 .modal-content button,
-        body.theme-color-2 .action-button {
-            background: #4caf50;
-            color: #ffffff;
-        }
-
-        body.theme-color-3 {
-            color: #2196f3;
-        }
-
-        body.theme-color-3 .header {
-            color: #2196f3;
-        }
-
-        body.theme-color-3 .sub-header {
-            color: #2196f3;
-        }
-
-        body.theme-color-3 .user-input button,
-        body.theme-color-3 .modal-content button,
-        body.theme-color-3 .action-button {
-            background: #2196f3;
-            color: #ffffff;
-        }
-
-        body.theme-color-4 {
-            color: #ffeb3b;
-        }
-
-        body.theme-color-4 .header {
-            color: #ffeb3b;
-        }
-
-        body.theme-color-4 .sub-header {
-            color: #ffeb3b;
-        }
-
-        body.theme-color-4 .user-input button,
-        body.theme-color-4 .modal-content button,
-        body.theme-color-4 .action-button {
-            background: #ffeb3b;
+        /* Dark/Light Mode */
+        body.light-mode {
+            background-color: #ffffff;
             color: #000000;
         }
 
-        body.theme-color-5 {
-            color: #673ab7;
-        }
-
-        body.theme-color-5 .header {
-            color: #673ab7;
-        }
-
-        body.theme-color-5 .sub-header {
-            color: #673ab7;
-        }
-
-        body.theme-color-5 .user-input button,
-        body.theme-color-5 .modal-content button,
-        body.theme-color-5 .action-button {
-            background: #673ab7;
+        body.dark-mode {
+            background-color: #1c1c1c;
             color: #ffffff;
         }
 
-        body.theme-color-6 {
-            color: #ff6a00;
-        }
-
-        body.theme-color-6 .header {
-            color: #ff6a00;
-        }
-
-        body.theme-color-6 .sub-header {
-            color: #ff6a00;
-        }
-
-        body.theme-color-6 .user-input button,
-        body.theme-color-6 .modal-content button,
-        body.theme-color-6 .action-button {
-            background: #ff6a00;
-            color: #ffffff;
+        /* Feedback button styles */
+        .feedback {
+            margin: 5px;
         }
     </style>
 </head>
 
-<body>
+<body class="light-mode">
+    <div class="header">
+        <div class="title">Rishab Chatbot</div>
+        <button class="profile" onclick="openAuthModal()">Profile</button>
+    </div>
+
     <div class="popup" id="introPopup">
         <h2>Welcome to Rishab Chatbot!</h2>
         <p>This is your personalized assistant. Engage in delightful conversations and receive daily facts!</p>
-        <p id="dailyFact"></p>
         <button onclick="closePopup()">Got it!</button>
     </div>
 
@@ -568,31 +357,18 @@
                 <option value="cn">Chinese</option>
             </select>
 
-            <label for="musicUpload">Upload Music:</label>
-            <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
-            <button onclick="playMusic()">Play/Pause Music</button>
-            <label>Volume:</label>
-            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)" />
-
             <label class="example-checkbox">
                 <input type="checkbox" id="voiceToggle" onchange="toggleVoice()" checked>
-                <div class="switch">
-                    <div class="circle"></div>
-                </div>
                 Enable Voice
             </label>
 
-            <button onclick="setReminder()">Set Reminder</button>
-            <button onclick="showDailyFact()">Get Daily Fact/Quote</button>
+            <div>
+                <label for="dayCycle">Toggle Dark/Light Mode</label>
+                <input type="checkbox" id="dayCycle" onchange="toggleMode()">
+            </div>
 
-            <label for="feedback">Feedback:</label>
-            <select id="feedback" onchange="sendFeedback()">
-                <option value="">Select Feedback</option>
-                <option value="helpful">Helpful</option>
-                <option value="not_helpful">Not Helpful</option>
-            </select>
-
-            <button onclick="resetChat()">Reset Chat</button>
+            <button onclick="setReminder()">✅ Set Reminder</button>
+            <button onclick="showDailyFact()">🔍 Get Daily Fact/Quote</button>
         </div>
     </div>
 
@@ -717,11 +493,11 @@
                 document.getElementById("language").value = savedLang;
             }
 
+            // Load theme
             if (savedTheme) {
-                document.body.className = '';
-                document.body.classList.add(savedTheme);
+                document.body.className = savedTheme;
             } else {
-                document.body.classList.add('default');
+                document.body.classList.add('light-mode');
             }
 
             if (savedBotName) {
@@ -734,6 +510,16 @@
         function displayRandomFact() {
             const randomFact = facts[Math.floor(Math.random() * facts.length)];
             document.getElementById("dailyFact").textContent = randomFact;
+        }
+
+        function toggleMode() {
+            if (document.body.classList.contains('light-mode')) {
+                document.body.className = 'dark-mode';
+                localStorage.setItem('theme', 'dark-mode');
+            } else {
+                document.body.className = 'light-mode';
+                localStorage.setItem('theme', 'light-mode');
+            }
         }
 
         function loadMusic(event) {
@@ -780,6 +566,7 @@
                 userMessageDiv.textContent = "🧑: " + userMessage;
                 chatbox.appendChild(userMessageDiv);
                 chatList.appendChild(document.createElement("li")).textContent = userMessage;
+
                 chatMessages.push(userMessage); // Store question
 
                 const typingIndicator = document.createElement("div");
@@ -790,12 +577,17 @@
                     await delayResponse(); // Simulate thinking delay
                     let response;
 
+                    // Dynamic response based on user input
                     if (/what's your name|who are you/i.test(userMessage)) {
                         response = `My name is ${chatbotName}.`;
                     } else if (/who made you|your creator/i.test(userMessage)) {
                         response = "I was made by Rishab.";
+                    } else if (/help/i.test(userMessage)) {
+                        response = "You can ask me anything! Type 'random fact' for interesting facts.";
+                    } else if (/fact/i.test(userMessage)) {
+                        response = facts[Math.floor(Math.random() * facts.length)];
                     } else {
-                        response = "I'm still learning!"; // Can be replaced with your chat service call
+                        response = "I'm still learning!"; // Static response
                     }
 
                     chatbox.removeChild(typingIndicator);
@@ -816,6 +608,9 @@
                     chatbox.appendChild(errorMessageDiv);
                 }
 
+                // Save the message to local storage
+                localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
+                
                 chatbox.scrollTop = chatbox.scrollHeight;
                 userInput.value = ""; // Clear input
             }
@@ -882,16 +677,6 @@
             alert("Language changed to: " + selectedLanguage);
         }
 
-        function changeTheme() {
-            const selectedTheme = document.getElementById("theme").value;
-            document.body.className = ''; // Reset classes
-            document.body.classList.add(selectedTheme);
-            localStorage.setItem('theme', selectedTheme);
-            if (selectedTheme === 'default') {
-                document.querySelector('.action-button').style.background = 'cyan'; // Ensure summarize button is cyan
-            }
-        }
-
         function resetChat() {
             const chatbox = document.getElementById("chatbox");
             const chatList = document.getElementById("chatList");
@@ -900,6 +685,7 @@
             messageCount = 0;
             chatMessages.length = 0;
             chatAnswers.length = 0;
+            localStorage.removeItem('chatMessages'); // Clear stored messages
         }
 
         function openSettings() {
@@ -922,7 +708,7 @@
         }
 
         function setReminder() {
-            const reminderText = prompt("What would you like to be reminded about?");
+            const reminderText = prompt("What would you like to be reminded about? (Using setTimeout for demo)");
             if (reminderText) {
                 setTimeout(() => {
                     alert(`Reminder: ${reminderText}`);
@@ -937,11 +723,35 @@
         }
 
         function sendFeedback() {
-            const feedback = document.getElementById("feedback").value;
+            const feedback = prompt("Rate my response: (1-5)");
             if (feedback) {
                 alert("Thank you for your feedback: " + feedback);
-                document.getElementById("feedback").value = "";
             }
+        }
+        
+        function openAuthModal() {
+            document.getElementById("authModal").style.display = "block";
+        }
+
+        function closeAuthModal() {
+            document.getElementById("authModal").style.display = "none"; // Close auth modal
+        }
+
+        function startVoiceInput() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'en-US';
+            recognition.interimResults = false;
+            recognition.onresult = function(event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById("userInput").value = transcript;
+                sendMessage(); // Automatically send the message
+            };
+        
+            recognition.onerror = function(event) {
+                console.error(event.error);
+            };
+
+            recognition.start();
         }
     </script>
 </body>
