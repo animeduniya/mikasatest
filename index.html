@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -14,15 +15,35 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative;
             background-color: #1c1c1c;
         }
 
-        /* Slideshow Background (example images) */
+        /* Slideshow Background */
         .slideshow {
-            display: none;
             position: absolute;
             width: 100%;
             height: 100%;
+            z-index: -1;
+            animation: fade 18s infinite;
+        }
+
+        @keyframes fade {
+            0% {
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+            }
+
+            90% {
+                opacity: 1;
+            }
+
+            100% {
+                opacity: 0;
+            }
         }
 
         /* Container Styles */
@@ -45,10 +66,25 @@
         }
 
         @keyframes rgbLight {
-            0%, 100% { border-color: rgba(255, 0, 0, 0.5); }
-            25% { border-color: rgba(0, 255, 0, 0.5); }
-            50% { border-color: rgba(0, 0, 255, 0.5); }
-            75% { border-color: rgba(255, 255, 0, 0.5); }
+            0% {
+                border-color: rgba(255, 0, 0, 1);
+            }
+
+            25% {
+                border-color: rgba(0, 255, 0, 1);
+            }
+
+            50% {
+                border-color: rgba(0, 0, 255, 1);
+            }
+
+            75% {
+                border-color: rgba(255, 255, 0, 1);
+            }
+
+            100% {
+                border-color: rgba(255, 0, 0, 1);
+            }
         }
 
         /* Chat History */
@@ -67,12 +103,12 @@
             color: #00fff0;
             text-align: center;
         }
-        
+
         .chat-history ul {
             list-style-type: none;
             padding: 0;
         }
-        
+
         .chat-history li {
             background: rgba(0, 255, 240, 0.2);
             color: #00fff0;
@@ -91,6 +127,7 @@
             overflow-y: auto;
         }
 
+        /* UI Elements */
         .header {
             font-size: 1.8em;
             font-weight: bold;
@@ -122,6 +159,7 @@
             margin: 5px 0;
             max-width: 70%;
             animation: slideIn 0.5s forwards;
+            transition: transform 0.2s;
         }
 
         .message.user {
@@ -250,8 +288,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         /* Welcome Modal Styles */
@@ -274,26 +317,56 @@
         }
 
         @keyframes welcomeFadeIn {
-            from { opacity: 0; transform: translate(-50%, -40%); }
-            to { opacity: 1; transform: translate(-50%, -50%); }
+            from {
+                opacity: 0;
+                transform: translate(-50%, -40%);
+            }
+
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%);
+            }
         }
-        
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             .header {
                 font-size: 1.5em;
             }
+
             .sub-header {
                 font-size: 0.9em;
             }
+
             .user-input input {
                 padding: 10px;
                 font-size: 0.9em;
             }
+
             .user-input button {
                 padding: 10px;
                 font-size: 0.9em;
             }
+        }
+        
+        /* Export & Summary Button Styles */
+        .action-buttons {
+            display: flex;
+            justify-content: space-around; 
+            margin-top: 10px; 
+        }
+
+        .action-button {
+            padding: 10px;
+            border-radius: 5px;
+            background: rgba(0, 255, 240, 0.2);
+            color: #00fff0;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .action-button:hover {
+            background: rgba(0, 255, 240, 0.5);
+            transform: scale(1.05);
         }
     </style>
     <script src="https://js.puter.com/v2/"></script>
@@ -303,6 +376,13 @@
 </head>
 
 <body>
+    <!-- Slideshow Implementation -->
+    <div class="slideshow">
+        <img src="https://example.com/your-image-1.jpg" alt="Slideshow Image 1" style="width: 100%; height: 100%; object-fit: cover;">
+        <img src="https://example.com/your-image-2.jpg" alt="Slideshow Image 2" style="width: 100%; height: 100%; object-fit: cover;">
+        <img src="https://example.com/your-image-3.jpg" alt="Slideshow Image 3" style="width: 100%; height: 100%; object-fit: cover;">
+    </div>
+
     <div class="welcome-modal" id="welcomeModal">
         <h1>Welcome to Mikasa Chatbot!</h1>
         <p>Your AI companion for all your queries!</p>
@@ -317,9 +397,12 @@
         <div class="chat-history">
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
-            <button class="action-button" onclick="exportChat();">🎤 Export Chat</button>
-            <button class="action-button" onclick="summarizeChat();">📝 Summarize Chat</button>
-            <button class="action-button" onclick="resetChat();">🔄 Add New Chat</button>
+            <!-- Action buttons moved below to fit with request -->
+            <div class="action-buttons">
+                <button class="action-button" onclick="exportChat();">🎤 Export Chat</button>
+                <button class="action-button" onclick="summarizeChat();">📝 Summarize Chat</button>
+                <button class="action-button" onclick="resetChat();">🔄 Add New Chat</button>
+            </div>
         </div>
 
         <div class="chat-window">
@@ -367,6 +450,7 @@
                 <option value="fr">French</option>
                 <option value="de">German</option>
                 <option value="it">Italian</option>
+                <!-- Add more languages as needed -->
             </select>
             <label for="theme">Text Color Theme:</label>
             <select id="theme" onchange="changeTheme()">
@@ -378,6 +462,9 @@
                 <option value="theme-color-5">Purple</option>
                 <option value="theme-color-6">Orange</option>
             </select>
+            <label for="reminder">Set Reminder:</label>
+            <input type="datetime-local" id="reminder" />
+            <button onclick="setReminder()">Set Reminder</button>
             <label for="voiceType">Voice Type:</label>
             <select id="voiceType" onchange="changeVoiceType()">
                 <!-- Options will be populated via JavaScript -->
@@ -388,7 +475,7 @@
             <label>Volume:</label>
             <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)" />
             <label for="voiceToggle">Enable Voice:</label>
-            <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
+            <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()" /> Enable
             
             <button onclick="resetChat()">Reset Chat</button>
         </div>
@@ -422,7 +509,7 @@
         const musicPlayer = document.getElementById('musicPlayer');
         let speechSynthesisInstance = window.speechSynthesis;
 
-        window.onload = function () {
+        window.onload = function() {
             loadPreferences();
             showWelcomeModal(); // Show welcome message on load
             loadVoiceTypes(); // Load available voice types
@@ -430,7 +517,7 @@
 
         function showWelcomeModal() {
             const welcomeModal = document.getElementById("welcomeModal");
-            welcomeModal.style.display = "flex"; 
+            welcomeModal.style.display = "flex";
         }
 
         function closeWelcomeModal() {
@@ -528,7 +615,7 @@
                 userMessageDiv.textContent = "🧑: " + userMessage;
                 chatbox.appendChild(userMessageDiv);
                 chatList.appendChild(document.createElement("li")).textContent = userMessage;
-                chatMessages.push(userMessage); 
+                chatMessages.push(userMessage);
 
                 const typingIndicator = document.createElement("div");
                 typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
@@ -555,7 +642,7 @@
                     chatbox.appendChild(botMessageDiv);
 
                     chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
-                    
+
                     speakResponse(response);
                     messageCount++;
                 } catch (error) {
@@ -587,7 +674,7 @@
 
         function startVoiceInput() {
             const recognition = new webkitSpeechRecognition();
-            recognition.onresult = function (event) {
+            recognition.onresult = function(event) {
                 const userInput = document.getElementById("userInput");
                 userInput.value = event.results[0][0].transcript;
             };
@@ -597,14 +684,6 @@
         function toggleVoice() {
             voiceEnabled = document.getElementById("voiceToggle").checked;
             showNotification("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
-        }
-
-        function sendFeedback() {
-            const feedback = document.getElementById("feedback").value;
-            if (feedback) {
-                showNotification("Thank you for your feedback: " + feedback);
-                document.getElementById("feedback").value = "";
-            }
         }
 
         function exportChat() {
@@ -635,9 +714,28 @@
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.className = ''; 
-            document.body.classList.add(selectedTheme);
+            const themeClass = selectedTheme !== 'default' ? selectedTheme : ''; // Apply default theme if selected
+            document.body.className = themeClass; // Set body class based on theme
             localStorage.setItem('theme', selectedTheme);
+            showNotification("Theme changed to: " + selectedTheme);
+        }
+
+        function setReminder() {
+            const datetime = document.getElementById("reminder").value;
+            if (datetime) {
+                const reminder = new Date(datetime);
+                const timeToReminder = reminder.getTime() - Date.now();
+
+                if (timeToReminder > 0) {
+                    setTimeout(() => {
+                        showNotification("⏰ Reminder: It's time!");
+                    }, timeToReminder);
+                } else {
+                    alert("Please select a future date and time for the reminder.");
+                }
+            } else {
+                alert("Please set a reminder date and time.");
+            }
         }
 
         function resetChat() {
@@ -646,8 +744,8 @@
             chatbox.innerHTML = "";
             chatList.innerHTML = "";
             messageCount = 0;
-            chatMessages.length = 0; 
-            chatAnswers.length = 0; 
+            chatMessages.length = 0;
+            chatAnswers.length = 0;
         }
 
         function openSettings() {
@@ -703,15 +801,15 @@
         function updateProfileImage(event) {
             const file = event.target.files[0];
             const user = auth.currentUser;
-            
+
             if (file && user) {
                 const reader = new FileReader();
-                reader.onload = function (e) {
+                reader.onload = function(e) {
                     document.getElementById('profileImage').src = e.target.result;
                 };
                 reader.readAsDataURL(file);
 
-                const storageRef = storage.ref(`profile_images/${user.uid}/profile.jpg`);
+                const storageRef = firebase.storage().ref(`profile_images/${user.uid}/profile.jpg`);
                 storageRef.put(file).then(() => {
                     storageRef.getDownloadURL().then((url) => {
                         user.updateProfile({ photoURL: url }).then(() => {
@@ -725,4 +823,5 @@
         }
     </script>
 </body>
+
 </html>
