@@ -49,6 +49,8 @@
             flex-direction: column;
             position: relative;
             padding: 10px;
+            /* To accommodate the profile icon */
+            padding-top: 70px; 
         }
 
         /* Chat History */
@@ -91,6 +93,7 @@
             overflow-y: auto;
         }
 
+        /* Header styles */
         .header {
             font-size: 1.8em;
             font-weight: bold;
@@ -211,6 +214,7 @@
             cursor: pointer;
             border: 2px solid #00fff0;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
         }
 
         .profile-icon img {
@@ -351,7 +355,7 @@
 
         <!-- Profile Icon -->
         <div class="profile-icon" onclick="openAuthModal()">
-            <img src="https://via.placeholder.com/50" id="profileImage" alt="Profile">
+            <img src="https://via.placeholder.com/50" id="profileImage" alt="Profile Picture">
         </div>
     </div>
 
@@ -392,7 +396,7 @@
             <h2>Settings</h2>
 
             <label for="botName">Chatbot Name:</label>
-            <input type="text" id="botNameInput" value="Rishab" />
+            <input type="text" id="botNameInput" value="Mikasa" />
 
             <label for="language">Language:</label>
             <select id="language" onchange="changeLanguage()">
@@ -541,12 +545,13 @@
                     let response;
                     const query = userMessage;
 
+                    // Mocking responses for demo. Replace `putter.ai.chat` with your chatbot's API logic.
                     if (/what's your name|who are you/i.test(query)) {
                         response = `My name is ${chatbotName}.`;
                     } else if (/who made you|your creator/i.test(query)) {
                         response = "I was made by Rishab.";
                     } else {
-                        response = await puter.ai.chat(query);
+                        response = "I'm not sure how to answer that. Can you try asking differently?";
                     }
 
                     chatbox.removeChild(typingIndicator);
@@ -704,6 +709,10 @@
                     alert("Error: " + error.message);
                 }
             }
+        }
+
+        function openSettings() {
+            document.getElementById("settingsModal").style.display = "block";
         }
 
         function closeSettings() {
