@@ -45,6 +45,7 @@
             justify-content: space-between;
             align-items: center;
             padding: 10px 20px;
+            position: relative;
         }
 
         .profile {
@@ -53,6 +54,32 @@
             border-radius: 30px;
             padding: 10px 15px;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+
+        .profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        /* Container Styles */
+        .container {
+            width: 95%;
+            max-width: 800px;
+            height: 90vh;
+            overflow-y: auto;
+            background-color: rgba(30, 30, 30, 0.9);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            padding: 10px;
+            border: 5px solid transparent; /* Initial border for RGB effect */
+            animation: rgbBorder 5s linear infinite; /* RGB border animation */
         }
 
         /* Pop-Up Styles */
@@ -89,23 +116,6 @@
             color: cyan;
         }
 
-        /* Container Styles */
-        .container {
-            width: 95%;
-            max-width: 800px;
-            height: 90vh;
-            overflow-y: auto;
-            background-color: rgba(30, 30, 30, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-            padding: 10px;
-            border: 5px solid transparent; /* Initial border for RGB effect */
-            animation: rgbBorder 5s linear infinite; /* RGB border animation */
-        }
-
         /* Chat Window Styles */
         .chat-window {
             flex: 1;
@@ -118,9 +128,22 @@
             animation: rgbBorder 5s linear infinite; /* Apply same RGB animation */
         }
 
+        .header,
         .sub-header {
             text-align: center;
             color: cyan;
+            text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .header {
+            font-size: 2.5em; /* Increased font sizes for better visibility */
+            font-weight: bold;
+        }
+
+        .sub-header {
+            font-size: 1.2em; /* Increased font sizes for better visibility */
+            opacity: 0.8;
+            margin-bottom: 15px;
         }
 
         /* Message Styles */
@@ -131,22 +154,52 @@
             max-width: 70%;
             word-wrap: break-word;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s;
+            transition: all 0.3s; /* Added transition for smooth hover effect */
         }
 
         /* User Message Style */
         .message.user {
-            background-color: #00ccff;
+            background-color: #00ccff; /* User messages */
             color: #000;
-            align-self: flex-end;
-            margin-left: auto; /* Align to right */
+            align-self: flex-end; /* Align to right */
+            margin-left: auto;
         }
 
         /* Bot Message Style */
         .message.bot {
-            background-color: #4caf50;
+            background-color: #4caf50; /* Bot responses */
             color: #fff;
             align-self: flex-start;
+        }
+
+        /* Chat History Styles */
+        .chat-history {
+            flex: 0 1 20%;
+            overflow-y: auto;
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-history h3 {
+            margin: 0;
+            color: cyan;
+            text-align: center;
+        }
+
+        .chat-history ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .chat-history li {
+            background: rgba(0, 255, 240, 0.2);
+            color: cyan;
+            margin: 5px 0;
+            padding: 8px;
+            border-radius: 8px;
         }
 
         /* User Input Styles */
@@ -180,9 +233,14 @@
             border-radius: 30px;
             cursor: pointer;
             margin-left: 5px;
-            background: cyan;
+            background: cyan; /* Default button background */
             color: #ffffff;
             transition: background 0.3s, transform 0.2s;
+        }
+
+        .user-input button:hover {
+            background: #00c8e1;
+            transform: scale(1.05);
         }
 
         /* Action Button Styles */
@@ -205,45 +263,6 @@
             transform: scale(1.05);
         }
 
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(40, 40, 40, 0.95);
-            border-radius: 15px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
-            width: 90%;
-            max-width: 400px;
-            overflow: hidden;
-            animation: rgbBorder 5s linear infinite; /* Same RGB animation */
-        }
-
-        /* More styles... */
-       
-        /* Chat History Styles */
-        .chat-history {
-            flex: 0 1 20%;
-            overflow-y: auto;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.2);
-        }
-
-        /* Scrollbar Customization */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #00fff0;
-            border-radius: 10px;
-        }
-
         /* Emoji Picker Styles */
         .emoji-picker {
             display: none;
@@ -261,33 +280,116 @@
             font-size: 1.5em;
         }
 
-        /* Theme Styles */
-        body.theme-color-1 {
-            color: #ff5722;
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(40, 40, 40, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
+            width: 90%;
+            max-width: 400px;
+            overflow: hidden;
+            animation: rgbBorder 5s linear infinite; /* Same RGB animation */
         }
 
-        /* Dark/Light Mode */
-        body.light-mode {
-            background-color: #ffffff;
-            color: #000000;
-        }
-
-        body.dark-mode {
-            background-color: #1c1c1c;
+        .modal-content {
+            padding: 20px;
             color: #ffffff;
         }
 
-        /* Feedback button styles */
-        .feedback {
-            margin: 5px;
+        .modal-content label {
+            margin-top: 10px;
+            display: block;
+            font-weight: bold;
+            color: inherit;
         }
+
+        .modal-content input[type="text"],
+        .modal-content select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid cyan;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+        }
+
+        .modal-content button {
+            border: none;
+            color: #ffffff;
+            font-size: 1em;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            margin-top: 10px;
+            width: 100%;
+            background: cyan;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00fff0;
+            border-radius: 10px;
+        }
+
+        /* Theme Styles */
+        body.theme-color-1 {
+            color: #ff5722; /* Dark Orange */
+        }
+
+        body.theme-color-1 .header {
+            color: #ff5722;
+        }
+
+        body.theme-color-1 .sub-header {
+            color: #ff5722;
+        }
+
+        body.theme-color-1 .user-input button,
+        body.theme-color-1 .modal-content button,
+        body.theme-color-1 .action-button {
+            background: #ff5722;
+            color: #ffffff;
+        }
+
+        /* Sign-up/Log-in Modal Styles */
+        #authModal {
+            background: linear-gradient(45deg, #4a00e0, #8e2de2);
+            overflow: auto;
+            color: #ffffff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Responsive Design for Modal */
+        @media (max-width: 600px) {
+            #authModal {
+                width: 95%;
+            }
+        }
+
     </style>
 </head>
 
 <body class="light-mode">
     <div class="header">
         <div class="title">Rishab Chatbot</div>
-        <button class="profile" onclick="openAuthModal()">Profile</button>
+        <button class="profile" onclick="openAuthModal()">
+            <img id="profileImage" src="default-profile.png" alt="Profile Image" />
+            Profile
+        </button>
     </div>
 
     <div class="popup" id="introPopup">
@@ -357,6 +459,11 @@
                 <option value="cn">Chinese</option>
             </select>
 
+            <div>
+                <label for="profileImageUpload">Change Profile Image:</label>
+                <input type="file" id="profileImageUpload" accept="image/*" onchange="changeProfileImage(event)" />
+            </div>
+
             <label class="example-checkbox">
                 <input type="checkbox" id="voiceToggle" onchange="toggleVoice()" checked>
                 Enable Voice
@@ -379,9 +486,9 @@
             <h2>Login / Register</h2>
             <input type="email" id="email" placeholder="Email" />
             <input type="password" id="password" placeholder="Password" />
-            <button onclick="register()">Register</button>
-            <button onclick="login()">Login</button>
-            <button onclick="logout()">Logout</button>
+            <div class="action-button" id="signupButton" onclick="register()">Register</div>
+            <div class="action-button" id="loginButton" onclick="login()">Login</div>
+            <div class="action-button" id="logoutButton" onclick="logout()" style="display: none;">Logout</div>
         </div>
     </div>
 
@@ -412,6 +519,9 @@
         const musicPlayer = document.getElementById('musicPlayer');
         let speechSynthesisInstance = window.speechSynthesis;
 
+        // Default profile image
+        document.getElementById("profileImage").src = "default-profile.png"; // Add a default profile image URL here
+
         // List of daily facts
         const facts = [
             "Did you know? Honey never spoils!",
@@ -436,8 +546,10 @@
                 if (user) {
                     console.log('User logged in: ', user.email);
                     document.getElementById("authModal").style.display = "none"; // Hide auth modal when logged in
+                    document.getElementById("logoutButton").style.display = "block"; // Show logout button
                 } else {
                     console.log('User not logged in');
+                    document.getElementById("logoutButton").style.display = "none"; // Hide logout button
                 }
             });
         };
@@ -457,6 +569,7 @@
             auth.createUserWithEmailAndPassword(email, password)
                 .then(() => {
                     alert('Registration successful!');
+                    document.getElementById("authModal").style.display = "none"; // Close modal
                 })
                 .catch(error => {
                     alert(error.message);
@@ -519,6 +632,17 @@
             } else {
                 document.body.className = 'light-mode';
                 localStorage.setItem('theme', 'light-mode');
+            }
+        }
+
+        function changeProfileImage(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    document.getElementById("profileImage").src = e.target.result;
+                }
+                reader.readAsDataURL(file);
             }
         }
 
@@ -610,7 +734,7 @@
 
                 // Save the message to local storage
                 localStorage.setItem('chatMessages', JSON.stringify(chatMessages));
-                
+
                 chatbox.scrollTop = chatbox.scrollHeight;
                 userInput.value = ""; // Clear input
             }
@@ -728,7 +852,7 @@
                 alert("Thank you for your feedback: " + feedback);
             }
         }
-        
+
         function openAuthModal() {
             document.getElementById("authModal").style.display = "block";
         }
@@ -741,13 +865,13 @@
             const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
             recognition.lang = 'en-US';
             recognition.interimResults = false;
-            recognition.onresult = function(event) {
+            recognition.onresult = function (event) {
                 const transcript = event.results[0][0].transcript;
                 document.getElementById("userInput").value = transcript;
                 sendMessage(); // Automatically send the message
             };
-        
-            recognition.onerror = function(event) {
+
+            recognition.onerror = function (event) {
                 console.error(event.error);
             };
 
