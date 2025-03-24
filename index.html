@@ -48,6 +48,18 @@
             flex-direction: column;
             position: relative;
             padding: 10px;
+            border: 5px solid transparent; /* Initial border for RGB effect */
+            animation: rgbBorder 5s linear infinite; /* RGB border animation */
+        }
+
+        @keyframes rgbBorder {
+            0% { border-color: red; }
+            16.67% { border-color: orange; }
+            33.33% { border-color: yellow; }
+            50% { border-color: green; }
+            66.67% { border-color: blue; }
+            83.33% { border-color: indigo; }
+            100% { border-color: violet; }
         }
 
         /* Chat Window Styles */
@@ -58,6 +70,8 @@
             padding: 10px;
             position: relative;
             overflow-y: auto;
+            border: 5px solid transparent; /* Same initial border for chat window */
+            animation: rgbBorder 5s linear infinite; /* Apply same RGB animation */
         }
 
         .header, .sub-header {
@@ -102,6 +116,7 @@
             align-self: flex-start;
         }
 
+        /* Chat History Styles */
         .chat-history {
             flex: 0 1 20%;
             overflow-y: auto;
@@ -131,13 +146,13 @@
             border-radius: 8px;
         }
 
+        /* User Input Styles */
         .user-input {
             display: flex;
             align-items: center;
             padding: 10px 0;
         }
 
-        /* Styles for Input and Buttons */
         .user-input input {
             flex: 1;
             padding: 12px;
@@ -163,7 +178,7 @@
             cursor: pointer;
             margin-left: 5px;
             background: cyan; /* Default button background */
-            color: #ffffff; /* Text color should be white */
+            color: #ffffff;
             transition: background 0.3s, transform 0.2s;
         }
 
@@ -223,6 +238,8 @@
             width: 90%;
             max-width: 400px;
             overflow: hidden;
+            border: 5px solid transparent; /* Border for RGB effect */
+            animation: rgbBorder 5s linear infinite; /* Same RGB animation */
         }
 
         .modal-content {
@@ -428,6 +445,8 @@
                 <option value="fr">French</option>
                 <option value="de">German</option>
                 <option value="it">Italian</option>
+                <option value="jp">Japanese</option>
+                <option value="cn">Chinese</option>
             </select>
 
             <label for="theme">Text Color Theme:</label>
@@ -455,6 +474,9 @@
                 Enable Voice
             </label>
 
+            <button onclick="setReminder()">Set Reminder</button>
+            <button onclick="showDailyFact()">Get Daily Fact/Quote</button>
+
             <label for="feedback">Feedback:</label>
             <select id="feedback" onchange="sendFeedback()">
                 <option value="">Select Feedback</option>
@@ -480,7 +502,7 @@
 
         window.onload = function () {
             loadPreferences();
-        }
+        };
 
         function loadPreferences() {
             const savedLang = localStorage.getItem('language');
@@ -495,7 +517,7 @@
                 document.body.className = '';
                 document.body.classList.add(savedTheme);
             } else {
-                document.body.classList.add('default'); // Default theme
+                document.body.classList.add('default');
             }
 
             if (savedBotName) {
@@ -607,7 +629,7 @@
 
         function chooseQuickReply(reply) {
             const userInput = document.getElementById("userInput");
-            userInput.value += reply;
+            userInput.value += reply; // Append the quick reply to input
             sendMessage(); // Send the message
         }
 
@@ -653,11 +675,11 @@
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.className = ''; 
+            document.body.className = ''; // Reset classes
             document.body.classList.add(selectedTheme);
             localStorage.setItem('theme', selectedTheme);
             if (selectedTheme === 'default') {
-                document.querySelector('.action-button').style.background = 'cyan'; 
+                document.querySelector('.action-button').style.background = 'cyan'; // Ensure summarize button is cyan
             }
         }
 
@@ -688,6 +710,33 @@
         function toggleVoice() {
             voiceEnabled = document.getElementById("voiceToggle").checked;
             alert("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
+        }
+
+        function setReminder() {
+            const reminderText = prompt("What would you like to be reminded about?");
+            if (reminderText) {
+                setTimeout(() => {
+                    alert(`Reminder: ${reminderText}`);
+                }, 10000); // Remind after 10 seconds for demonstration purposes
+                alert("Reminder set! You will be alerted in 10 seconds.");
+            }
+        }
+
+        function showDailyFact() {
+            const facts = [
+                "Did you know? Honey never spoils!",
+                "Bananas are berries, but strawberries aren't.",
+                "The Eiffel Tower can be 15 cm taller during the summer.",
+                "A group of flamingos is called a 'flamboyance'.",
+                "Octopuses have three hearts.",
+                "Did you know that wombat poop is cube-shaped?",
+                "One teaspoon of honey is the life work of 12 bees.",
+                "An octopus has nine brains!",
+                "The longest wedding veil was longer than 63 football fields!",
+                "A day on Venus is longer than a year on Venus."
+            ];
+            const randomFact = facts[Math.floor(Math.random() * facts.length)];
+            alert(`Daily Fact: ${randomFact}`);
         }
 
         function sendFeedback() {
