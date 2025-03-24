@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,25 +17,21 @@
             background-color: #1c1c1c;
             animation: backgroundAnimation 20s ease-in-out infinite;
         }
-
+        
         @keyframes backgroundAnimation {
-            0% {
-                background: url('https://wallpapercave.com/wp/wp9388551.jpg') center center / cover no-repeat;
-            }
-            25% {
-                background: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg') center center / cover no-repeat;
-            }
-            50% {
-                background: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg') center center / cover no-repeat;
-            }
-            75% {
-                background: url('https://wallpaperaccess.com/full/8583147.jpg') center center / cover no-repeat;
-            }
-            100% {
-                background: url('https://coolwallpapers.me/picsup/2503093-4k-hd-wallpaper-high-definition.jpg') center center / cover no-repeat;
-            }
+            0% { background: #1c1c1c; }
+            50% { background: #282828; }
+            100% { background: #1c1c1c; }
         }
-
+        
+        /* Light Animation */
+        @keyframes rgbLight {
+            0%, 100% { background-color: rgba(255, 0, 0, 0.5); }
+            25% { background-color: rgba(0, 255, 0, 0.5); }
+            50% { background-color: rgba(0, 0, 255, 0.5); }
+            75% { background-color: rgba(255, 255, 0, 0.5); }
+        }
+        
         /* Container Styles */
         .container {
             width: 95%;
@@ -50,8 +45,10 @@
             flex-direction: column;
             position: relative;
             padding: 10px;
+            animation: rgbLight 10s infinite; /* RGB light effect */
         }
 
+        /* Profile Icon */
         .profile-icon {
             position: absolute;
             top: 20px;
@@ -72,73 +69,45 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
+            border-radius: 50%;
         }
 
-        /* Chat History */
-        .chat-history {
+        /* Chat and Settings UI */
+        .chat-history, .settings-modal {
             flex: 0 1 20%;
             overflow-y: auto;
             padding: 10px;
             border-radius: 10px;
-            margin-bottom: 10px;
             background: rgba(255, 255, 255, 0.1);
             box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.2);
-        }
-
-        .chat-history h3 {
-            margin: 0;
-            color: #00fff0;
-            text-align: center;
-        }
-
-        .chat-history ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .chat-history li {
-            background: rgba(0, 255, 240, 0.2);
-            color: #00fff0;
-            margin: 5px 0;
-            padding: 8px;
-            border-radius: 8px;
-        }
-
-        /* Chat Window */
-        .chat-window {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            padding: 10px;
-            position: relative;
-            overflow-y: auto;
+            animation: rgbLight 10s infinite; /* RGB light effect */
         }
 
         .header {
-            font-size: 1.8em;
-            font-weight: bold;
-            color: #00fff0;
-            text-align: center;
-            margin-bottom: 5px;
+            font-size: 1.8em; 
+            font-weight: bold; 
+            color: #00fff0; 
+            text-align: center; 
+            margin-bottom: 5px; 
             text-shadow: 2px 2px 5px rgba(0, 255, 255, 0.5);
         }
 
         .sub-header {
-            font-size: 1em;
-            color: #00fff0;
-            text-align: center;
-            margin-top: 0;
-            margin-bottom: 15px;
+            font-size: 1em; 
+            color: #00fff0; 
+            text-align: center; 
+            margin: 0; 
             opacity: 0.8;
         }
 
+        /* Messages */
         .messages {
-            flex: 1;
-            overflow-y: auto;
-            margin-bottom: 10px;
+            flex: 1; 
+            overflow-y: auto; 
+            margin-bottom: 10px; 
             padding-right: 10px;
         }
-
+        
         .message {
             padding: 10px 15px;
             border-radius: 20px;
@@ -160,66 +129,46 @@
             align-self: flex-start;
         }
 
+        /* User Input */
         .user-input {
-            display: flex;
-            align-items: center;
+            display: flex; 
+            align-items: center; 
             padding: 10px 0;
         }
 
-        /* Styles for Input and Buttons */
         .user-input input {
-            flex: 1;
+            flex: 1; 
             padding: 12px;
-            font-size: 1em;
-            border: 2px solid #00fff0;
-            border-radius: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            margin-right: 5px;
+            font-size: 1em; 
+            border: 2px solid #00fff0; 
+            border-radius: 30px; 
+            background: rgba(255, 255, 255, 0.1); 
+            color: #ffffff; 
+            margin-right: 5px; 
             transition: border 0.3s;
         }
 
         .user-input input:focus {
-            outline: none;
+            outline: none; 
             border: 2px solid #00ccff;
         }
 
+        /* Buttons */
         .user-input button {
-            border: none;
-            font-size: 1em;
-            padding: 10px 15px;
-            border-radius: 30px;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            margin-left: 5px;
-            color: #0A0A0A;
+            border: none; 
+            font-size: 1em; 
+            padding: 10px 15px; 
+            border-radius: 30px; 
+            cursor: pointer; 
+            transition: background 0.3s, transform 0.2s; 
+            margin-left: 5px; 
+            color: #0A0A0A; 
             background: #00fff0;
         }
 
         .user-input button:hover {
-            transform: scale(1.05);
+            transform: scale(1.05); 
             background: #00ccff;
-        }
-
-        /* Epic Button Styles */
-        .action-button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 30px;
-            background: #00fff0;
-            color: #0A0A0A;
-            font-weight: bold;
-            font-size: 1em;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-            margin-top: 10px;
-        }
-
-        .action-button:hover {
-            background: #00ccff;
-            border: 2px solid #fff;
-            transform: scale(1.05);
         }
 
         /* Modal Styles */
@@ -236,6 +185,7 @@
             width: 90%;
             max-width: 400px;
             overflow: hidden;
+            animation: rgbLight 10s infinite; /* RGB light effect */
         }
 
         .modal-content {
@@ -253,24 +203,24 @@
         .modal-content input[type="text"],
         .modal-content select {
             width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #00fff0;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
+            padding: 10px; 
+            margin-top: 5px; 
+            border: 1px solid #00fff0; 
+            border-radius: 5px; 
+            background: rgba(255, 255, 255, 0.1); 
             color: #ffffff;
         }
 
         .modal-content button {
-            background: #00fff0;
-            border: none;
-            color: #0A0A0A;
-            font-size: 1em;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            margin-top: 10px;
+            background: #00fff0; 
+            border: none; 
+            color: #0A0A0A; 
+            font-size: 1em; 
+            padding: 10px; 
+            border-radius: 5px; 
+            cursor: pointer; 
+            transition: background 0.3s ease; 
+            margin-top: 10px; 
             width: 100%;
         }
 
@@ -278,144 +228,46 @@
             background: #00ccff;
         }
 
+        /* Pop-up notification */
+        .notification {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(30,30,30,0.8);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.5s forwards;
+            z-index: 9999;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Signup/Login Modal Styles */
+        #loginModal {
+            animation: rgbLight 10s infinite; /* RGB light effect */
+            border: 1px solid #00fff0;
+        }
+
+        #loginModal .modal-content h2 {
+            color: #00fff0;
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
-            body {
-                height: auto;
-                overflow-y: auto;
-            }
-
             .header {
                 font-size: 1.5em;
             }
-
             .sub-header {
                 font-size: 0.9em;
             }
-
-            .user-input input {
-                padding: 10px;
-                font-size: 0.9em;
-            }
-
-            .user-input button {
-                padding: 10px;
-                font-size: 0.9em;
-            }
         }
 
-        /* Theme Styles */
-        /* Theme 1 */
-        body.theme-color-1 {
-            color: #ff5722; /* Dark Orange */
-        }
-        body.theme-color-1 .header {
-            color: #ff5722;
-        }
-        body.theme-color-1 .sub-header {
-            color: #ff5722; /* Dark Orange */
-        }
-        body.theme-color-1 .user-input button,
-        body.theme-color-1 .modal-content button,
-        body.theme-color-1 .action-button {
-            background: #ff5722;
-            color: #ffffff;
-        }
-
-        /* Theme 2 */
-        body.theme-color-2 {
-            color: #4caf50; /* Green */
-        }
-        body.theme-color-2 .header {
-            color: #4caf50;
-        }
-        body.theme-color-2 .sub-header {
-            color: #4caf50; /* Green */
-        }
-        body.theme-color-2 .user-input button,
-        body.theme-color-2 .modal-content button,
-        body.theme-color-2 .action-button {
-            background: #4caf50;
-            color: #ffffff;
-        }
-
-        /* Theme 3 */
-        body.theme-color-3 {
-            color: #2196f3; /* Blue */
-        }
-        body.theme-color-3 .header {
-            color: #2196f3;
-        }
-        body.theme-color-3 .sub-header {
-            color: #2196f3; /* Blue */
-        }
-        body.theme-color-3 .user-input button,
-        body.theme-color-3 .modal-content button,
-        body.theme-color-3 .action-button {
-            background: #2196f3;
-            color: #ffffff;
-        }
-
-        /* Theme 4 */
-        body.theme-color-4 {
-            color: #ffeb3b; /* Yellow */
-        }
-        body.theme-color-4 .header {
-            color: #ffeb3b;
-        }
-        body.theme-color-4 .sub-header {
-            color: #ffeb3b; /* Yellow */
-        }
-        body.theme-color-4 .user-input button,
-        body.theme-color-4 .modal-content button,
-        body.theme-color-4 .action-button {
-            background: #ffeb3b;
-            color: #000000;
-        }
-
-        /* Theme 5 */
-        body.theme-color-5 {
-            color: #673ab7; /* Purple */
-        }
-        body.theme-color-5 .header {
-            color: #673ab7;
-        }
-        body.theme-color-5 .sub-header {
-            color: #673ab7; /* Purple */
-        }
-        body.theme-color-5 .user-input button,
-        body.theme-color-5 .modal-content button,
-        body.theme-color-5 .action-button {
-            background: #673ab7;
-            color: #ffffff;
-        }
-
-        /* Theme 6 */
-        body.theme-color-6 {
-            color: #ff6a00; /* Orange */
-        }
-        body.theme-color-6 .header {
-            color: #ff6a00;
-        }
-        body.theme-color-6 .sub-header {
-            color: #ff6a00; /* Orange */
-        }
-        body.theme-color-6 .user-input button,
-        body.theme-color-6 .modal-content button,
-        body.theme-color-6 .action-button {
-            background: #ff6a00;
-            color: #ffffff;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #00fff0;
-            border-radius: 10px;
-        }
     </style>
     <script src="https://js.puter.com/v2/"></script>
     <script src="https://www.gstatic.com/firebasejs/9.1.3/firebase-app.js"></script>
@@ -426,7 +278,7 @@
 <body>
     <div class="container" id="chatContainer">
         <div class="profile-icon" onclick="toggleProfileModal();">
-            <img src="default-profile.png" alt="Profile Picture" id="profileImage" />
+            <img src="https://my-default-profile-image.jpg" alt="Default Profile Picture" id="profileImage" />
         </div>
         <div class="chat-history">
             <h3>Chat History</h3>
@@ -462,15 +314,16 @@
         </div>
     </div>
 
+    <!-- Notification Pop-up -->
+    <div id="notification" class="notification"></div>
+
     <!-- Settings Modal -->
     <div id="settingsModal" class="modal">
         <div class="modal-content">
             <span onclick="closeSettings()" style="float:right;cursor:pointer;color:#00fff0;">×</span>
             <h2>Settings</h2>
-
             <label for="botName">Chatbot Name:</label>
             <input type="text" id="botNameInput" value="Mikasa" />
-
             <label for="language">Language:</label>
             <select id="language" onchange="changeLanguage()">
                 <option value="en">English</option>
@@ -479,7 +332,6 @@
                 <option value="de">German</option>
                 <option value="it">Italian</option>
             </select>
-
             <label for="theme">Text Color Theme:</label>
             <select id="theme" onchange="changeTheme()">
                 <option value="default">Default</option>
@@ -490,23 +342,19 @@
                 <option value="theme-color-5">Purple</option>
                 <option value="theme-color-6">Orange</option>
             </select>
-
             <label for="musicUpload">Upload Music:</label>
             <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
             <button onclick="playMusic()">Play/Pause Music</button>
             <label>Volume:</label>
             <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)" />
-
             <label for="voiceToggle">Enable Voice:</label>
             <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
-
             <label for="feedback">Feedback:</label>
             <select id="feedback" onchange="sendFeedback()">
                 <option value="">Select Feedback</option>
                 <option value="helpful">Helpful</option>
                 <option value="not_helpful">Not Helpful</option>
             </select>
-
             <button onclick="resetChat()">Reset Chat</button>
         </div>
     </div>
@@ -541,7 +389,18 @@
 
         window.onload = function () {
             loadPreferences();
+            showNotification("Welcome to Mikasa Chatbot! Your AI companion"); // Welcome notification
         };
+
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.innerText = message;
+            notification.style.display = 'block';
+
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 5000);
+        }
 
         function loadPreferences() {
             const savedLang = localStorage.getItem('language');
@@ -584,7 +443,6 @@
         }
 
         function speakResponse(response) {
-            // Stop previous speech if any
             if (speechSynthesisInstance.speaking) {
                 speechSynthesisInstance.cancel();
             }
@@ -608,7 +466,7 @@
                 userMessageDiv.textContent = "🧑: " + userMessage;
                 chatbox.appendChild(userMessageDiv);
                 chatList.appendChild(document.createElement("li")).textContent = userMessage;
-                chatMessages.push(userMessage); // Store question
+                chatMessages.push(userMessage); 
 
                 const typingIndicator = document.createElement("div");
                 typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
@@ -619,7 +477,6 @@
                     let response;
                     const query = userMessage;
 
-                    // Use the provided logic for chatbot response
                     if (/what's your name|who are you/i.test(query)) {
                         response = `My name is ${chatbotName}.`;
                     } else if (/who made you|your creator/i.test(query)) {
@@ -635,9 +492,8 @@
                     botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
                     chatbox.appendChild(botMessageDiv);
 
-                    // Store answer
                     chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
-
+                    
                     speakResponse(response);
                     messageCount++;
                 } catch (error) {
@@ -648,7 +504,7 @@
                 }
 
                 chatbox.scrollTop = chatbox.scrollHeight;
-                userInput.value = ""; // Clear input
+                userInput.value = "";
             }
         }
 
@@ -671,7 +527,7 @@
             const recognition = new webkitSpeechRecognition();
             recognition.onresult = function (event) {
                 const userInput = document.getElementById("userInput");
-                userInput.value = event.results[0][0].transcript; // Set voice input to the text field
+                userInput.value = event.results[0][0].transcript;
             };
             recognition.start();
         }
@@ -717,7 +573,7 @@
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.className = ''; // Reset classes
+            document.body.className = ''; 
             document.body.classList.add(selectedTheme);
             localStorage.setItem('theme', selectedTheme);
         }
@@ -728,8 +584,8 @@
             chatbox.innerHTML = "";
             chatList.innerHTML = "";
             messageCount = 0;
-            chatMessages.length = 0; // Clear messages
-            chatAnswers.length = 0; // Clear answers too
+            chatMessages.length = 0; 
+            chatAnswers.length = 0; 
         }
 
         function openSettings() {
@@ -762,11 +618,11 @@
             const password = document.getElementById('password').value;
             auth.signInWithEmailAndPassword(email, password)
                 .then(() => {
-                    alert('Logged in successfully!');
+                    showNotification('Logged in successfully!');
                     closeProfileModal();
                 })
                 .catch(error => {
-                    alert(error.message);
+                    showNotification(error.message);
                 });
         }
 
@@ -775,17 +631,17 @@
             const password = document.getElementById('password').value;
             auth.createUserWithEmailAndPassword(email, password)
                 .then(() => {
-                    alert('Signed up successfully! Please log in.');
+                    showNotification('Signed up successfully! Please log in.');
                 })
                 .catch(error => {
-                    alert(error.message);
+                    showNotification(error.message);
                 });
         }
 
         function updateProfileImage(event) {
             const file = event.target.files[0];
             const user = auth.currentUser;
-
+            
             if (file && user) {
                 const reader = new FileReader();
                 reader.onload = function (e) {
@@ -793,15 +649,13 @@
                 };
                 reader.readAsDataURL(file);
 
-                // Upload the profile picture to Firebase Storage
                 const storageRef = storage.ref(`profile_images/${user.uid}/profile.jpg`);
                 storageRef.put(file).then(() => {
-                    // Get the download URL and update the user's profile
                     storageRef.getDownloadURL().then((url) => {
                         user.updateProfile({ photoURL: url }).then(() => {
-                            console.log('Profile updated successfully!');
+                            showNotification('Profile updated successfully!');
                         }).catch((error) => {
-                            console.error(error);
+                            showNotification(error.message);
                         });
                     });
                 });
@@ -809,5 +663,4 @@
         }
     </script>
 </body>
-
 </html>
