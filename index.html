@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,15 +22,19 @@
             0% {
                 background: url('https://wallpapercave.com/wp/wp9388551.jpg') center center / cover no-repeat;
             }
+
             25% {
                 background: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg') center center / cover no-repeat;
             }
+
             50% {
                 background: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg') center center / cover no-repeat;
             }
+
             75% {
                 background: url('https://wallpaperaccess.com/full/8583147.jpg') center center / cover no-repeat;
             }
+
             100% {
                 background: url('https://coolwallpapers.me/picsup/2503093-4k-hd-wallpaper-high-definition.jpg') center center / cover no-repeat;
             }
@@ -58,6 +63,7 @@
                 opacity: 0;
                 transform: translate(-50%, -60%);
             }
+
             to {
                 opacity: 1;
                 transform: translate(-50%, -50%);
@@ -65,7 +71,7 @@
         }
 
         .popup h2 {
-            color: cyan; 
+            color: cyan;
         }
 
         .popup p {
@@ -100,18 +106,40 @@
             flex-direction: column;
             position: relative;
             padding: 10px;
-            border: 5px solid transparent; /* Initial border for RGB effect */
-            animation: rgbBorder 5s linear infinite; /* RGB border animation */
+            border: 5px solid transparent;
+            /* Initial border for RGB effect */
+            animation: rgbBorder 5s linear infinite;
+            /* RGB border animation */
         }
 
         @keyframes rgbBorder {
-            0% { border-color: red; }
-            16.67% { border-color: orange; }
-            33.33% { border-color: yellow; }
-            50% { border-color: green; }
-            66.67% { border-color: blue; }
-            83.33% { border-color: indigo; }
-            100% { border-color: violet; }
+            0% {
+                border-color: red;
+            }
+
+            16.67% {
+                border-color: orange;
+            }
+
+            33.33% {
+                border-color: yellow;
+            }
+
+            50% {
+                border-color: green;
+            }
+
+            66.67% {
+                border-color: blue;
+            }
+
+            83.33% {
+                border-color: indigo;
+            }
+
+            100% {
+                border-color: violet;
+            }
         }
 
         /* Chat Window Styles */
@@ -122,23 +150,28 @@
             padding: 10px;
             position: relative;
             overflow-y: auto;
-            border: 5px solid transparent; /* Same initial border for chat window */
-            animation: rgbBorder 5s linear infinite; /* Apply same RGB animation */
+            border: 5px solid transparent;
+            /* Same initial border for chat window */
+            animation: rgbBorder 5s linear infinite;
+            /* Apply same RGB animation */
         }
 
-        .header, .sub-header {
+        .header,
+        .sub-header {
             text-align: center;
             color: cyan;
             text-shadow: 2px 2px 5px rgba(255, 255, 255, 0.5);
         }
 
         .header {
-            font-size: 2.5em; /* Increased font sizes for better visibility */
+            font-size: 2.5em;
+            /* Increased font sizes for better visibility */
             font-weight: bold;
         }
 
         .sub-header {
-            font-size: 1.2em; /* Increased font sizes for better visibility */
+            font-size: 1.2em;
+            /* Increased font sizes for better visibility */
             opacity: 0.8;
             margin-bottom: 15px;
         }
@@ -151,20 +184,24 @@
             max-width: 70%;
             word-wrap: break-word;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s; /* Added transition for smooth hover effect */
+            transition: all 0.3s;
+            /* Added transition for smooth hover effect */
         }
 
         /* User Message Style */
         .message.user {
-            background-color: #00ccff; /* User messages */
+            background-color: #00ccff;
+            /* User messages */
             color: #000;
             align-self: flex-end;
-            margin-left: auto; /* Align to right */
+            margin-left: auto;
+            /* Align to right */
         }
 
         /* Bot Message Style */
         .message.bot {
-            background-color: #4caf50; /* Bot responses */
+            background-color: #4caf50;
+            /* Bot responses */
             color: #fff;
             align-self: flex-start;
         }
@@ -182,7 +219,7 @@
 
         .chat-history h3 {
             margin: 0;
-            color: cyan; 
+            color: cyan;
             text-align: center;
         }
 
@@ -193,7 +230,7 @@
 
         .chat-history li {
             background: rgba(0, 255, 240, 0.2);
-            color: cyan; 
+            color: cyan;
             margin: 5px 0;
             padding: 8px;
             border-radius: 8px;
@@ -230,7 +267,8 @@
             border-radius: 30px;
             cursor: pointer;
             margin-left: 5px;
-            background: cyan; /* Default button background */
+            background: cyan;
+            /* Default button background */
             color: #ffffff;
             transition: background 0.3s, transform 0.2s;
         }
@@ -245,12 +283,12 @@
             width: 100%;
             padding: 12px;
             border-radius: 30px;
-            color: #ffffff; 
+            color: #ffffff;
             font-weight: bold;
             font-size: 1.1em;
             text-align: center;
             margin-top: 10px;
-            background: cyan; 
+            background: cyan;
             border: none;
             transition: all 0.3s;
         }
@@ -291,8 +329,10 @@
             width: 90%;
             max-width: 400px;
             overflow: hidden;
-            border: 5px solid transparent; /* Border for RGB effect */
-            animation: rgbBorder 5s linear infinite; /* Same RGB animation */
+            border: 5px solid transparent;
+            /* Border for RGB effect */
+            animation: rgbBorder 5s linear infinite;
+            /* Same RGB animation */
         }
 
         .modal-content {
@@ -304,7 +344,7 @@
             margin-top: 10px;
             display: block;
             font-weight: bold;
-            color: inherit; 
+            color: inherit;
         }
 
         .modal-content input[type="text"],
@@ -343,14 +383,18 @@
 
         /* Theme Styles */
         body.theme-color-1 {
-            color: #ff5722; /* Dark Orange */
+            color: #ff5722;
+            /* Dark Orange */
         }
+
         body.theme-color-1 .header {
             color: #ff5722;
         }
+
         body.theme-color-1 .sub-header {
-            color: #ff5722; 
+            color: #ff5722;
         }
+
         body.theme-color-1 .user-input button,
         body.theme-color-1 .modal-content button,
         body.theme-color-1 .action-button {
@@ -359,14 +403,17 @@
         }
 
         body.theme-color-2 {
-            color: #4caf50; 
+            color: #4caf50;
         }
+
         body.theme-color-2 .header {
             color: #4caf50;
         }
+
         body.theme-color-2 .sub-header {
-            color: #4caf50; 
+            color: #4caf50;
         }
+
         body.theme-color-2 .user-input button,
         body.theme-color-2 .modal-content button,
         body.theme-color-2 .action-button {
@@ -375,14 +422,17 @@
         }
 
         body.theme-color-3 {
-            color: #2196f3; 
+            color: #2196f3;
         }
+
         body.theme-color-3 .header {
             color: #2196f3;
         }
+
         body.theme-color-3 .sub-header {
-            color: #2196f3; 
+            color: #2196f3;
         }
+
         body.theme-color-3 .user-input button,
         body.theme-color-3 .modal-content button,
         body.theme-color-3 .action-button {
@@ -391,14 +441,17 @@
         }
 
         body.theme-color-4 {
-            color: #ffeb3b; 
+            color: #ffeb3b;
         }
+
         body.theme-color-4 .header {
             color: #ffeb3b;
         }
+
         body.theme-color-4 .sub-header {
-            color: #ffeb3b; 
+            color: #ffeb3b;
         }
+
         body.theme-color-4 .user-input button,
         body.theme-color-4 .modal-content button,
         body.theme-color-4 .action-button {
@@ -407,14 +460,17 @@
         }
 
         body.theme-color-5 {
-            color: #673ab7; 
+            color: #673ab7;
         }
+
         body.theme-color-5 .header {
             color: #673ab7;
         }
+
         body.theme-color-5 .sub-header {
-            color: #673ab7; 
+            color: #673ab7;
         }
+
         body.theme-color-5 .user-input button,
         body.theme-color-5 .modal-content button,
         body.theme-color-5 .action-button {
@@ -423,23 +479,26 @@
         }
 
         body.theme-color-6 {
-            color: #ff6a00; 
+            color: #ff6a00;
         }
+
         body.theme-color-6 .header {
             color: #ff6a00;
         }
+
         body.theme-color-6 .sub-header {
-            color: #ff6a00; 
+            color: #ff6a00;
         }
+
         body.theme-color-6 .user-input button,
         body.theme-color-6 .modal-content button,
         body.theme-color-6 .action-button {
             background: #ff6a00;
             color: #ffffff;
         }
-
     </style>
 </head>
+
 <body>
     <div class="popup" id="introPopup">
         <h2>Welcome to Rishab Chatbot!</h2>
@@ -509,17 +568,6 @@
                 <option value="cn">Chinese</option>
             </select>
 
-            <label for="theme">Text Color Theme:</label>
-            <select id="theme" onchange="changeTheme()">
-                <option value="theme-color-1">Dark Orange</option>
-                <option value="theme-color-2">Green</option>
-                <option value="theme-color-3">Blue</option>
-                <option value="theme-color-4">Yellow</option>
-                <option value="theme-color-5">Purple</option>
-                <option value="theme-color-6">Orange</option>
-                <option value="default">Cyan (Default)</option>
-            </select>
-
             <label for="musicUpload">Upload Music:</label>
             <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
             <button onclick="playMusic()">Play/Pause Music</button>
@@ -548,10 +596,38 @@
         </div>
     </div>
 
+    <!-- Authentication Modal -->
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span onclick="closeAuthModal()" style="float:right;cursor:pointer;color:#00fff0;">×</span>
+            <h2>Login / Register</h2>
+            <input type="email" id="email" placeholder="Email" />
+            <input type="password" id="password" placeholder="Password" />
+            <button onclick="register()">Register</button>
+            <button onclick="login()">Login</button>
+            <button onclick="logout()">Logout</button>
+        </div>
+    </div>
+
     <audio id="musicPlayer" src="" preload="auto"></audio>
 
-    <script src="https://js.puter.com/v2/"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
     <script>
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyD0PGTsX1IJLm2qwh--7aKv3itQ7vrla-k",
+            authDomain: "mikasa-519d1.firebaseapp.com",
+            projectId: "mikasa-519d1",
+            storageBucket: "mikasa-519d1.firebasestorage.app",
+            messagingSenderId: "190611410740",
+            appId: "1:190611410740:web:d6c0e2e5a8b0e060c79f61"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
+
         let chatbotName = "Rishab";
         let voiceEnabled = true;
         let messageCount = 0;
@@ -578,7 +654,59 @@
             loadPreferences();
             displayRandomFact();
             document.getElementById("introPopup").style.display = "block"; // Show pop-up on load
+            document.getElementById("authModal").style.display = "block"; // Show auth modal on load
+
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    console.log('User logged in: ', user.email);
+                    document.getElementById("authModal").style.display = "none"; // Hide auth modal when logged in
+                } else {
+                    console.log('User not logged in');
+                }
+            });
         };
+
+        function closePopup() {
+            document.getElementById("introPopup").style.display = "none"; // Close pop-up
+        }
+
+        function closeAuthModal() {
+            document.getElementById("authModal").style.display = "none"; // Close auth modal
+        }
+
+        function register() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(() => {
+                    alert('Registration successful!');
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+        }
+
+        function login() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    alert('Login successful!');
+                    document.getElementById("authModal").style.display = "none"; // Hide auth modal on login
+                })
+                .catch(error => {
+                    alert(error.message);
+                });
+        }
+
+        function logout() {
+            auth.signOut().then(() => {
+                alert('Logged out successfully!');
+                document.getElementById("authModal").style.display = "block"; // Show auth modal again
+            });
+        }
 
         function loadPreferences() {
             const savedLang = localStorage.getItem('language');
@@ -667,7 +795,7 @@
                     } else if (/who made you|your creator/i.test(userMessage)) {
                         response = "I was made by Rishab.";
                     } else {
-                        response = await puter.ai.chat(userMessage); // Use chat service
+                        response = "I'm still learning!"; // Can be replaced with your chat service call
                     }
 
                     chatbox.removeChild(typingIndicator);
@@ -678,7 +806,7 @@
                     chatbox.appendChild(botMessageDiv);
 
                     chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
-                    
+
                     speakResponse(response);
                     messageCount++;
                 } catch (error) {
@@ -730,7 +858,7 @@
             const summaryText = `Chat Summary:\nOverview of your questions: ${chatMessages.join(", ")}.\nTotal Messages: ${chatMessages.length}`;
             summaryDiv.textContent = summaryText;
             document.getElementById("chatbox").appendChild(summaryDiv);
-            document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight; 
+            document.getElementById("chatbox").scrollTop = document.getElementById("chatbox").scrollHeight;
         }
 
         function exportChat() {
@@ -770,8 +898,8 @@
             chatbox.innerHTML = "";
             chatList.innerHTML = "";
             messageCount = 0;
-            chatMessages.length = 0; 
-            chatAnswers.length = 0; 
+            chatMessages.length = 0;
+            chatAnswers.length = 0;
         }
 
         function openSettings() {
@@ -808,10 +936,6 @@
             alert(`Daily Fact: ${randomFact}`);
         }
 
-        function closePopup() {
-            document.getElementById("introPopup").style.display = "none"; // Close the introductory popup
-        }
-
         function sendFeedback() {
             const feedback = document.getElementById("feedback").value;
             if (feedback) {
@@ -821,4 +945,5 @@
         }
     </script>
 </body>
+
 </html>
