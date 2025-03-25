@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>🌌 Mikasa - Beyond Limits Chatbot 🌟</title>
+    <title>🌌 Mikasa - Your AI Companion 🌟</title>
     <style>
         body {
             margin: 0;
@@ -23,7 +23,6 @@
             from {
                 opacity: 0;
             }
-
             to {
                 opacity: 1;
             }
@@ -66,7 +65,6 @@
             0% {
                 text-shadow: 0 0 20px #00fff0, 0 0 40px #00fff0;
             }
-
             100% {
                 text-shadow: 0 0 30px #00ffcc, 0 0 60px #00ccff;
             }
@@ -94,7 +92,6 @@
                 transform: translateX(-100%);
                 opacity: 0;
             }
-
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -244,8 +241,6 @@
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
             <div class="user-input">
-                <button onclick="exportChat()" title="Export Chat">📤</button>
-                <button onclick="startVoiceInput()" title="Voice Input">🎤</button>
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
                 <button onclick="sendMessage()" title="Send Message">📬</button>
                 <button onclick="openSettings()" title="Settings">⚙️</button>
@@ -271,6 +266,9 @@
                 <option value="it">Italian</option>
             </select>
 
+            <label for="musicUpload">Upload Your Music:</label>
+            <input type="file" id="musicUpload" accept="audio/*" onchange="loadMusic(event)" />
+
             <div class="volume-control">
                 <label for="volumeControl">Volume Control:</label>
                 <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5" onchange="setVolume(this.value)">
@@ -282,14 +280,12 @@
         </div>
     </div>
 
-    <audio id="musicPlayer" src="your-music-file.mp3" preload="auto" loop></audio>
+    <audio id="musicPlayer" preload="auto" loop></audio>
 
     <script src="https://js.puter.com/v2/"></script>
     <script>
         let chatbotName = "Mikasa";
         let voiceEnabled = true; // Default voice enabled
-        const chatMessages = []; // Store chat messages for export and summary
-        const chatAnswers = []; // Store chat answers for export
         let musicPlaying = false; // Track music status
 
         window.onload = function () {
@@ -308,6 +304,20 @@
             if (savedVolume) {
                 document.getElementById("volumeControl").value = savedVolume;
                 setVolume(savedVolume);
+            }
+        }
+
+        function loadMusic(event) {
+            const file = event.target.files[0];
+            const musicPlayer = document.getElementById('musicPlayer');
+
+            if (file) {
+                const url = URL.createObjectURL(file);
+                musicPlayer.src = url;
+                musicPlayer.volume = document.getElementById('volumeControl').value;
+                // Reset play status
+                musicPlaying = false;
+                document.getElementById("musicControlButton").innerText = "Play Music";
             }
         }
 
@@ -338,44 +348,46 @@
 
             if (userInput.value.trim()) {
                 const userMessage = userInput.value.trim();
-
-                // Display user message
-                const userMessageDiv = document.createElement("div");
-                userMessageDiv.className = "message user";
-                userMessageDiv.textContent = "🧑: " + userMessage;
-                chatbox.appendChild(userMessageDiv);
-                chatMessages.push(userMessage);
-
-                const typingIndicator = document.createElement("div");
-                typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
-                chatbox.appendChild(typingIndicator);
-
-                try {
-                    await delayResponse();
-                    let response = await getResponse(userMessage);
-                    chatbox.removeChild(typingIndicator);
-                    
-                    // Display bot response
-                    const botMessageDiv = document.createElement("div");
-                    botMessageDiv.className = "message bot";
-                    botMessageDiv.textContent = `🤖 ${chatbotName}: ${response}`;
-                    chatbox.appendChild(botMessageDiv);
-                    
-                    chatAnswers.push(`🤖 ${chatbotName}: ${response}`);
-                    // Speak response if voice is enabled
-                    speakResponse(response);
-                } catch (error) {
-                    console.error(error);
-                    chatbox.appendChild(createBotMessage("Oops! Something went wrong. Please try again."));
-                }
-
-                chatbox.scrollTop = chatbox.scrollHeight;
+                appendUserMessage(userMessage);
+                await processUserMessage(userMessage);
                 userInput.value = "";
             }
         }
 
-        async function getResponse(userMessage) {
-            // Implement dynamic responses - here you can reach out to an AI backend as needed
+        function appendUserMessage(userMessage) {
+            const chatbox = document.getElementById("chatbox");
+            const userMessageDiv = document.createElement("div");
+            userMessageDiv.className = "message user";
+            userMessageDiv.textContent = "🧑: " + userMessage;
+            chatbox.appendChild(userMessageDiv);
+            chatbox.scrollTop = chatbox.scrollHeight; // Auto scroll
+        }
+
+        async function processUserMessage(userMessage) {
+            const chatbox = document.getElementById("chatbox");
+            const typingIndicator = document.createElement("div");
+            typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
+            chatbox.appendChild(typingIndicator);
+
+            // Simulating response delay
+            await delayResponse();
+            const response = getResponse(userMessage);
+            chatbox.removeChild(typingIndicator);
+
+            // Append bot response
+            const botMessageDiv = document.createElement("div");
+            botMessageDiv.className = "message bot";
+            botMessageDiv.textContent = `🤖 ${chatbotName}: ${response}`;
+            chatbox.appendChild(botMessageDiv);
+
+            chatbox.scrollTop = chatbox.scrollHeight; // Auto scroll
+            
+            // Speak response if voice is enabled
+            speakResponse(response);
+        }
+
+        function getResponse(userMessage) {
+            // The logic for dynamic response
             if (/what's your name|who are you/i.test(userMessage)) {
                 return `My name is ${chatbotName}.`;
             } else if (/who made you|your creator/i.test(userMessage)) {
@@ -383,47 +395,14 @@
             } else if (/how are you/i.test(userMessage)) {
                 return "I'm just a program, but thanks for asking! How can I assist you today?";
             } else if (/help/i.test(userMessage)) {
-                return "I can answer questions or chat with you. Just type away!";
-            } else if (/image/i.test(userMessage)) {
-                return "I can't send images yet, but I can help you find them!";
+                return "How can I assist you? You can ask about my features!";
             } else {
-                return "Sorry, I don't have a response for that."; // Placeholder response
+                return "Sorry, I don't understand that. Can you please rephrase?";
             }
-        }
-
-        function createBotMessage(text) {
-            const botMessageDiv = document.createElement("div");
-            botMessageDiv.className = "message bot";
-            botMessageDiv.textContent = `🤖 ${chatbotName}: ${text}`;
-            return botMessageDiv;
         }
 
         function delayResponse() {
-            return new Promise(resolve => setTimeout(resolve, 1000));
-        }
-
-        function exportChat() {
-            let exportText = "";
-            for (let i = 0; i < chatMessages.length; i++) {
-                exportText += `🧑: ${chatMessages[i]}\n${chatAnswers[i] || ''}\n`;
-            }
-            const blob = new Blob([exportText], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'chat_history.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
-
-        function startVoiceInput() {
-            const recognition = new webkitSpeechRecognition();
-            recognition.onresult = function (event) {
-                const userInput = document.getElementById("userInput");
-                userInput.value = event.results[0][0].transcript;
-            };
-            recognition.start();
+            return new Promise(resolve => setTimeout(resolve, 1000)); // Simulated delay of 1s
         }
 
         function speakResponse(response) {
@@ -442,9 +421,7 @@
 
         function resetChat() {
             const chatbox = document.getElementById("chatbox");
-            chatbox.innerHTML = "";
-            chatMessages.length = 0;
-            chatAnswers.length = 0;
+            chatbox.innerHTML = ""; // Clear chat history
         }
 
         function openSettings() {
