@@ -3,109 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Epic Futuristic Chatbot</title>
+    <title>Beyond Futuristic Chatbot</title>
     <style>
+        /* Global Styles */
         body {
             margin: 0;
             padding: 0;
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #001219, #005f73, #0a9396);
             color: white;
             height: 100vh;
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            overflow: hidden;
+            perspective: 1000px;
         }
+
+        /* Chat Container */
         .chat-container {
+            width: 80%;
+            height: 90%;
+            background: rgba(0, 20, 40, 0.8);
+            border-radius: 30px;
+            box-shadow: 0 20px 50px rgba(0, 255, 255, 0.6);
+            overflow: hidden;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            width: 90%;
-            max-width: 600px;
-            height: 80vh;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            overflow: hidden;
+            position: relative;
+            transform: rotateX(5deg) rotateY(5deg);
+            animation: holographic-shine 5s infinite ease-in-out;
         }
+
+        @keyframes holographic-shine {
+            0%, 100% {
+                transform: rotateX(5deg) rotateY(5deg);
+            }
+            50% {
+                transform: rotateX(-5deg) rotateY(-5deg);
+            }
+        }
+
+        /* Header */
         .chat-header {
-            padding: 20px;
+            background: linear-gradient(90deg, #94d2bd, #e9d8a6);
+            color: black;
+            font-size: 1.8em;
             text-align: center;
-            font-size: 1.5em;
-            background: rgba(0, 0, 0, 0.6);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            text-transform: uppercase;
+            letter-spacing: 2px;
         }
+
+        /* Chat Box */
         .chat-box {
             flex: 1;
             overflow-y: auto;
-            padding: 20px;
-            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            background: transparent;
+            perspective: 600px;
         }
-        .chat-box::-webkit-scrollbar {
-            width: 8px;
+
+        .message {
+            background: linear-gradient(135deg, #005f73, #94d2bd);
+            border-radius: 15px;
+            padding: 15px 20px;
+            color: white;
+            font-size: 1em;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            transform: translateZ(30px);
+            animation: float 3s ease-in-out infinite alternate;
         }
-        .chat-box::-webkit-scrollbar-thumb {
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 5px;
+
+        @keyframes float {
+            0% {
+                transform: translateZ(0px);
+            }
+            100% {
+                transform: translateZ(30px);
+            }
         }
-        .chat-box::-webkit-scrollbar-thumb:hover {
-            background: rgba(255, 255, 255, 0.5);
-        }
+
+        /* Input Section */
         .chat-input {
             display: flex;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.6);
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            align-items: center;
+            padding: 20px;
+            background: rgba(0, 20, 40, 0.6);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
+
         .chat-input textarea {
             flex: 1;
-            background: rgba(255, 255, 255, 0.1);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-radius: 10px;
-            padding: 10px;
+            background: transparent;
             color: white;
-            font-size: 1em;
-            resize: none;
+            border: 2px solid #94d2bd;
+            border-radius: 15px;
+            padding: 15px;
+            font-size: 1.2em;
             outline: none;
+            resize: none;
             transition: border 0.3s ease;
         }
+
         .chat-input textarea:focus {
-            border: 2px solid #1c92d2;
+            border: 2px solid #e9d8a6;
         }
+
         .send-button {
-            background: linear-gradient(45deg, #6dd5fa, #1c92d2);
-            color: white;
+            background: linear-gradient(135deg, #94d2bd, #e9d8a6);
             border: none;
-            border-radius: 10px;
-            padding: 15px;
-            margin-left: 10px;
-            font-size: 1em;
+            border-radius: 20px;
+            padding: 10px 30px;
+            color: black;
+            font-size: 1.2em;
             cursor: pointer;
-            transition: background 0.3s ease;
+            margin-left: 20px;
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.6);
+            transition: box-shadow 0.3s ease, transform 0.3s ease;
         }
+
         .send-button:hover {
-            background: linear-gradient(45deg, #1c92d2, #6dd5fa);
-        }
-        .message {
-            margin: 10px 0;
-        }
-        .message.user {
-            text-align: right;
-        }
-        .message.bot {
-            text-align: left;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 255, 255, 0.8);
         }
     </style>
 </head>
 <body>
     <div class="chat-container">
-        <div class="chat-header">⚡ Epic Futuristic Bot ⚡</div>
-        <div class="chat-box" id="chat-box"></div>
+        <div class="chat-header">🌌 Beyond AI Assistant 🌌</div>
+        <div class="chat-box" id="chat-box">
+            <!-- Example Messages -->
+            <div class="message">Hello, I'm your futuristic assistant!</div>
+            <div class="message">What's on your mind today?</div>
+        </div>
         <div class="chat-input">
-            <textarea id="chat-input" rows="1" placeholder="Enter your epic message..."></textarea>
+            <textarea id="chat-input" rows="1" placeholder="Type something unreal..."></textarea>
             <button class="send-button" onclick="sendMessage()">Send</button>
         </div>
     </div>
@@ -117,17 +154,21 @@
             const message = chatInput.value.trim();
             if (message) {
                 const userMessage = document.createElement('div');
-                userMessage.classList.add('message', 'user');
+                userMessage.classList.add('message');
                 userMessage.textContent = `You: ${message}`;
                 chatBox.appendChild(userMessage);
 
-                const botMessage = document.createElement('div');
-                botMessage.classList.add('message', 'bot');
-                botMessage.textContent = "Bot: Here's your futuristic response!";
-                chatBox.appendChild(botMessage);
-
                 chatInput.value = '';
                 chatBox.scrollTop = chatBox.scrollHeight;
+
+                // Simulate bot response
+                setTimeout(() => {
+                    const botMessage = document.createElement('div');
+                    botMessage.classList.add('message');
+                    botMessage.textContent = "Bot: I'm here to blow your mind!";
+                    chatBox.appendChild(botMessage);
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }, 1000);
             }
         }
     </script>
