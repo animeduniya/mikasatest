@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ultra-Futuristic Chatbot Interface</title>
+    <title>Hyper-Dimensional Chat Experience</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
-        /* Reset Styles */
+        /* Basic Reset */
         body, html {
             margin: 0;
             padding: 0;
@@ -14,75 +14,50 @@
             font-family: 'Poppins', sans-serif;
         }
 
-        /* Glowing Holographic Background */
-        #background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
+        /* 3D Interactive Environment */
+        canvas {
+            display: block;
         }
 
-        /* Chat UI */
+        /* Chat Interface */
         .chat-container {
             position: absolute;
             bottom: 5%;
             left: 50%;
             transform: translateX(-50%);
-            width: 80%;
-            height: 50%;
+            width: 70%;
+            height: 60%;
             background: rgba(0, 0, 0, 0.5);
             border: 3px solid #00ffee;
             border-radius: 25px;
             backdrop-filter: blur(20px);
-            box-shadow: 0 20px 40px rgba(0, 255, 238, 0.5);
-            color: white;
+            box-shadow: 0 30px 50px rgba(0, 255, 238, 0.6);
             display: flex;
             flex-direction: column;
-            padding: 20px;
+            color: white;
         }
 
         .chat-header {
+            padding: 20px;
             font-size: 2em;
             text-align: center;
             color: white;
             text-shadow: 0 0 10px #00ffee, 0 0 20px #00ffee;
-            border-bottom: 2px solid rgba(0, 255, 238, 0.5);
-            margin-bottom: 10px;
+            border-bottom: 2px solid rgba(0, 255, 238, 0.3);
         }
 
         .chat-box {
             flex: 1;
             overflow-y: auto;
             padding: 10px;
-            border-radius: 15px;
             background: rgba(0, 0, 0, 0.3);
-            box-shadow: inset 0 5px 10px rgba(0, 255, 238, 0.2);
-        }
-
-        .message {
-            margin: 10px 0;
-            padding: 10px 15px;
-            border-radius: 10px;
-            background: linear-gradient(45deg, #00ffee, #0066ff);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-            color: white;
-            font-size: 1.2em;
-        }
-
-        .message.user {
-            text-align: right;
-        }
-
-        .message.bot {
-            text-align: left;
+            box-shadow: inset 0 5px 15px rgba(0, 255, 238, 0.2);
         }
 
         .chat-input {
             display: flex;
-            align-items: center;
-            margin-top: 10px;
+            padding: 10px;
+            border-top: 2px solid rgba(0, 255, 238, 0.3);
         }
 
         textarea {
@@ -95,12 +70,11 @@
             font-size: 1.2em;
             outline: none;
             resize: none;
-            box-shadow: inset 0 5px 15px rgba(0, 255, 238, 0.5);
         }
 
         button {
             margin-left: 10px;
-            padding: 15px 30px;
+            padding: 10px 20px;
             border: none;
             border-radius: 15px;
             background: linear-gradient(45deg, #00ffee, #0066ff);
@@ -108,7 +82,7 @@
             font-size: 1.2em;
             cursor: pointer;
             box-shadow: 0 5px 15px rgba(0, 255, 238, 0.5);
-            transition: background 0.3s, transform 0.3s;
+            transition: transform 0.3s ease, background 0.3s ease;
         }
 
         button:hover {
@@ -120,7 +94,7 @@
 <body>
     <canvas id="background"></canvas>
     <div class="chat-container">
-        <div class="chat-header">✨ Ultra-Futuristic Chatbot ✨</div>
+        <div class="chat-header">✨ Hyper-Dimensional Assistant ✨</div>
         <div class="chat-box" id="chat-box"></div>
         <div class="chat-input">
             <textarea id="chat-input" placeholder="Type your epic message..."></textarea>
@@ -129,7 +103,7 @@
     </div>
 
     <script>
-        // THREE.js Glowing Particle Background
+        // 3D Interactive Environment
         const canvas = document.getElementById('background');
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
@@ -138,6 +112,7 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         camera.position.z = 50;
 
+        // Particle System
         const particles = [];
         const geometry = new THREE.SphereGeometry(1, 16, 16);
         const material = new THREE.MeshBasicMaterial({ color: 0x00ffee });
@@ -168,7 +143,6 @@
             const message = chatInput.value.trim();
             if (message) {
                 const userMessage = document.createElement('div');
-                userMessage.classList.add('message', 'user');
                 userMessage.textContent = `You: ${message}`;
                 chatBox.appendChild(userMessage);
                 chatInput.value = '';
@@ -176,7 +150,6 @@
 
                 setTimeout(() => {
                     const botMessage = document.createElement('div');
-                    botMessage.classList.add('message', 'bot');
                     botMessage.textContent = "Bot: Welcome to the future!";
                     chatBox.appendChild(botMessage);
                     chatBox.scrollTop = chatBox.scrollHeight;
