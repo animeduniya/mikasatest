@@ -313,7 +313,7 @@
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
             <div class="user-input">
                 <button onclick="exportChat()" title="Export Chat">📤</button>
-                <button onclick="startVoiceInput()" title="Voice Input">🎤</button>
+                <button onclick="startVoiceInput()" title="Voice Input" id="voiceButton">🎤</button>
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
                 <button onclick="sendMessage()" title="Send Message">📬</button>
                 <button onclick="openSettings()" title="Settings">⚙️</button>
@@ -365,6 +365,10 @@
             <div>
                 <button onclick="toggleMusic()" id="musicControlButton" class="epic-button">Play Music</button>
             </div>
+            <div>
+                <label for="readerToggle">Text-to-Speech:</label>
+                <input type="checkbox" id="readerToggle" checked onchange="toggleReader()"> Enable Reader
+            </div>
             <button onclick="resetChat()" class="epic-button">Reset Chat</button>
             <button onclick="resetAllSettings()" class="epic-button">Reset All Settings</button>
         </div>
@@ -387,6 +391,7 @@
         let voiceEnabled = true; // Default voice enabled
         let musicPlaying = false; // Track music status
         let reminders = []; // Array to store reminders
+        let speechSynthesisActive = false; // Track if speech synthesis is active
 
         window.onload = function () {
             loadPreferences();
@@ -468,6 +473,12 @@
                 chatbox.appendChild(userMessageDiv);
                 chatMessages.push(userMessage); // Store question
 
+                // Stop any current reading
+                if (speechSynthesis.speaking) {
+                    speechSynthesis.cancel(); // Stop the current speaking
+                    speechSynthesisActive = false; // Mark speech synthesis as inactive
+                }
+
                 const typingIndicator = document.createElement("div");
                 typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
                 chatbox.appendChild(typingIndicator);
@@ -498,7 +509,12 @@
 
                     // Store answer
                     chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
-                    speakResponse(response);
+
+                    // Speak response only if reader is enabled
+                    if (voiceEnabled) {
+                        speakResponse(response);
+                    }
+
                 } catch (error) {
                     const errorMessageDiv = document.createElement("div");
                     errorMessageDiv.className = "message bot";
@@ -511,11 +527,22 @@
             }
         }
 
+        function toggleReader() {
+            voiceEnabled = document.getElementById("readerToggle").checked;
+            if (!voiceEnabled && speechSynthesis.speaking) {
+                speechSynthesis.cancel(); // Stop reading if reader is turned off
+            }
+        }
+
         function delayResponse() {
             return new Promise(resolve => setTimeout(resolve, 1000)); // Simulate a response delay
         }
 
         function startVoiceInput() {
+            // Disable input field while speaking
+            if (speechSynthesis.speaking) {
+                return; // Do not proceed if speech is active
+            }
             const recognition = new webkitSpeechRecognition();
             recognition.onresult = function (event) {
                 const userInput = document.getElementById("userInput");
@@ -542,9 +569,13 @@
 
         function speakResponse(response) {
             if (voiceEnabled) {
+                speechSynthesisActive = true; // Mark speech synthesis as active
                 const utterance = new SpeechSynthesisUtterance(response);
+                utterance.onend = () => {
+                    speechSynthesisActive = false; // Mark as inactive when done
+                };
                 utterance.lang = "en-US";
-                window.speechSynthesis.speak(utterance);
+                speechSynthesis.speak(utterance);
             }
         }
 
