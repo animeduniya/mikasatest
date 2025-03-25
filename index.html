@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -20,12 +19,8 @@
         }
 
         @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .container {
@@ -49,7 +44,6 @@
             background: rgba(10, 10, 20, 0.8);
             border-radius: 15px;
             overflow-y: auto;
-            position: relative;
         }
 
         .header {
@@ -62,12 +56,8 @@
         }
 
         @keyframes glow {
-            0% {
-                text-shadow: 0 0 20px #00fff0, 0 0 40px #00fff0;
-            }
-            100% {
-                text-shadow: 0 0 30px #00ffcc, 0 0 60px #00ccff;
-            }
+            0% { text-shadow: 0 0 20px #00fff0, 0 0 40px #00fff0; }
+            100% { text-shadow: 0 0 30px #00ffcc, 0 0 60px #00ccff; }
         }
 
         .messages {
@@ -82,20 +72,13 @@
             border-radius: 15px;
             margin: 10px 0;
             max-width: 75%;
-            position: relative;
             animation: slideIn 0.5s forwards;
             box-shadow: 0 4px 10px rgba(0, 255, 255, 0.2);
         }
 
         @keyframes slideIn {
-            from {
-                transform: translateX(-100%);
-                opacity: 0;
-            }
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         .message.user {
@@ -116,9 +99,6 @@
             padding: 15px;
             background: rgba(0, 255, 240, 0.3);
             border-radius: 30px;
-            box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
-            position: relative;
-            margin-top: 10px;
         }
 
         .user-input input {
@@ -218,19 +198,9 @@
         }
 
         @media (max-width: 768px) {
-            .header {
-                font-size: 2em;
-            }
-
-            .user-input input {
-                padding: 8px;
-                font-size: 0.9em;
-            }
-
-            .user-input button {
-                padding: 8px;
-                font-size: 0.9em;
-            }
+            .header { font-size: 2em; }
+            .user-input input { padding: 8px; font-size: 0.9em; }
+            .user-input button { padding: 8px; font-size: 0.9em; }
         }
     </style>
 </head>
@@ -241,6 +211,8 @@
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
             <div class="user-input">
+                <button onclick="exportChat()" title="Export Chat">📤</button>
+                <button onclick="startVoiceInput()" title="Voice Input">🎤</button>
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
                 <button onclick="sendMessage()" title="Send Message">📬</button>
                 <button onclick="openSettings()" title="Settings">⚙️</button>
@@ -285,6 +257,8 @@
     <script src="https://js.puter.com/v2/"></script>
     <script>
         let chatbotName = "Mikasa";
+        let chatMessages = []; // Store chat messages for export
+        let chatAnswers = []; // Store chat answers for export
         let voiceEnabled = true; // Default voice enabled
         let musicPlaying = false; // Track music status
 
@@ -348,61 +322,80 @@
 
             if (userInput.value.trim()) {
                 const userMessage = userInput.value.trim();
-                appendUserMessage(userMessage);
-                await processUserMessage(userMessage);
-                userInput.value = "";
-            }
-        }
+                const userMessageDiv = document.createElement("div");
+                userMessageDiv.className = "message user";
+                userMessageDiv.textContent = "🧑: " + userMessage;
+                chatbox.appendChild(userMessageDiv);
+                chatMessages.push(userMessage); // Store question
 
-        function appendUserMessage(userMessage) {
-            const chatbox = document.getElementById("chatbox");
-            const userMessageDiv = document.createElement("div");
-            userMessageDiv.className = "message user";
-            userMessageDiv.textContent = "🧑: " + userMessage;
-            chatbox.appendChild(userMessageDiv);
-            chatbox.scrollTop = chatbox.scrollHeight; // Auto scroll
-        }
+                const typingIndicator = document.createElement("div");
+                typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
+                chatbox.appendChild(typingIndicator);
 
-        async function processUserMessage(userMessage) {
-            const chatbox = document.getElementById("chatbox");
-            const typingIndicator = document.createElement("div");
-            typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
-            chatbox.appendChild(typingIndicator);
+                try {
+                    await delayResponse(); // Delay for effect
 
-            // Simulating response delay
-            await delayResponse();
-            const response = getResponse(userMessage);
-            chatbox.removeChild(typingIndicator);
+                    let response;
+                    const query = userMessage;
 
-            // Append bot response
-            const botMessageDiv = document.createElement("div");
-            botMessageDiv.className = "message bot";
-            botMessageDiv.textContent = `🤖 ${chatbotName}: ${response}`;
-            chatbox.appendChild(botMessageDiv);
+                    // Responding with clear responses
+                    if (/what's your name|who are you/i.test(query)) {
+                        response = `My name is ${chatbotName}.`;
+                    } else if (/who made you|your creator/i.test(query)) {
+                        response = "I was made by Rishab.";
+                    } else {
+                        response = await puter.ai.chat(query); // Replace with your AI call if available
+                    }
 
-            chatbox.scrollTop = chatbox.scrollHeight; // Auto scroll
-            
-            // Speak response if voice is enabled
-            speakResponse(response);
-        }
+                    chatbox.removeChild(typingIndicator);
 
-        function getResponse(userMessage) {
-            // The logic for dynamic response
-            if (/what's your name|who are you/i.test(userMessage)) {
-                return `My name is ${chatbotName}.`;
-            } else if (/who made you|your creator/i.test(userMessage)) {
-                return "I was made by Rishab.";
-            } else if (/how are you/i.test(userMessage)) {
-                return "I'm just a program, but thanks for asking! How can I assist you today?";
-            } else if (/help/i.test(userMessage)) {
-                return "How can I assist you? You can ask about my features!";
-            } else {
-                return "Sorry, I don't understand that. Can you please rephrase?";
+                    const botMessageDiv = document.createElement("div");
+                    botMessageDiv.className = "message bot";
+                    botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
+                    chatbox.appendChild(botMessageDiv);
+
+                    // Store answer
+                    chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);                  
+                    speakResponse(response);
+                } catch (error) {
+                    const errorMessageDiv = document.createElement("div");
+                    errorMessageDiv.className = "message bot";
+                    errorMessageDiv.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
+                    chatbox.appendChild(errorMessageDiv);
+                }
+
+                chatbox.scrollTop = chatbox.scrollHeight; // Auto scroll
+                userInput.value = ""; // Clear input
             }
         }
 
         function delayResponse() {
-            return new Promise(resolve => setTimeout(resolve, 1000)); // Simulated delay of 1s
+            return new Promise(resolve => setTimeout(resolve, 1000)); // Simulate a response delay
+        }
+
+        function startVoiceInput() {
+            const recognition = new webkitSpeechRecognition();
+            recognition.onresult = function (event) {
+                const userInput = document.getElementById("userInput");
+                userInput.value = event.results[0][0].transcript;
+                sendMessage();
+            };
+            recognition.start();
+        }
+
+        function exportChat() {
+            let exportText = "";
+            for (let i = 0; i < chatMessages.length; i++) {
+                exportText += `🧑: ${chatMessages[i]}\n${chatAnswers[i] || ''}\n`;
+            }
+            const blob = new Blob([exportText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'chat_history.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
         }
 
         function speakResponse(response) {
@@ -422,6 +415,8 @@
         function resetChat() {
             const chatbox = document.getElementById("chatbox");
             chatbox.innerHTML = ""; // Clear chat history
+            chatMessages = []; // Reset message array
+            chatAnswers = []; // Reset answer array
         }
 
         function openSettings() {
@@ -439,5 +434,4 @@
         }
     </script>
 </body>
-
 </html>
