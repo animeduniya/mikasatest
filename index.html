@@ -2,8 +2,8 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>🌌 Mikasa - Your AI Companion 🌟</title>
     <style>
         body {
@@ -20,8 +20,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .container {
@@ -57,8 +62,13 @@
         }
 
         @keyframes glow {
-            0% { text-shadow: 0 0 20px #00fff0, 0 0 40px #00fff0; }
-            100% { text-shadow: 0 0 30px #00ffcc, 0 0 60px #00ccff; }
+            0% {
+                text-shadow: 0 0 20px #00fff0, 0 0 40px #00fff0;
+            }
+
+            100% {
+                text-shadow: 0 0 30px #00ffcc, 0 0 60px #00ccff;
+            }
         }
 
         .messages {
@@ -78,8 +88,15 @@
         }
 
         @keyframes slideIn {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
         .message.user {
@@ -137,6 +154,27 @@
             background: linear-gradient(90deg, #00b3e3, #00ccff);
         }
 
+        /* Epic file input */
+        .file-input {
+            display: none;
+        }
+
+        .custom-file-input {
+            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 30px;
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            color: #fff;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            font-weight: bold;
+        }
+
+        .custom-file-input:hover {
+            background: linear-gradient(90deg, #ff5f5f, #00b3e3);
+            transform: scale(1.05);
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -185,8 +223,8 @@
         }
 
         .scrollable-settings {
-            max-height: 400px; /* Limit the height */
-            overflow-y: auto; /* Add scroll if needed */
+            max-height: 400px;
+            overflow-y: auto;
         }
 
         /* Scrollbar */
@@ -217,8 +255,15 @@
         }
 
         @keyframes fadeInPopup {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .epic-button {
@@ -243,9 +288,20 @@
         }
 
         @media (max-width: 768px) {
-            .header { font-size: 2em; }
-            .user-input input { padding: 8px; font-size: 0.9em; }
-            .user-input button { padding: 8px; font-size: 0.9em; }
+            .header {
+                font-size: 2em;
+            }
+
+            .user-input input {
+                padding: 8px;
+                font-size: 0.9em;
+            }
+
+            .user-input button {
+                padding-left: 8px;
+                padding-right: 8px;
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
@@ -284,13 +340,23 @@
             </select>
 
             <label for="musicUpload">Upload Your Music:</label>
-            <input type="file" id="musicUpload" accept="audio/*" onchange="loadMusic(event)" />
+            <label class="custom-file-input">
+                Choose File
+                <input type="file" id="musicUpload" accept="audio/*" onchange="loadMusic(event)" class="file-input" />
+            </label>
 
             <label for="bgUpload">Change Background Image:</label>
-            <input type="file" id="bgUpload" accept="image/*" onchange="changeBackground(event)" />
+            <label class="custom-file-input">
+                Choose File
+                <input type="file" id="bgUpload" accept="image/*" onchange="changeBackground(event)" class="file-input" />
+            </label>
 
-            <label for="reminder">Set a Reminder Message:</label>
-            <input type="text" id="reminderInput" placeholder="Enter your reminder here..." />
+            <label for="reminder">Set a Reminder:</label>
+            <div>
+                <input type="text" id="reminderInput" placeholder="Enter your reminder here..." />
+                <input type="time" id="reminderTimeInput" />
+                <button class="epic-button" onclick="setReminder()">Set Reminder</button>
+            </div>
 
             <div class="volume-control">
                 <label for="volumeControl">Volume Control:</label>
@@ -320,6 +386,7 @@
         let chatAnswers = []; // Store chat answers for export
         let voiceEnabled = true; // Default voice enabled
         let musicPlaying = false; // Track music status
+        let reminders = []; // Array to store reminders
 
         window.onload = function () {
             loadPreferences();
@@ -417,8 +484,7 @@
                     } else if (/who made you|your creator/i.test(query)) {
                         response = "I was made by Rishab.";
                     } else if (/reminder/i.test(query)) {
-                        const reminderMessage = document.getElementById("reminderInput").value;
-                        response = reminderMessage ? `Reminder set: ${reminderMessage}` : "Please set a reminder message.";
+                        response = "I will remind you in a minute.";
                     } else {
                         response = await puter.ai.chat(query); // Replace with your AI call if available
                     }
@@ -499,6 +565,33 @@
             localStorage.clear(); // Clear everything stored in localStorage
             loadPreferences(); // Reset preferences to defaults
             showPopup("All settings have been reset!"); // Show confirmation popup
+        }
+
+        function setReminder() {
+            const reminderText = document.getElementById("reminderInput").value;
+            const reminderTime = document.getElementById("reminderTimeInput").value;
+
+            if (reminderText && reminderTime) {
+                const reminderDate = new Date();
+                const [hours, minutes] = reminderTime.split(':');
+                reminderDate.setHours(hours);
+                reminderDate.setMinutes(minutes);
+                reminderDate.setSeconds(0);
+
+                const timeUntilReminder = reminderDate.getTime() - Date.now();
+
+                if (timeUntilReminder > 0) {
+                    setTimeout(() => {
+                        showPopup(`🛎️ Reminder: ${reminderText}`);
+                    }, timeUntilReminder);
+                    showPopup("Reminder set for " + reminderTime);
+                    reminders.push({ text: reminderText, time: reminderDate });
+                } else {
+                    showPopup("Please set a future time for the reminder.");
+                }
+            } else {
+                showPopup("Please enter a reminder message and select a time.");
+            }
         }
 
         function openSettings() {
