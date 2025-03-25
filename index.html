@@ -129,7 +129,6 @@
             border-radius: 30px;
             background: rgba(255, 255, 255, 0.1);
             color: #fff;
-            margin-right: 10px;
             transition: background 0.3s, box-shadow 0.3s;
         }
 
@@ -148,7 +147,7 @@
             transition: transform 0.2s, background 0.3s, box-shadow 0.4s;
             color: #0A0A0A;
             box-shadow: 0 3px 10px rgba(0, 255, 255, 0.4);
-            margin-left: 10px; /* Space for the buttons */
+            margin-left: 10px;
         }
 
         .user-input button:hover {
@@ -238,10 +237,11 @@
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
             <div class="user-input">
-                <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
-                <button onclick="startVoiceInput()" title="Voice Input">🎤</button>
                 <button onclick="exportChat()" title="Export Chat">📤</button>
+                <button onclick="startVoiceInput()" title="Voice Input">🎤</button>
+                <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
                 <button onclick="sendMessage()" title="Send Message">📬</button>
+                <button onclick="openSettings()" title="Settings">⚙️</button>
             </div>
         </div>
     </div>
