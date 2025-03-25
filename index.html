@@ -14,8 +14,7 @@
             background: #000;
             position: relative;
             height: 100vh;
-            background-image: radial-gradient(circle, rgba(0, 0, 0, 0.8), rgba(10, 10, 20, 1)),
-                url('https://source.unsplash.com/random/1920x1080/?space');
+            background-image: radial-gradient(circle, rgba(0, 0, 0, 0.8), rgba(10, 10, 20, 1)), url('https://source.unsplash.com/random/1920x1080/?space');
             background-size: cover;
             animation: fadeIn 2s forwards;
         }
@@ -31,9 +30,9 @@
 
         .container {
             display: flex;
-            flex-direction: row;
+            flex-direction: column;
             width: 90%;
-            height: 100%;
+            height: 90%;
             margin: auto;
             border-radius: 15px;
             overflow: hidden;
@@ -42,51 +41,13 @@
             position: relative;
         }
 
-        .chat-history {
-            flex: 0 1 30%;
-            padding: 20px;
-            border-right: 2px solid rgba(255, 255, 255, 0.2);
-            overflow-y: auto;
-            background: rgba(30, 30, 30, 0.8);
-            backdrop-filter: blur(15px);
-            position: relative;
-            box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.1);
-        }
-
-        .chat-history h3 {
-            text-align: center;
-            font-size: 2.5em;
-            color: #00fff0;
-            text-shadow: 0 0 20px rgba(0, 255, 255, 0.9);
-            margin: 0 0 20px;
-        }
-
-        .chat-history ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .chat-history li {
-            background: rgba(0, 255, 200, 0.3);
-            color: #fff;
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 10px;
-            transition: background 0.3s, transform 0.3s;
-        }
-
-        .chat-history li:hover {
-            transform: scale(1.05);
-            background: rgba(0, 255, 200, 0.5);
-        }
-
         .chat-window {
             flex: 1;
             display: flex;
             flex-direction: column;
             padding: 20px;
             background: rgba(10, 10, 20, 0.8);
-            border-radius: 0 15px 15px 0;
+            border-radius: 15px;
             overflow-y: auto;
             position: relative;
         }
@@ -107,13 +68,6 @@
             100% {
                 text-shadow: 0 0 30px #00ffcc, 0 0 60px #00ccff;
             }
-        }
-
-        .sub-header {
-            font-size: 1.5em;
-            color: rgba(255, 255, 255, 0.8);
-            text-align: center;
-            margin-bottom: 20px;
         }
 
         .messages {
@@ -164,6 +118,7 @@
             border-radius: 30px;
             box-shadow: 0 0 20px rgba(0, 255, 255, 0.4);
             position: relative;
+            margin-top: 10px;
         }
 
         .user-input input {
@@ -186,43 +141,19 @@
 
         .user-input button {
             border: none;
-            padding: 12px;
+            padding: 12px 15px;
             border-radius: 30px;
             cursor: pointer;
             background: linear-gradient(90deg, #00ccff, #00ff99);
             transition: transform 0.2s, background 0.3s, box-shadow 0.4s;
             color: #0A0A0A;
             box-shadow: 0 3px 10px rgba(0, 255, 255, 0.4);
+            margin-left: 10px; /* Space for the buttons */
         }
 
         .user-input button:hover {
             transform: scale(1.05);
             background: linear-gradient(90deg, #00b3e3, #00ccff);
-        }
-
-        .emoji-picker {
-            display: none;
-            position: absolute;
-            bottom: 60px;
-            right: 30px;
-            background: rgba(50, 50, 50, 0.9);
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
-            z-index: 10;
-        }
-
-        .emoji-picker button {
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            font-size: 1.5em;
-            margin: 5px;
-            transition: transform 0.2s;
-        }
-
-        .emoji-picker button:hover {
-            transform: scale(1.2);
         }
 
         .modal {
@@ -252,6 +183,27 @@
             font-size: 1.5em;
         }
 
+        .modal-content label {
+            display: block;
+            margin: 15px 0 5px;
+        }
+
+        .modal-content input[type="text"],
+        .modal-content select {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            margin-bottom: 10px;
+        }
+
+        .scrollable-settings {
+            max-height: 400px; /* Limit the height */
+            overflow-y: auto; /* Add scroll if needed */
+        }
+
         /* Scrollbar */
         ::-webkit-scrollbar {
             width: 12px;
@@ -265,10 +217,6 @@
         @media (max-width: 768px) {
             .header {
                 font-size: 2em;
-            }
-
-            .sub-header {
-                font-size: 1em;
             }
 
             .user-input input {
@@ -286,43 +234,21 @@
 
 <body>
     <div class="container" id="chatContainer">
-        <div class="chat-history">
-            <h3>Chat History</h3>
-            <ul id="chatList"></ul>
-            <button class="action-button" onclick="exportChat();">📤 Export Chat</button>
-            <button class="action-button" onclick="summarizeChat();">📝 Summarize Chat</button>
-            <button class="action-button" onclick="resetChat();">🔄 New Chat</button>
-        </div>
         <div class="chat-window">
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
-            <div class="sub-header">Made by Rishab, Ansh, and Abhi</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
             <div class="user-input">
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
-                <button onclick="sendMessage()">📤</button>
-                <button onclick="openSettings()">⚙️</button>
-                <button onclick="toggleEmojiPicker()">😀</button>
-                <button onclick="startVoiceInput()">🎤</button>
-            </div>
-            <div class="emoji-picker" id="emojiPicker">
-                <button onclick="addEmoji('😀')">😀</button>
-                <button onclick="addEmoji('😁')">😁</button>
-                <button onclick="addEmoji('😂')">😂</button>
-                <button onclick="addEmoji('😃')">😃</button>
-                <button onclick="addEmoji('😄')">😄</button>
-                <button onclick="addEmoji('😊')">😊</button>
-                <button onclick="addEmoji('😍')">😍</button>
-                <button onclick="addEmoji('😎')">😎</button>
-                <button onclick="addEmoji('😜')">😜</button>
-                <button onclick="addEmoji('😢')">😢</button>
-                <button onclick="addEmoji('😡')">😡</button>
+                <button onclick="startVoiceInput()" title="Voice Input">🎤</button>
+                <button onclick="exportChat()" title="Export Chat">📤</button>
+                <button onclick="sendMessage()" title="Send Message">📬</button>
             </div>
         </div>
     </div>
 
     <!-- Settings Modal -->
     <div id="settingsModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content scrollable-settings">
             <span onclick="closeSettings()">×</span>
             <h2>Settings</h2>
 
@@ -349,22 +275,6 @@
                 <option value="theme-color-6">Orange</option>
             </select>
 
-            <label for="musicUpload">Upload Music:</label>
-            <input type="file" accept="audio/*" id="musicUpload" onchange="loadMusic(event)" />
-            <button onclick="playMusic()">Play/Pause Music</button>
-            <label>Volume:</label>
-            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5" onchange="setVolume(this.value)" />
-
-            <label for="voiceToggle">Enable Voice:</label>
-            <input type="checkbox" id="voiceToggle" checked onchange="toggleVoice()"> Enable
-
-            <label for="feedback">Feedback:</label>
-            <select id="feedback" onchange="sendFeedback()">
-                <option value="">Select Feedback</option>
-                <option value="helpful">Helpful</option>
-                <option value="not_helpful">Not Helpful</option>
-            </select>
-
             <button onclick="resetChat()">Reset Chat</button>
         </div>
     </div>
@@ -375,28 +285,15 @@
     <script>
         let chatbotName = "Mikasa";
         let voiceEnabled = true; // Default voice enabled
-        let messageCount = 0; // Tracks number of messages
         const chatMessages = []; // Store chat messages for export and summary
         const chatAnswers = []; // Store chat answers for export
-        const musicPlayer = document.getElementById('musicPlayer');
-        let speechSynthesisInstance = window.speechSynthesis;
-
+        
         window.onload = function () {
             loadPreferences();
         }
 
         function loadPreferences() {
-            const savedLang = localStorage.getItem('language');
-            const savedTheme = localStorage.getItem('theme');
             const savedBotName = localStorage.getItem('botName');
-
-            if (savedLang) {
-                document.getElementById("language").value = savedLang;
-            }
-
-            if (savedTheme) {
-                changeTheme(savedTheme);
-            }
 
             if (savedBotName) {
                 chatbotName = savedBotName;
@@ -405,41 +302,9 @@
             }
         }
 
-        function loadMusic(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const url = URL.createObjectURL(file);
-                musicPlayer.src = url;
-            }
-        }
-
-        function playMusic() {
-            if (musicPlayer.paused) {
-                musicPlayer.play();
-            } else {
-                musicPlayer.pause();
-            }
-        }
-
-        function setVolume(value) {
-            musicPlayer.volume = value;
-        }
-
-        function speakResponse(response) {
-            if (speechSynthesisInstance.speaking) {
-                speechSynthesisInstance.cancel();
-            }
-            if (voiceEnabled) {
-                const utterance = new SpeechSynthesisUtterance(response);
-                utterance.lang = "en-US";
-                speechSynthesisInstance.speak(utterance);
-            }
-        }
-
         async function sendMessage() {
             const userInput = document.getElementById("userInput");
             const chatbox = document.getElementById("chatbox");
-            const chatList = document.getElementById("chatList");
 
             if (userInput.value.trim()) {
                 const userMessage = userInput.value.trim();
@@ -449,7 +314,6 @@
                 userMessageDiv.className = "message user";
                 userMessageDiv.textContent = "🧑: " + userMessage;
                 chatbox.appendChild(userMessageDiv);
-                chatList.appendChild(document.createElement("li")).textContent = userMessage;
                 chatMessages.push(userMessage);
 
                 const typingIndicator = document.createElement("div");
@@ -468,8 +332,8 @@
                     chatbox.appendChild(botMessageDiv);
                     
                     chatAnswers.push(`🤖 ${chatbotName}: ${response}`);
+                    // Speak response if voice is enabled
                     speakResponse(response);
-                    messageCount++;
                 } catch (error) {
                     chatbox.appendChild(createBotMessage("Oops! Something went wrong. Please try again."));
                 }
@@ -485,7 +349,7 @@
             } else if (/who made you|your creator/i.test(userMessage)) {
                 return "I was made by Rishab.";
             } else {
-                return await puter.ai.chat(userMessage);
+                return "Sorry, I don't have a response for that."; // Placeholder response
             }
         }
 
@@ -500,30 +364,10 @@
             return new Promise(resolve => setTimeout(resolve, 1000));
         }
 
-        function addEmoji(emoji) {
-            const userInput = document.getElementById("userInput");
-            userInput.value += emoji;
-            document.getElementById('emojiPicker').style.display = 'none';
-        }
-
-        function toggleEmojiPicker() {
-            const emojiPicker = document.getElementById('emojiPicker');
-            emojiPicker.style.display = emojiPicker.style.display === 'block' ? 'none' : 'block';
-        }
-
-        function startVoiceInput() {
-            const recognition = new webkitSpeechRecognition();
-            recognition.onresult = function (event) {
-                const userInput = document.getElementById("userInput");
-                userInput.value = event.results[0][0].transcript;
-            };
-            recognition.start();
-        }
-
         function exportChat() {
             let exportText = "";
             for (let i = 0; i < chatMessages.length; i++) {
-                exportText += `🧑: ${chatMessages[i]}\n${chatAnswers[i]}\n`;
+                exportText += `🧑: ${chatMessages[i]}\n${chatAnswers[i] || ''}\n`;
             }
             const blob = new Blob([exportText], { type: 'text/plain' });
             const url = URL.createObjectURL(blob);
@@ -535,9 +379,21 @@
             document.body.removeChild(a);
         }
 
-        function summarizeChat() {
-            const summary = `Chat Summary:\nYou have exchanged ${chatMessages.length} messages.`;
-            alert(summary);
+        function startVoiceInput() {
+            const recognition = new webkitSpeechRecognition();
+            recognition.onresult = function (event) {
+                const userInput = document.getElementById("userInput");
+                userInput.value = event.results[0][0].transcript;
+            };
+            recognition.start();
+        }
+
+        function speakResponse(response) {
+            if (voiceEnabled) {
+                const utterance = new SpeechSynthesisUtterance(response);
+                utterance.lang = "en-US";
+                window.speechSynthesis.speak(utterance);
+            }
         }
 
         function changeLanguage() {
@@ -548,17 +404,12 @@
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.className = '';
-            document.body.classList.add(selectedTheme);
             localStorage.setItem('theme', selectedTheme);
         }
 
         function resetChat() {
             const chatbox = document.getElementById("chatbox");
-            const chatList = document.getElementById("chatList");
             chatbox.innerHTML = "";
-            chatList.innerHTML = "";
-            messageCount = 0;
             chatMessages.length = 0;
             chatAnswers.length = 0;
         }
@@ -575,19 +426,6 @@
                 localStorage.setItem('botName', chatbotName);
             }
             document.getElementById("settingsModal").style.display = "none";
-        }
-
-        function toggleVoice() {
-            voiceEnabled = document.getElementById("voiceToggle").checked;
-            alert("Voice responses are now " + (voiceEnabled ? "enabled" : "disabled") + ".");
-        }
-
-        function sendFeedback() {
-            const feedback = document.getElementById("feedback").value;
-            if (feedback) {
-                alert("Thank you for your feedback: " + feedback);
-                document.getElementById("feedback").value = "";
-            }
         }
     </script>
 </body>
