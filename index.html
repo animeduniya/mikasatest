@@ -23,6 +23,7 @@
             from {
                 opacity: 0;
             }
+
             to {
                 opacity: 1;
             }
@@ -65,6 +66,7 @@
             0% {
                 text-shadow: 0 0 20px #00fff0, 0 0 40px #00fff0;
             }
+
             100% {
                 text-shadow: 0 0 30px #00ffcc, 0 0 60px #00ccff;
             }
@@ -92,6 +94,7 @@
                 transform: translateX(-100%);
                 opacity: 0;
             }
+
             to {
                 transform: translateX(0);
                 opacity: 1;
@@ -198,6 +201,10 @@
             margin-bottom: 10px;
         }
 
+        .volume-control {
+            margin-top: 10px;
+        }
+
         .scrollable-settings {
             max-height: 400px; /* Limit the height */
             overflow-y: auto; /* Add scroll if needed */
@@ -264,22 +271,18 @@
                 <option value="it">Italian</option>
             </select>
 
-            <label for="theme">Text Color Theme:</label>
-            <select id="theme" onchange="changeTheme()">
-                <option value="default">Default</option>
-                <option value="theme-color-1">Deep Orange</option>
-                <option value="theme-color-2">Green</option>
-                <option value="theme-color-3">Blue</option>
-                <option value="theme-color-4">Yellow</option>
-                <option value="theme-color-5">Purple</option>
-                <option value="theme-color-6">Orange</option>
-            </select>
-
+            <div class="volume-control">
+                <label for="volumeControl">Volume Control:</label>
+                <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5" onchange="setVolume(this.value)">
+            </div>
+            <div>
+                <button onclick="toggleMusic()" id="musicControlButton">Play Music</button>
+            </div>
             <button onclick="resetChat()">Reset Chat</button>
         </div>
     </div>
 
-    <audio id="musicPlayer" src="" preload="auto"></audio>
+    <audio id="musicPlayer" src="your-music-file.mp3" preload="auto" loop></audio>
 
     <script src="https://js.puter.com/v2/"></script>
     <script>
@@ -287,18 +290,45 @@
         let voiceEnabled = true; // Default voice enabled
         const chatMessages = []; // Store chat messages for export and summary
         const chatAnswers = []; // Store chat answers for export
-        
+        let musicPlaying = false; // Track music status
+
         window.onload = function () {
             loadPreferences();
         }
 
         function loadPreferences() {
             const savedBotName = localStorage.getItem('botName');
+            const savedVolume = localStorage.getItem('volume');
 
             if (savedBotName) {
                 chatbotName = savedBotName;
                 document.getElementById("chatbotName").innerText = chatbotName + " - Your AI Companion";
                 document.getElementById("botNameInput").value = chatbotName;
+            }
+            if (savedVolume) {
+                document.getElementById("volumeControl").value = savedVolume;
+                setVolume(savedVolume);
+            }
+        }
+
+        function setVolume(volume) {
+            const musicPlayer = document.getElementById('musicPlayer');
+            musicPlayer.volume = volume;
+            localStorage.setItem('volume', volume);
+        }
+
+        function toggleMusic() {
+            const musicPlayer = document.getElementById('musicPlayer');
+            const musicControlButton = document.getElementById('musicControlButton');
+
+            if (musicPlaying) {
+                musicPlayer.pause();
+                musicControlButton.innerText = "Play Music";
+                musicPlaying = false;
+            } else {
+                musicPlayer.play();
+                musicControlButton.innerText = "Pause Music";
+                musicPlaying = true;
             }
         }
 
@@ -335,6 +365,7 @@
                     // Speak response if voice is enabled
                     speakResponse(response);
                 } catch (error) {
+                    console.error(error);
                     chatbox.appendChild(createBotMessage("Oops! Something went wrong. Please try again."));
                 }
 
@@ -344,10 +375,17 @@
         }
 
         async function getResponse(userMessage) {
+            // Implement dynamic responses - here you can reach out to an AI backend as needed
             if (/what's your name|who are you/i.test(userMessage)) {
                 return `My name is ${chatbotName}.`;
             } else if (/who made you|your creator/i.test(userMessage)) {
                 return "I was made by Rishab.";
+            } else if (/how are you/i.test(userMessage)) {
+                return "I'm just a program, but thanks for asking! How can I assist you today?";
+            } else if (/help/i.test(userMessage)) {
+                return "I can answer questions or chat with you. Just type away!";
+            } else if (/image/i.test(userMessage)) {
+                return "I can't send images yet, but I can help you find them!";
             } else {
                 return "Sorry, I don't have a response for that."; // Placeholder response
             }
@@ -400,11 +438,6 @@
             const selectedLanguage = document.getElementById("language").value;
             localStorage.setItem('language', selectedLanguage);
             alert("Language changed to: " + selectedLanguage);
-        }
-
-        function changeTheme() {
-            const selectedTheme = document.getElementById("theme").value;
-            localStorage.setItem('theme', selectedTheme);
         }
 
         function resetChat() {
