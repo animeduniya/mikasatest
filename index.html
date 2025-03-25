@@ -4,68 +4,66 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mikasa Chatbot</title>
+    <title>Mikasa Chatbot - Epic UI</title>
     <style>
         body {
             margin: 0;
             font-family: 'Arial', sans-serif;
             overflow: hidden;
-            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #1c1c1c;
+            height: 100vh;
+            background: linear-gradient(45deg, #1c1c1c, #3f51b5);
             animation: backgroundAnimation 20s ease-in-out infinite;
         }
 
         @keyframes backgroundAnimation {
             0% {
-                background: url('https://wallpapercave.com/wp/wp9388551.jpg') center center / cover no-repeat;
+                background: linear-gradient(45deg, #1c1c1c, #3f51b5);
             }
             25% {
-                background: url('https://cdn.wallpapersafari.com/64/65/QhkeST.jpg') center center / cover no-repeat;
+                background: linear-gradient(45deg, #ff5722, #4caf50);
             }
             50% {
-                background: url('https://png.pngtree.com/thumb_back/fw800/background/20230331/pngtree-starry-sky-forest-night-scene-image_2127839.jpg') center center / cover no-repeat;
+                background: linear-gradient(45deg, #2196f3, #ffeb3b);
             }
             75% {
-                background: url('https://wallpaperaccess.com/full/8583147.jpg') center center / cover no-repeat;
+                background: linear-gradient(45deg, #673ab7, #ff6a00);
             }
             100% {
-                background: url('https://coolwallpapers.me/picsup/2503093-4k-hd-wallpaper-high-definition.jpg') center center / cover no-repeat;
+                background: linear-gradient(45deg, #1c1c1c, #3f51b5);
             }
         }
 
-        /* Container Styles */
         .container {
-            width: 95%;
-            max-width: 800px;
+            width: 90%;
+            max-width: 1200px;
             height: 90vh;
-            overflow-y: auto;
-            background-color: rgba(30, 30, 30, 0.9);
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             display: flex;
             flex-direction: column;
-            position: relative;
-            padding: 10px;
+            border-radius: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(10px);
         }
 
-        /* Chat History */
         .chat-history {
             flex: 0 1 20%;
+            padding: 20px;
             overflow-y: auto;
-            padding: 10px;
-            border-radius: 10px;
-            margin-bottom: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: inset 0 5px 10px rgba(255, 255, 255, 0.2);
+            background: rgba(20, 20, 20, 0.7);
+            border-radius: 20px;
+            box-shadow: inset 0 4px 10px rgba(255, 255, 255, 0.1);
         }
 
         .chat-history h3 {
             margin: 0;
             color: #00fff0;
             text-align: center;
+            font-size: 1.8em;
+            text-shadow: 2px 2px 5px rgba(0, 255, 255, 0.5);
         }
 
         .chat-history ul {
@@ -74,37 +72,41 @@
         }
 
         .chat-history li {
-            background: rgba(0, 255, 240, 0.2);
+            background: rgba(0, 255, 240, 0.3);
             color: #00fff0;
             margin: 5px 0;
             padding: 8px;
             border-radius: 8px;
+            transition: transform 0.3s;
         }
 
-        /* Chat Window */
+        .chat-history li:hover {
+            transform: scale(1.02);
+        }
+
         .chat-window {
             flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 10px;
+            padding: 20px;
             position: relative;
             overflow-y: auto;
         }
 
         .header {
-            font-size: 1.8em;
+            font-size: 2em;
             font-weight: bold;
             color: #00fff0;
             text-align: center;
-            margin-bottom: 5px;
-            text-shadow: 2px 2px 5px rgba(0, 255, 255, 0.5);
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 10px rgba(0, 255, 255, 0.5);
         }
 
         .sub-header {
-            font-size: 1em;
+            font-size: 1.2em;
             color: #00fff0;
             text-align: center;
-            margin-top: 0;
+            margin-top: 5px;
             margin-bottom: 15px;
             opacity: 0.8;
         }
@@ -112,46 +114,48 @@
         .messages {
             flex: 1;
             overflow-y: auto;
+            padding: 10px;
             margin-bottom: 10px;
-            padding-right: 10px;
         }
 
         .message {
-            padding: 10px 15px;
+            padding: 12px 18px;
             border-radius: 20px;
             margin: 5px 0;
-            max-width: 70%;
+            max-width: 80%;
             animation: slideIn 0.5s forwards;
         }
 
         .message.user {
-            background-color: #00ccff;
+            background-color: #35d2d4;
             color: #000;
             align-self: flex-end;
-            margin-left: auto;
+            border-top-right-radius: 0;
         }
 
         .message.bot {
-            background-color: #3f51b5;
+            background-color: #3949ab;
             color: #fff;
             align-self: flex-start;
+            border-top-left-radius: 0;
         }
 
         .user-input {
             display: flex;
             align-items: center;
             padding: 10px 0;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 30px;
         }
 
-        /* Styles for Input and Buttons */
         .user-input input {
             flex: 1;
             padding: 12px;
             font-size: 1em;
             border: 2px solid #00fff0;
             border-radius: 30px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
             margin-right: 5px;
             transition: border 0.3s;
         }
@@ -164,42 +168,45 @@
         .user-input button {
             border: none;
             font-size: 1em;
-            padding: 10px 15px;
+            padding: 12px;
             border-radius: 30px;
             cursor: pointer;
             transition: background 0.3s, transform 0.2s;
             margin-left: 5px;
             color: #0A0A0A;
             background: #00fff0;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
         }
 
         .user-input button:hover {
-            transform: scale(1.05);
+            transform: scale(1.1);
             background: #00ccff;
         }
 
-        /* Epic Button Styles */
-        .action-button {
-            width: 100%;
-            padding: 12px;
-            border-radius: 30px;
-            background: #00fff0;
-            color: #0A0A0A;
-            font-weight: bold;
-            font-size: 1em;
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-            margin-top: 10px;
+        .emoji-picker {
+            display: none;
+            position: absolute;
+            bottom: 60px;
+            right: 20px;
+            background: rgba(50, 50, 50, 0.9);
+            border-radius: 10px;
+            padding: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
         }
 
-        .action-button:hover {
-            background: #00ccff;
-            border: 2px solid #fff;
-            transform: scale(1.05);
+        .emoji-picker button {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            margin: 5px;
+            transition: transform 0.2s;
         }
 
-        /* Modal Styles */
+        .emoji-picker button:hover {
+            transform: scale(1.2);
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -211,8 +218,9 @@
             border-radius: 15px;
             box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
             width: 90%;
-            max-width: 400px;
+            max-width: 500px;
             overflow: hidden;
+            animation: fadeIn 0.5s;
         }
 
         .modal-content {
@@ -220,54 +228,41 @@
             color: #ffffff;
         }
 
-        .modal-content label {
-            margin-top: 10px;
-            display: block;
-            font-weight: bold;
-            color: #00fff0;
-        }
-
-        .modal-content input[type="text"],
-        .modal-content select {
-            width: 100%;
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #00fff0;
-            border-radius: 5px;
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-        }
-
         .modal-content button {
-            background: #00fff0;
-            border: none;
-            color: #0A0A0A;
-            font-size: 1em;
-            padding: 10px;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-            margin-top: 10px;
             width: 100%;
         }
 
-        .modal-content button:hover {
-            background: #00ccff;
+        .modal-content span {
+            cursor: pointer;
+            float: right;
+            color: #00fff0;
+            font-size: 1.5em;
         }
 
-        /* Responsive Styles */
-        @media (max-width: 768px) {
-            body {
-                height: auto;
-                overflow-y: auto;
-            }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
 
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #00fff0;
+            border-radius: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
             .header {
                 font-size: 1.5em;
             }
 
             .sub-header {
-                font-size: 0.9em;
+                font-size: 1em;
             }
 
             .user-input input {
@@ -280,119 +275,6 @@
                 font-size: 0.9em;
             }
         }
-
-        /* Theme Styles */
-        /* Theme 1 */
-        body.theme-color-1 {
-            color: #ff5722; /* Dark Orange */
-        }
-        body.theme-color-1 .header {
-            color: #ff5722;
-        }
-        body.theme-color-1 .sub-header {
-            color: #ff5722; /* Dark Orange */
-        }
-        body.theme-color-1 .user-input button,
-        body.theme-color-1 .modal-content button,
-        body.theme-color-1 .action-button {
-            background: #ff5722;
-            color: #ffffff;
-        }
-
-        /* Theme 2 */
-        body.theme-color-2 {
-            color: #4caf50; /* Green */
-        }
-        body.theme-color-2 .header {
-            color: #4caf50;
-        }
-        body.theme-color-2 .sub-header {
-            color: #4caf50; /* Green */
-        }
-        body.theme-color-2 .user-input button,
-        body.theme-color-2 .modal-content button,
-        body.theme-color-2 .action-button {
-            background: #4caf50;
-            color: #ffffff;
-        }
-
-        /* Theme 3 */
-        body.theme-color-3 {
-            color: #2196f3; /* Blue */
-        }
-        body.theme-color-3 .header {
-            color: #2196f3;
-        }
-        body.theme-color-3 .sub-header {
-            color: #2196f3; /* Blue */
-        }
-        body.theme-color-3 .user-input button,
-        body.theme-color-3 .modal-content button,
-        body.theme-color-3 .action-button {
-            background: #2196f3;
-            color: #ffffff;
-        }
-
-        /* Theme 4 */
-        body.theme-color-4 {
-            color: #ffeb3b; /* Yellow */
-        }
-        body.theme-color-4 .header {
-            color: #ffeb3b;
-        }
-        body.theme-color-4 .sub-header {
-            color: #ffeb3b; /* Yellow */
-        }
-        body.theme-color-4 .user-input button,
-        body.theme-color-4 .modal-content button,
-        body.theme-color-4 .action-button {
-            background: #ffeb3b;
-            color: #000000;
-        }
-
-        /* Theme 5 */
-        body.theme-color-5 {
-            color: #673ab7; /* Purple */
-        }
-        body.theme-color-5 .header {
-            color: #673ab7;
-        }
-        body.theme-color-5 .sub-header {
-            color: #673ab7; /* Purple */
-        }
-        body.theme-color-5 .user-input button,
-        body.theme-color-5 .modal-content button,
-        body.theme-color-5 .action-button {
-            background: #673ab7;
-            color: #ffffff;
-        }
-
-        /* Theme 6 */
-        body.theme-color-6 {
-            color: #ff6a00; /* Orange */
-        }
-        body.theme-color-6 .header {
-            color: #ff6a00;
-        }
-        body.theme-color-6 .sub-header {
-            color: #ff6a00; /* Orange */
-        }
-        body.theme-color-6 .user-input button,
-        body.theme-color-6 .modal-content button,
-        body.theme-color-6 .action-button {
-            background: #ff6a00;
-            color: #ffffff;
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #00fff0;
-            border-radius: 10px;
-        }
     </style>
 </head>
 
@@ -401,9 +283,9 @@
         <div class="chat-history">
             <h3>Chat History</h3>
             <ul id="chatList"></ul>
-            <button class="action-button" onclick="exportChat();">🎤 Export Chat</button>
+            <button class="action-button" onclick="exportChat();">📤 Export Chat</button>
             <button class="action-button" onclick="summarizeChat();">📝 Summarize Chat</button>
-            <button class="action-button" onclick="resetChat();">🔄 Add New Chat</button>
+            <button class="action-button" onclick="resetChat();">🔄 New Chat</button>
         </div>
         <div class="chat-window">
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
@@ -435,7 +317,7 @@
     <!-- Settings Modal -->
     <div id="settingsModal" class="modal">
         <div class="modal-content">
-            <span onclick="closeSettings()" style="float:right;cursor:pointer;color:#00fff0;">×</span>
+            <span onclick="closeSettings()">×</span>
             <h2>Settings</h2>
 
             <label for="botName">Chatbot Name:</label>
@@ -538,7 +420,6 @@
         }
 
         function speakResponse(response) {
-            // Stop previous speech if any
             if (speechSynthesisInstance.speaking) {
                 speechSynthesisInstance.cancel();
             }
@@ -562,7 +443,7 @@
                 userMessageDiv.textContent = "🧑: " + userMessage;
                 chatbox.appendChild(userMessageDiv);
                 chatList.appendChild(document.createElement("li")).textContent = userMessage;
-                chatMessages.push(userMessage); // Store question
+                chatMessages.push(userMessage);
 
                 const typingIndicator = document.createElement("div");
                 typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
@@ -588,7 +469,6 @@
                     botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
                     chatbox.appendChild(botMessageDiv);
 
-                    // Store answer
                     chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
                     
                     speakResponse(response);
@@ -601,7 +481,7 @@
                 }
 
                 chatbox.scrollTop = chatbox.scrollHeight;
-                userInput.value = ""; // Clear input
+                userInput.value = "";
             }
         }
 
@@ -624,7 +504,7 @@
             const recognition = new webkitSpeechRecognition();
             recognition.onresult = function (event) {
                 const userInput = document.getElementById("userInput");
-                userInput.value = event.results[0][0].transcript; // Set voice input to the text field
+                userInput.value = event.results[0][0].transcript;
             };
             recognition.start();
         }
@@ -657,7 +537,7 @@
 
         function changeTheme() {
             const selectedTheme = document.getElementById("theme").value;
-            document.body.className = ''; // Reset classes
+            document.body.className = '';
             document.body.classList.add(selectedTheme);
             localStorage.setItem('theme', selectedTheme);
         }
@@ -668,8 +548,8 @@
             chatbox.innerHTML = "";
             chatList.innerHTML = "";
             messageCount = 0;
-            chatMessages.length = 0; // Clear messages
-            chatAnswers.length = 0; // Clear answers too
+            chatMessages.length = 0;
+            chatAnswers.length = 0;
         }
 
         function openSettings() {
