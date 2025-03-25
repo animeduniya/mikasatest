@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -197,6 +198,26 @@
             border-radius: 10px;
         }
 
+        .popup {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(50, 50, 50, 0.9);
+            border: 2px solid #00fff0;
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            display: none;
+            z-index: 2000;
+            animation: fadeInPopup 0.5s;
+        }
+
+        @keyframes fadeInPopup {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @media (max-width: 768px) {
             .header { font-size: 2em; }
             .user-input input { padding: 8px; font-size: 0.9em; }
@@ -241,6 +262,12 @@
             <label for="musicUpload">Upload Your Music:</label>
             <input type="file" id="musicUpload" accept="audio/*" onchange="loadMusic(event)" />
 
+            <label for="bgUpload">Change Background Image:</label>
+            <input type="file" id="bgUpload" accept="image/*" onchange="changeBackground(event)" />
+
+            <label for="reminder">Set a Reminder Message:</label>
+            <input type="text" id="reminderInput" placeholder="Enter your reminder here..." />
+
             <div class="volume-control">
                 <label for="volumeControl">Volume Control:</label>
                 <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5" onchange="setVolume(this.value)">
@@ -254,6 +281,13 @@
 
     <audio id="musicPlayer" preload="auto" loop></audio>
 
+    <div id="infoPopup" class="popup">
+        <h2>Welcome to Mikasa!</h2>
+        <p>Your AI Companion is here to provide answers, reminders, and a fun chat experience.</p>
+        <p>Try sending messages, adjusting settings, and adding music!</p>
+        <button onclick="closePopup()">Close</button>
+    </div>
+
     <script src="https://js.puter.com/v2/"></script>
     <script>
         let chatbotName = "Mikasa";
@@ -264,11 +298,13 @@
 
         window.onload = function () {
             loadPreferences();
+            openPopup(); // Show the welcome popup on load
         }
 
         function loadPreferences() {
             const savedBotName = localStorage.getItem('botName');
             const savedVolume = localStorage.getItem('volume');
+            const savedBackgroundImage = localStorage.getItem('backgroundImage');
 
             if (savedBotName) {
                 chatbotName = savedBotName;
@@ -278,6 +314,9 @@
             if (savedVolume) {
                 document.getElementById("volumeControl").value = savedVolume;
                 setVolume(savedVolume);
+            }
+            if (savedBackgroundImage) {
+                document.body.style.backgroundImage = `url('${savedBackgroundImage}')`;
             }
         }
 
@@ -292,6 +331,15 @@
                 // Reset play status
                 musicPlaying = false;
                 document.getElementById("musicControlButton").innerText = "Play Music";
+            }
+        }
+
+        function changeBackground(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                document.body.style.backgroundImage = `url('${url}')`;
+                localStorage.setItem('backgroundImage', url);
             }
         }
 
@@ -343,6 +391,9 @@
                         response = `My name is ${chatbotName}.`;
                     } else if (/who made you|your creator/i.test(query)) {
                         response = "I was made by Rishab.";
+                    } else if (/reminder/i.test(query)) {
+                        const reminderMessage = document.getElementById("reminderInput").value;
+                        response = reminderMessage ? `Reminder set: ${reminderMessage}` : "Please set a reminder message.";
                     } else {
                         response = await puter.ai.chat(query); // Replace with your AI call if available
                     }
@@ -355,7 +406,7 @@
                     chatbox.appendChild(botMessageDiv);
 
                     // Store answer
-                    chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);                  
+                    chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
                     speakResponse(response);
                 } catch (error) {
                     const errorMessageDiv = document.createElement("div");
@@ -409,7 +460,7 @@
         function changeLanguage() {
             const selectedLanguage = document.getElementById("language").value;
             localStorage.setItem('language', selectedLanguage);
-            alert("Language changed to: " + selectedLanguage);
+            showPopup("Language changed to: " + selectedLanguage); // Change alert to popup
         }
 
         function resetChat() {
@@ -432,6 +483,21 @@
             }
             document.getElementById("settingsModal").style.display = "none";
         }
+
+        function openPopup() {
+            document.getElementById("infoPopup").style.display = "block";
+        }
+
+        function closePopup() {
+            document.getElementById("infoPopup").style.display = "none";
+        }
+
+        function showPopup(message) {
+            const popup = document.getElementById("infoPopup");
+            popup.innerHTML = `<h2>${message}</h2>`;
+            popup.style.display = "block";
+        }
     </script>
 </body>
+
 </html>
