@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Mikasa Chatbot - Epic UI</title>
+    <title>Mikasa AI - Beyond Limits Chatbot</title>
     <style>
         body {
             margin: 0;
@@ -14,56 +14,47 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(45deg, #1c1c1c, #3f51b5);
-            animation: backgroundAnimation 20s ease-in-out infinite;
-        }
-
-        @keyframes backgroundAnimation {
-            0% {
-                background: linear-gradient(45deg, #1c1c1c, #3f51b5);
-            }
-            25% {
-                background: linear-gradient(45deg, #ff5722, #4caf50);
-            }
-            50% {
-                background: linear-gradient(45deg, #2196f3, #ffeb3b);
-            }
-            75% {
-                background: linear-gradient(45deg, #673ab7, #ff6a00);
-            }
-            100% {
-                background: linear-gradient(45deg, #1c1c1c, #3f51b5);
-            }
+            background: radial-gradient(circle, #1c1c1c, #101010);
+            color: #fff;
         }
 
         .container {
             width: 90%;
             max-width: 1200px;
             height: 90vh;
+            border-radius: 20px;
+            background: rgba(30, 30, 30, 0.9);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
             display: flex;
-            flex-direction: column;
-            border-radius: 30px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            flex-direction: row;
             overflow: hidden;
-            background: rgba(30, 30, 30, 0.8);
-            backdrop-filter: blur(10px);
+            animation: pulse 10s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
         }
 
         .chat-history {
-            flex: 0 1 20%;
+            flex: 0 1 30%;
             padding: 20px;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
             overflow-y: auto;
             background: rgba(20, 20, 20, 0.7);
-            border-radius: 20px;
-            box-shadow: inset 0 4px 10px rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(15px);
+            box-shadow: inset 0 0 30px rgba(0, 255, 255, 0.1);
         }
 
         .chat-history h3 {
-            margin: 0;
-            color: #00fff0;
             text-align: center;
-            font-size: 1.8em;
-            text-shadow: 2px 2px 5px rgba(0, 255, 255, 0.5);
+            font-size: 2em;
+            color: #00fff0;
+            text-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+            margin: 0;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .chat-history ul {
@@ -72,16 +63,17 @@
         }
 
         .chat-history li {
-            background: rgba(0, 255, 240, 0.3);
-            color: #00fff0;
+            background: rgba(0, 255, 240, 0.5);
+            color: #000;
             margin: 5px 0;
-            padding: 8px;
+            padding: 10px;
             border-radius: 8px;
-            transition: transform 0.3s;
+            transition: transform 0.2s;
         }
 
         .chat-history li:hover {
-            transform: scale(1.02);
+            transform: scale(1.05);
+            background: rgba(0, 255, 255, 0.7);
         }
 
         .chat-window {
@@ -91,61 +83,74 @@
             padding: 20px;
             position: relative;
             overflow-y: auto;
+            background-image: linear-gradient(135deg, rgba(30, 30, 30, 0.9), rgba(0, 0, 0, 0.7));
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 255, 255, 0.1);
         }
 
         .header {
-            font-size: 2em;
+            font-size: 2.5em;
             font-weight: bold;
-            color: #00fff0;
             text-align: center;
             margin-bottom: 10px;
-            text-shadow: 1px 1px 10px rgba(0, 255, 255, 0.5);
+            color: #00fff0;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        @keyframes glow {
+            0% { text-shadow: 0 0 20px #00fff0; }
+            100% { text-shadow: 0 0 40px #00fff0; }
         }
 
         .sub-header {
             font-size: 1.2em;
-            color: #00fff0;
+            margin-bottom: 20px;
+            color: rgba(255, 255, 255, 0.8);
             text-align: center;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            opacity: 0.8;
         }
 
         .messages {
             flex: 1;
             overflow-y: auto;
-            padding: 10px;
             margin-bottom: 10px;
+            padding: 0 10px;
         }
 
         .message {
-            padding: 12px 18px;
-            border-radius: 20px;
+            padding: 15px;
+            border-radius: 25px;
             margin: 5px 0;
-            max-width: 80%;
-            animation: slideIn 0.5s forwards;
+            max-width: 75%;
+            position: relative;
+            animation: fadeIn 0.5s forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .message.user {
-            background-color: #35d2d4;
+            background-color: rgba(0, 204, 255, 0.8);
             color: #000;
             align-self: flex-end;
-            border-top-right-radius: 0;
+            border-top-left-radius: 0;
         }
 
         .message.bot {
-            background-color: #3949ab;
+            background-color: rgba(63, 81, 181, 0.8);
             color: #fff;
             align-self: flex-start;
-            border-top-left-radius: 0;
+            border-top-right-radius: 0;
         }
 
         .user-input {
             display: flex;
             align-items: center;
-            padding: 10px 0;
-            background: rgba(255, 255, 255, 0.1);
+            padding: 15px;
+            background: rgba(0, 255, 240, 0.2);
             border-radius: 30px;
+            box-shadow: 0px 0px 20px rgba(0, 255, 255, 0.2);
         }
 
         .user-input input {
@@ -154,28 +159,26 @@
             font-size: 1em;
             border: 2px solid #00fff0;
             border-radius: 30px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.1);
             color: #fff;
-            margin-right: 5px;
+            margin-right: 10px;
             transition: border 0.3s;
         }
 
         .user-input input:focus {
             outline: none;
-            border: 2px solid #00ccff;
+            border-color: #00ccff;
         }
 
         .user-input button {
             border: none;
-            font-size: 1em;
             padding: 12px;
             border-radius: 30px;
             cursor: pointer;
-            transition: background 0.3s, transform 0.2s;
-            margin-left: 5px;
+            transition: transform 0.2s, background 0.3s;
             color: #0A0A0A;
             background: #00fff0;
-            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 3px 10px rgba(0, 255, 255, 0.3);
         }
 
         .user-input button:hover {
@@ -186,12 +189,13 @@
         .emoji-picker {
             display: none;
             position: absolute;
-            bottom: 60px;
-            right: 20px;
-            background: rgba(50, 50, 50, 0.9);
+            bottom: 70px;
+            right: 30px;
+            background: rgba(0, 0, 0, 0.9);
             border-radius: 10px;
             padding: 10px;
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+            z-index: 10;
         }
 
         .emoji-picker button {
@@ -216,9 +220,8 @@
             transform: translate(-50%, -50%);
             background-color: rgba(40, 40, 40, 0.95);
             border-radius: 15px;
-            box-shadow: 0 5px 25px rgba(0, 0, 0, 0.5);
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             overflow: hidden;
             animation: fadeIn 0.5s;
         }
@@ -228,10 +231,6 @@
             color: #ffffff;
         }
 
-        .modal-content button {
-            width: 100%;
-        }
-
         .modal-content span {
             cursor: pointer;
             float: right;
@@ -239,13 +238,7 @@
             font-size: 1.5em;
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        /* Scrollbar */
+        /* scrollbar */
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -255,10 +248,9 @@
             border-radius: 10px;
         }
 
-        /* Responsive Design */
         @media (max-width: 768px) {
             .header {
-                font-size: 1.5em;
+                font-size: 2em;
             }
 
             .sub-header {
@@ -266,12 +258,12 @@
             }
 
             .user-input input {
-                padding: 10px;
+                padding: 8px;
                 font-size: 0.9em;
             }
 
             .user-input button {
-                padding: 10px;
+                padding: 8px;
                 font-size: 0.9em;
             }
         }
@@ -423,7 +415,6 @@
             if (speechSynthesisInstance.speaking) {
                 speechSynthesisInstance.cancel();
             }
-
             if (voiceEnabled) {
                 const utterance = new SpeechSynthesisUtterance(response);
                 utterance.lang = "en-US";
@@ -438,6 +429,8 @@
 
             if (userInput.value.trim()) {
                 const userMessage = userInput.value.trim();
+
+                // Display user message
                 const userMessageDiv = document.createElement("div");
                 userMessageDiv.className = "message user";
                 userMessageDiv.textContent = "🧑: " + userMessage;
@@ -451,33 +444,20 @@
 
                 try {
                     await delayResponse();
-                    let response;
-                    const query = userMessage;
-
-                    if (/what's your name|who are you/i.test(query)) {
-                        response = `My name is ${chatbotName}.`;
-                    } else if (/who made you|your creator/i.test(query)) {
-                        response = "I was made by Rishab.";
-                    } else {
-                        response = await puter.ai.chat(query);
-                    }
-
+                    let response = await getResponse(userMessage);
                     chatbox.removeChild(typingIndicator);
-
+                    
+                    // Display bot response
                     const botMessageDiv = document.createElement("div");
                     botMessageDiv.className = "message bot";
-                    botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
+                    botMessageDiv.textContent = `🤖 ${chatbotName}: ${response}`;
                     chatbox.appendChild(botMessageDiv);
-
-                    chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
                     
+                    chatAnswers.push(`🤖 ${chatbotName}: ${response}`);
                     speakResponse(response);
                     messageCount++;
                 } catch (error) {
-                    const errorMessageDiv = document.createElement("div");
-                    errorMessageDiv.className = "message bot";
-                    errorMessageDiv.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
-                    chatbox.appendChild(errorMessageDiv);
+                    chatbox.appendChild(createBotMessage("Oops! Something went wrong. Please try again."));
                 }
 
                 chatbox.scrollTop = chatbox.scrollHeight;
@@ -485,14 +465,31 @@
             }
         }
 
+        async function getResponse(userMessage) {
+            if (/what's your name|who are you/i.test(userMessage)) {
+                return `My name is ${chatbotName}.`;
+            } else if (/who made you|your creator/i.test(userMessage)) {
+                return "I was made by Rishab.";
+            } else {
+                return await puter.ai.chat(userMessage);
+            }
+        }
+
+        function createBotMessage(text) {
+            const botMessageDiv = document.createElement("div");
+            botMessageDiv.className = "message bot";
+            botMessageDiv.textContent = `🤖 ${chatbotName}: ${text}`;
+            return botMessageDiv;
+        }
+
         function delayResponse() {
-            return new Promise(resolve => setTimeout(resolve, 1000)); // Simulates typing delay
+            return new Promise(resolve => setTimeout(resolve, 1000));
         }
 
         function addEmoji(emoji) {
             const userInput = document.getElementById("userInput");
             userInput.value += emoji;
-            document.getElementById('emojiPicker').style.display = 'none'; // Hide emoji picker
+            document.getElementById('emojiPicker').style.display = 'none';
         }
 
         function toggleEmojiPicker() {
