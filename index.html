@@ -12,21 +12,21 @@
             font-family: 'Arial', sans-serif;
             color: #fff;
             overflow: hidden;
-            background: #0a0a0a;
-            position: relative;
-            height: 100vh;
-            background-image: radial-gradient(circle, rgba(0, 0, 0, 0.8), rgba(10, 10, 20, 0.9)), url('https://source.unsplash.com/random/1920x1080/?space');
+            background: linear-gradient(180deg, rgba(10, 10, 20, 0.9), rgba(0, 0, 0, 0.8)), url('https://source.unsplash.com/random/1920x1080/?space');
             background-size: cover;
-            animation: fadeIn 2s forwards;
+            animation: gradientAnimation 30s ease infinite;
+            height: 100vh;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
+        @keyframes gradientAnimation {
+            0% {
+                background-color: rgba(10, 10, 20, 0.9);
             }
-
-            to {
-                opacity: 1;
+            50% {
+                background-color: rgba(0, 255, 255, 0.7);
+            }
+            100% {
+                background-color: rgba(10, 10, 20, 0.9);
             }
         }
 
@@ -42,6 +42,7 @@
             box-shadow: 0 4px 30px rgba(0, 255, 255, 0.6);
             backdrop-filter: blur(10px);
             position: relative;
+            animation: fadeIn 2s forwards;
         }
 
         /* Chat Window */
@@ -53,6 +54,7 @@
             background: rgba(0, 0, 0, 0.8);
             border-radius: 15px;
             overflow-y: auto;
+            box-shadow: 0 4px 20px rgba(0, 255, 255, 0.5);
         }
 
         /* Header */
@@ -69,7 +71,6 @@
             0% {
                 text-shadow: 0 0 20px #00fff0, 0 0 40px #00fff0;
             }
-
             100% {
                 text-shadow: 0 0 30px #00ffcc, 0 0 60px #00ccff;
             }
@@ -131,7 +132,7 @@
         .user-input input:focus {
             outline: none;
             background: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 0 15px rgba(0, 255, 255, 0.5);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
         }
 
         .user-input button {
@@ -183,26 +184,50 @@
         .modal-content label {
             display: block;
             margin: 15px 0 5px;
+            font-weight: bold;
         }
 
-        .modal-content input[type="text"],
-        .modal-content select {
-            width: 100%;
-            padding: 10px;
+        /* Epic Select Style */
+        select {
+            padding: 12px;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #00ccff, #00ff99);
+            color: white;
+            border: none;
+            outline: none;
+            font-size: 1em;
+            margin-top: 5px;
+            transition: background 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 6px rgba(0, 255, 255, 0.5);
+        }
+
+        select:hover {
+            background: linear-gradient(90deg, #00b3e3, #00ccff);
+            box-shadow: 0 4px 12px rgba(0, 255, 255, 0.7);
+        }
+
+        /* Custom File Input */
+        .custom-file-input {
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
             border: none;
             border-radius: 10px;
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            margin-bottom: 10px;
+            color: #fff;
+            padding: 10px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            display: inline-block;
+            margin-top: 5px;
+            box-shadow: 0 2px 6px rgba(0, 255, 255, 0.5);
         }
 
-        .volume-control {
-            margin-top: 10px;
+        .custom-file-input:hover {
+            background: linear-gradient(90deg, #ff5f5f, #00b3e3);
+            transform: scale(1.05);
         }
 
-        .scrollable-settings {
-            max-height: 400px;
-            overflow-y: auto;
+        /* File Input - Hidden */
+        .file-input {
+            display: none;
         }
 
         /* Popup styles */
@@ -264,6 +289,11 @@
                 padding-right: 8px;
                 font-size: 0.9em;
             }
+
+            select {
+                padding: 10px;
+                font-size: 0.9em;
+            }
         }
     </style>
 </head>
@@ -305,14 +335,12 @@
             <select id="voiceSelection" onchange="changeVoice()"></select>
 
             <label for="musicUpload">Upload Your Music:</label>
-            <label class="custom-file-input">
-                Choose File
+            <label class="custom-file-input" for="musicUpload">Choose File
                 <input type="file" id="musicUpload" accept="audio/*" onchange="loadMusic(event)" class="file-input" />
             </label>
 
             <label for="bgUpload">Change Background Image:</label>
-            <label class="custom-file-input">
-                Choose File
+            <label class="custom-file-input" for="bgUpload">Choose File
                 <input type="file" id="bgUpload" accept="image/*" onchange="changeBackground(event)" class="file-input" />
             </label>
 
@@ -337,7 +365,7 @@
     </div>
 
     <audio id="musicPlayer" preload="auto" loop></audio>
-    
+
     <div id="infoPopup" class="popup">
         <h2>Welcome to Mikasa!</h2>
         <p>Your AI Companion is here to provide answers, reminders, and a fun chat experience.</p>
