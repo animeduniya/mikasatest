@@ -1,134 +1,388 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot</title>
+    <title>Mikasa - Your AI Companion</title>
     <style>
+        /* Body and Background */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            background: linear-gradient(180deg, rgba(10, 10, 20, 0.9), rgba(0, 0, 0, 0.8)),
+                url('https://source.unsplash.com/random/1920x1080/?space') no-repeat center center fixed;
+            background-size: cover;
+            animation: gradientAnimation 30s ease infinite;
         }
-        #chatbox {
-            border: 1px solid #ccc;
-            width: 400px;
-            height: 500px;
+
+        /* Dynamic Animation */
+        @keyframes gradientAnimation {
+            0% {
+                background-color: rgba(10, 10, 20, 0.9);
+            }
+
+            100% {
+                background-color: rgba(0, 204, 255, 0.8);
+            }
+        }
+
+        /* Main Container */
+        .container {
+            display: flex;
+            flex-direction: column;
+            width: 90%;
+            height: 90%;
+            margin: auto;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 30px rgba(0, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Chat Window */
+        .chat-window {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 15px;
             overflow-y: auto;
-            margin: 20px auto;
-            padding: 10px;
-            background-color: #fff;
         }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header {
+                font-size: 2.5em;
+            }
+
+            .user-input input {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            .user-input button {
+                padding: 8px;
+                font-size: 0.9em;
+            }
+        }
+
+        /* Header */
+        .header {
+            font-size: 3em;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 10px;
+            color: #00fff0;
+            animation: glow 1.5s infinite alternate;
+        }
+
+        /* User and Bot Messages */
         .message {
             margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
         }
-        .user {
-            text-align: right;
-            color: blue;
+
+        .message.user {
+            background-color: #007bff;
+            color: white;
+            align-self: flex-end;
         }
-        .bot {
-            text-align: left;
-            color: green;
+
+        .message.bot {
+            background-color: #28a745;
+            color: white;
+            align-self: flex-start;
         }
-        #userInput {
-            width: 300px;
+
+        /* User Input Area */
+        .user-input {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .user-input input {
+            flex: 1;
+            padding: 10px;
+            margin-left: 5px;
+            border: none;
+            border-radius: 5px;
+        }
+
+        .user-input button {
+            background-color: #00fff0;
+            border: none;
+            color: black;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .user-input button:hover {
+            background-color: #00cccc;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 70%;
+        }
+
+        /* Close Button for Modal and Popup */
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Popup */
+        .popup {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
         }
     </style>
 </head>
+
 <body>
+    <div class="container" id="chatContainer" role="main" aria-labelledby="chatbotName">
+        <div class="chat-window">
+            <div class="header" id="chatbotName" tabindex="0">Mikasa - Your AI Companion</div>
+            <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
+            <div class="user-input">
+                <button onclick="exportChat()" title="Export Chat" aria-label="Export chat">📤</button>
+                <button onclick="startVoiceInput()" title="Voice Input" id="voiceButton" aria-label="Voice input">🎤</button>
+                <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
+                <button onclick="sendMessage()" title="Send Message" aria-label="Send message">📬</button>
+                <button onclick="openSettings()" title="Settings" aria-label="Open settings">⚙️</button>
+            </div>
+        </div>
+    </div>
 
-<div id="chatbox"></div>
-<input type="text" id="userInput" placeholder="Type your message..." />
-<button id="sendButton">Send</button>
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close" onclick="closeSettings()" aria-label="Close settings modal">×</span>
+            <h2>Settings</h2>
+            <label for="botName">Chatbot Name:</label>
+            <input type="text" id="botNameInput" aria-label="Chatbot name" />
+            <label for="volumeControl">Volume:</label>
+            <input type="range" id="volumeControl" min="0" max="100" value="100" aria-label="Volume control" onchange="setVolume(this.value)" />
+        </div>
+    </div>
 
-<script src="https://cdn.jsdelivr.net/npm/puter.js"></script>
-<script>
-    const chatbotName = "Mikasa";
-    const chatMessages = [];
-    const chatAnswers = [];
-    const voiceEnabled = true; // Set to true if you want voice responses
+    <div id="infoPopup" class="popup" aria-hidden="true">
+        <div class="modal-content">
+            <span class="close" onclick="closePopup()" aria-label="Close popup">×</span>
+            <h2>Info</h2>
+            <p>Welcome to Mikasa - your AI companion!</p>
+        </div>
+    </div>
 
-    function delayResponse() {
-        return new Promise(resolve => setTimeout(resolve, 1000)); // 1 second delay
-    }
+    <audio id="musicPlayer" preload="auto" loop>
+        <source src="your-audio-file.mp3" type="audio/mpeg"> <!-- Replace with your audio file -->
+        Your browser does not support the audio element.
+    </audio>
 
-    function speakResponse(response) {
-        const utterance = new SpeechSynthesisUtterance(response);
-        speechSynthesis.speak(utterance);
-    }
+    <script>
+        let chatbotName = "Mikasa";
+        let chatMessages = [];
+        let musicPlaying = false;
+        let voices = [];
+        let selectedVoice = null;
+        
+        // Function that runs on page load
+        window.onload = function () {
+            loadPreferences();
+            loadVoices();
+            openPopup();
+        };
 
-    async function sendMessage() {
-        const userInput = document.getElementById("userInput");
-        const chatbox = document.getElementById("chatbox");
+        // Load user preferences from local storage
+        function loadPreferences() {
+            const savedBotName = localStorage.getItem('botName');
+            const savedVolume = localStorage.getItem('volume');
 
-        if (userInput.value.trim()) {
-            const userMessage = userInput.value.trim();
+            if (savedBotName) {
+                chatbotName = savedBotName;
+                document.getElementById("chatbotName").innerText = chatbotName + " - Your AI Companion";
+                document.getElementById("botNameInput").value = chatbotName;
+            }
+            if (savedVolume) {
+                document.getElementById("volumeControl").value = savedVolume;
+                setVolume(savedVolume);
+            }
+        }
+
+        // Load available voices for speech synthesis
+        function loadVoices() {
+            const voiceSelection = document.getElementById('voiceSelection');
+            speechSynthesis.onvoiceschanged = () => {
+                voices = speechSynthesis.getVoices();
+                voices.forEach((voice) => {
+                    const option = document.createElement('option');
+                    option.value = voice.name;
+                    option.textContent = `${voice.name} (${voice.lang})`;
+                    voiceSelection.appendChild(option);
+                });
+                if (voiceSelection.options.length > 0) {
+                    selectedVoice = voices[0];
+                }
+            };
+        }
+
+        // Function to send a message
+        function sendMessage() {
+            const userInput = document.getElementById("userInput");
+            const chatbox = document.getElementById("chatbox");
+
+            if (userInput.value.trim()) {
+                const userMessage = userInput.value.trim();
+                addUserMessage(chatbox, userMessage);
+                
+                // Simulate user intent recognition and response
+                simulateNLPResponse(userMessage).then(responseText => {
+                    addBotMessage(chatbox, responseText);
+                }).catch(error => {
+                    handleError(error);
+                    addBotMessage(chatbox, "Oops! Something went wrong. Please try again.");
+                });
+
+                chatbox.scrollTop = chatbox.scrollHeight;
+                userInput.value = ""; // Clear input
+            }
+        }
+
+        // Add user message to chat
+        function addUserMessage(chatbox, message) {
             const userMessageDiv = document.createElement("div");
             userMessageDiv.className = "message user";
-            userMessageDiv.textContent = "🧑: " + userMessage;
+            userMessageDiv.textContent = "🧑: " + message;
             chatbox.appendChild(userMessageDiv);
-            chatMessages.push(userMessage); // Store user question
-
-            // Stop any ongoing speech
-            if (speechSynthesis.speaking) {
-                speechSynthesis.cancel();
-            }
-
-            const typingIndicator = document.createElement("div");
-            typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
-            chatbox.appendChild(typingIndicator);
-
-            try {
-                await delayResponse(); // Simulate typing delay
-
-                let response;
-                const query = userMessage;
-
-                // Predefined responses
-                if (/what's your name|who are you/i.test(query)) {
-                    response = `My name is ${chatbotName}.`;
-                } else if (/who made you|your creator/i.test(query)) {
-                    response = "I was made by Rishab.";
-                } else if (/reminder/i.test(query)) {
-                    response = "I will remind you in a minute.";
-                } else {
-                    // Using GPT-4o model from Puter.js
-                    response = await puter.ai.chat(query, { model: "gpt-4o" });
-                }
-
-                chatbox.removeChild(typingIndicator);
-
-                const botMessageDiv = document.createElement("div");
-                botMessageDiv.className = "message bot";
-                botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
-                chatbox.appendChild(botMessageDiv);
-
-                // Store the answer
-                chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
-
-                // Speak response only if voice is enabled
-                if (voiceEnabled) {
-                    speakResponse(response);
-                }
-
-            } catch (error) {
-                const errorMessageDiv = document.createElement("div");
-                errorMessageDiv.className = "message bot";
-                errorMessageDiv.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
-                chatbox.appendChild(errorMessageDiv);
-            }
-
-            chatbox.scrollTop = chatbox.scrollHeight; // Auto scroll
-            userInput.value = ""; // Clear input
+            chatMessages.push("You: " + message);
         }
-    }
 
-    document.getElementById("sendButton").addEventListener("click", sendMessage);
-    document.getElementById("userInput").addEventListener("keypress", function(e) {
-        if (e.key === "Enter") {
-            sendMessage();
+        // Add bot message to chat
+        function addBotMessage(chatbox, response) {
+            const botMessageDiv = document.createElement("div");
+            botMessageDiv.className = "message bot";
+            botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
+            chatbox.appendChild(botMessageDiv);
+            chatMessages.push(`${chatbotName}: ${response}`);
         }
-    });
-</script>
 
+        // Simulate user's intent recognition
+        function simulateNLPResponse(userMessage) {
+            return new Promise((resolve, reject) => {
+                const lowerCaseMessage = userMessage.toLowerCase();
+                setTimeout(() => {
+                    if (lowerCaseMessage.includes("hello")) {
+                        resolve("Hello! How can I assist you today?");
+                    } else if (lowerCaseMessage.includes("help")) {
+                        resolve("Sure! What do you need help with?");
+                    } else if (lowerCaseMessage.includes("bye")) {
+                        resolve("Goodbye! Have a great day!");
+                    } else {
+                        resolve("I'm still learning. Can you please elaborate?");
+                    }
+                }, 1000);
+            });
+        }
+
+        // Error handling function
+        function handleError(error) {
+            console.error("An error occurred:", error);
+            alert("An issue occurred: " + error.message);
+        }
+
+        // Volume control for music
+        function setVolume(volume) {
+            const musicPlayer = document.getElementById("musicPlayer");
+            musicPlayer.volume = volume / 100; // Scale volume to 0-1
+            localStorage.setItem('volume', volume);
+        }
+
+        // Start voice input (mock functionality)
+        function startVoiceInput() {
+            alert("Voice input is not implemented in this demo.");
+        }
+
+        // Function to change user settings
+        function openSettings() {
+            document.getElementById("settingsModal").style.display = "block";
+        }
+
+        // Function to close settings and update preferences
+        function closeSettings() {
+            const newBotName = document.getElementById("botNameInput").value;
+            if (newBotName) {
+                chatbotName = newBotName;
+                document.getElementById("chatbotName").innerText = chatbotName + " - Your AI Companion";
+                localStorage.setItem('botName', chatbotName);
+            }
+            document.getElementById("settingsModal").style.display = "none";
+        }
+
+        // Show info popup on load
+        function openPopup() {
+            document.getElementById("infoPopup").style.display = "block";
+            document.getElementById("infoPopup").setAttribute("aria-hidden", "false");
+        }
+
+        // Close info popup
+        function closePopup() {
+            document.getElementById("infoPopup").style.display = "none";
+            document.getElementById("infoPopup").setAttribute("aria-hidden", "true");
+        }
+
+        // Export chat functionality (mock implementation)
+        function exportChat() {
+            const blob = new Blob([chatMessages.join('\n')], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'chat.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
 </body>
+
 </html>
