@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mikasa - Your AI Companion</title>
+    <title>🌌 Mikasa - Your AI Companion 🌟</title>
     <style>
         /* Body and Background */
         body {
@@ -12,22 +12,21 @@
             font-family: 'Arial', sans-serif;
             color: #fff;
             overflow: hidden;
+            position: relative;
             height: 100vh;
-            background: linear-gradient(180deg, rgba(10, 10, 20, 0.9), rgba(0, 0, 0, 0.8)),
-                url('https://source.unsplash.com/random/1920x1080/?space') no-repeat center center fixed;
-            background-size: cover;
-            animation: gradientAnimation 30s ease infinite;
+            width: 100vw;
+            background-color: #0a0a20; /* Fallback background color */
         }
 
-        /* Dynamic Animation */
-        @keyframes gradientAnimation {
-            0% {
-                background-color: rgba(10, 10, 20, 0.9);
-            }
-
-            100% {
-                background-color: rgba(0, 204, 255, 0.8);
-            }
+        /* Particle Effect */
+        #particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
         }
 
         /* Main Container */
@@ -39,8 +38,11 @@
             margin: auto;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 4px 30px rgba(0, 255, 255, 0.6);
-            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 30px rgba(0, 255, 255, 0.8);
+            backdrop-filter: blur(15px);
+            animation: fadeIn 2s forwards;
+            position: relative;
+            z-index: 10; /* Ensure the chat container is above the background */
         }
 
         /* Chat Window */
@@ -49,26 +51,10 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(20, 20, 30, 0.8);
             border-radius: 15px;
             overflow-y: auto;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .header {
-                font-size: 2.5em;
-            }
-
-            .user-input input {
-                padding: 10px;
-                font-size: 0.9em;
-            }
-
-            .user-input button {
-                padding: 8px;
-                font-size: 0.9em;
-            }
+            box-shadow: 0 4px 20px rgba(0, 255, 255, 0.5);
         }
 
         /* Header */
@@ -81,162 +67,321 @@
             animation: glow 1.5s infinite alternate;
         }
 
-        /* User and Bot Messages */
+        @keyframes glow {
+            0% {
+                text-shadow: 0 0 20px #00fff0, 0 0 40px #00fff0;
+            }
+
+            100% {
+                text-shadow: 0 0 30px #00ffcc, 0 0 60px #00ccff;
+            }
+        }
+
+        /* Messages */
         .message {
-            margin: 5px 0;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 15px;
+            border-radius: 15px;
+            margin: 10px 0;
+            max-width: 75%;
+            box-shadow: 0 4px 10px rgba(0, 255, 255, 0.3);
+            transition: transform 0.2s;
+        }
+
+        .message:hover {
+            transform: translateY(-3px);
         }
 
         .message.user {
-            background-color: #007bff;
-            color: white;
+            background-color: rgba(0, 204, 255, 0.8);
+            color: #000;
             align-self: flex-end;
         }
 
         .message.bot {
-            background-color: #28a745;
-            color: white;
+            background-color: rgba(63, 81, 181, 0.8);
+            color: #fff;
             align-self: flex-start;
         }
 
-        /* User Input Area */
+        /* User Input */
         .user-input {
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            padding: 15px;
+            background: rgba(0, 255, 240, 0.6);
+            border-radius: 30px;
         }
 
         .user-input input {
             flex: 1;
-            padding: 10px;
-            margin-left: 5px;
+            padding: 15px;
+            font-size: 1.1em;
             border: none;
-            border-radius: 5px;
+            border-radius: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            color: #fff;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        .user-input input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 15px rgba(0, 255, 255, 0.6);
         }
 
         .user-input button {
-            background-color: #00fff0;
             border: none;
-            color: black;
-            padding: 10px;
-            border-radius: 5px;
+            padding: 12px 15px;
+            border-radius: 30px;
             cursor: pointer;
-        }
-
-        .user-input button:hover {
-            background-color: #00cccc;
-        }
-
-        /* Modal */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.4);
-        }
-
-        .modal-content {
-            background-color: white;
-            margin: 15% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 70%;
-        }
-
-        /* Close Button for Modal and Popup */
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
+            background: linear-gradient(90deg, #00ccff, #00ff99);
+            transition: transform 0.2s, background 0.3s;
+            color: #0A0A0A;
+            box-shadow: 0 3px 10px rgba(0, 255, 255, 0.4);
+            margin-left: 10px;
             font-weight: bold;
         }
 
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
+        .user-input button:hover {
+            transform: scale(1.05);
+            background: linear-gradient(90deg, #00b3e3, #00ccff);
         }
 
-        /* Popup */
-        .popup {
+        /* Modal styles */
+        .modal {
             display: none;
             position: fixed;
-            z-index: 1;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(40, 40, 40, 0.95);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            overflow: hidden;
+            animation: fadeIn 0.5s;
+        }
+
+        .modal-content {
+            padding: 20px;
+            color: #ffffff;
+        }
+
+        .modal-content span {
+            cursor: pointer;
+            float: right;
+            color: #00fff0;
+            font-size: 1.5em;
+        }
+
+        .modal-content label {
+            display: block;
+            margin: 15px 0 5px;
+            font-weight: bold;
+        }
+
+        /* Select and File Upload Styles */
+        select,
+        .custom-file-input {
+            border-radius: 10px;
+            background: linear-gradient(90deg, #00ccff, #00ff99);
+            color: white;
+            border: none;
+            outline: none;
+            padding: 12px;
+            margin-top: 5px;
+            transition: background 0.3s, box-shadow 0.3s;
+        }
+
+        select:hover,
+        .custom-file-input:hover {
+            background: linear-gradient(90deg, #00b3e3, #00ccff);
+            box-shadow: 0 4px 12px rgba(0, 255, 255, 0.7);
+        }
+
+        /* Media Query for Mobile Responsiveness */
+        @media (max-width: 768px) {
+            .header {
+                font-size: 2em;
+            }
+
+            .user-input input {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+
+            .user-input button {
+                padding: 8px;
+                font-size: 0.9em;
+            }
+
+            .message {
+                font-size: 0.9em;
+            }
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
     </style>
 </head>
 
 <body>
-    <div class="container" id="chatContainer" role="main" aria-labelledby="chatbotName">
+    <!-- Particle Background -->
+    <canvas id="particles"></canvas>
+
+    <div class="container" id="chatContainer">
         <div class="chat-window">
-            <div class="header" id="chatbotName" tabindex="0">Mikasa - Your AI Companion</div>
+            <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
             <div class="messages" id="chatbox" role="log" aria-live="polite"></div>
             <div class="user-input">
-                <button onclick="exportChat()" title="Export Chat" aria-label="Export chat">📤</button>
-                <button onclick="startVoiceInput()" title="Voice Input" id="voiceButton" aria-label="Voice input">🎤</button>
+                <button onclick="exportChat()" title="Export Chat">📤</button>
+                <button onclick="startVoiceInput()" title="Voice Input" id="voiceButton">🎤</button>
                 <input type="text" id="userInput" placeholder="Type your message here..." onkeydown="if(event.key === 'Enter') sendMessage();" aria-label="Type your message" />
-                <button onclick="sendMessage()" title="Send Message" aria-label="Send message">📬</button>
-                <button onclick="openSettings()" title="Settings" aria-label="Open settings">⚙️</button>
+                <button onclick="sendMessage()" title="Send Message">📬</button>
+                <button onclick="openSettings()" title="Settings">⚙️</button>
             </div>
         </div>
     </div>
 
     <!-- Settings Modal -->
-    <div id="settingsModal" class="modal" aria-hidden="true">
-        <div class="modal-content">
-            <span class="close" onclick="closeSettings()" aria-label="Close settings modal">×</span>
+    <div id="settingsModal" class="modal">
+        <div class="modal-content scrollable-settings">
+            <span onclick="closeSettings()">×</span>
             <h2>Settings</h2>
+
             <label for="botName">Chatbot Name:</label>
-            <input type="text" id="botNameInput" aria-label="Chatbot name" />
-            <label for="volumeControl">Volume:</label>
-            <input type="range" id="volumeControl" min="0" max="100" value="100" aria-label="Volume control" onchange="setVolume(this.value)" />
+            <input type="text" id="botNameInput" value="Mikasa" />
+
+            <label for="language">Language:</label>
+            <select id="language" onchange="changeLanguage()">
+                <option value="en">English</option>
+                <option value="es">Spanish</option>
+                <option value="fr">French</option>
+                <option value="de">German</option>
+                <option value="it">Italian</option>
+            </select>
+
+            <label for="voiceSelection">Select Voice:</label>
+            <select id="voiceSelection" onchange="changeVoice()"></select>
+
+            <label for="musicUpload">Upload Your Music:</label>
+            <label class="custom-file-input" for="musicUpload">Choose File
+                <input type="file" id="musicUpload" accept="audio/*" onchange="loadMusic(event)" class="file-input" />
+            </label>
+
+            <label for="bgUpload">Change Background Image:</label>
+            <label class="custom-file-input" for="bgUpload">Choose File
+                <input type="file" id="bgUpload" accept="image/*" onchange="changeBackground(event)" class="file-input" />
+            </label>
+
+            <label for="reminder">Set a Reminder:</label>
+            <div>
+                <input type="text" id="reminderInput" placeholder="Enter your reminder here..." />
+                <input type="time" id="reminderTimeInput" />
+                <button class="epic-toggle-button" onclick="setReminder()">Set Reminder</button>
+            </div>
+
+            <div class="volume-control">
+                <label for="volumeControl">Volume Control:</label>
+                <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5" onchange="setVolume(this.value)">
+            </div>
+            <div>
+                <button onclick="toggleMusic()" id="musicControlButton" class="epic-toggle-button">Play Music</button>
+            </div>
+            <button id="readerToggle" class="epic-toggle-button" onclick="toggleReader()">Enable/Disable Reader</button>
+            <button onclick="resetChat()" class="epic-toggle-button">Reset Chat</button>
+            <button onclick="resetAllSettings()" class="epic-toggle-button">Reset All Settings</button>
         </div>
     </div>
 
-    <div id="infoPopup" class="popup" aria-hidden="true">
-        <div class="modal-content">
-            <span class="close" onclick="closePopup()" aria-label="Close popup">×</span>
-            <h2>Info</h2>
-            <p>Welcome to Mikasa - your AI companion!</p>
-        </div>
+    <audio id="musicPlayer" preload="auto" loop></audio>
+
+    <div id="infoPopup" class="popup">
+        <h2>Welcome to MikasaAI — Your Ultimate AI Companion! 🌟</h2>
+        <p>Unlock the power of intelligent conversations, get instant answers, and explore the limitless potential of AI. Whether you're seeking knowledge, inspiration, or just a friendly chat, MikasaAI is here for you. Start your journey into the future of AI now!</p>
+        <p>🚀 Let's dive in and experience the brilliance of MikasaAI!</p>
+        <p>Made By Rishab!</p>
+        <button onclick="closePopup()" class="epic-toggle-button">Got It</button>
     </div>
 
-    <audio id="musicPlayer" preload="auto" loop>
-        <source src="your-audio-file.mp3" type="audio/mpeg"> <!-- Replace with your audio file -->
-        Your browser does not support the audio element.
-    </audio>
-
+    <script src="https://js.puter.com/v2/"></script>
     <script>
-        let chatbotName = "Mikasa";
-        let chatMessages = [];
-        let musicPlaying = false;
-        let voices = [];
-        let selectedVoice = null;
-        
-        // Function that runs on page load
-        window.onload = function () {
-            loadPreferences();
-            loadVoices();
-            openPopup();
+        // Particle effect
+        const canvas = document.getElementById('particles');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        function Particle(x, y) {
+            this.x = x;
+            this.y = y;
+            this.size = Math.random() * 5 + 1;
+            this.speedX = Math.random() * 3 - 1.5;
+            this.speedY = Math.random() * 3 - 1.5;
+        }
+
+        Particle.prototype.update = function () {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            // Decrease particle size to create a dying effect
+            if (this.size > 0.2) this.size -= 0.1;
         };
 
-        // Load user preferences from local storage
+        Particle.prototype.draw = function () {
+            ctx.fillStyle = 'rgba(0, 255, 255, 0.7)';
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fill();
+        };
+
+        function init() {
+            particles = [];
+            for (let i = 0; i < 100; i++) {
+                particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(particle => {
+                particle.update();
+                particle.draw();
+            });
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        let chatbotName = "Mikasa";
+        let chatMessages = []; // Store chat messages for export
+        let chatAnswers = []; // Store chat answers for export
+        let voiceEnabled = true; // Default voice enabled
+        let musicPlaying = false; // Track music status
+        let voices = []; // Array to store available voices
+        let selectedVoice = null; // Currently selected voice
+
+        window.onload = function () {
+            loadPreferences();
+            loadVoices(); // Load available voices
+            openPopup(); // Show the welcome popup on load
+        }
+
         function loadPreferences() {
             const savedBotName = localStorage.getItem('botName');
             const savedVolume = localStorage.getItem('volume');
+            const savedBackgroundImage = localStorage.getItem('backgroundImage');
 
             if (savedBotName) {
                 chatbotName = savedBotName;
@@ -247,9 +392,11 @@
                 document.getElementById("volumeControl").value = savedVolume;
                 setVolume(savedVolume);
             }
+            if (savedBackgroundImage) {
+                document.body.style.backgroundImage = `url('${savedBackgroundImage}')`;
+            }
         }
 
-        // Load available voices for speech synthesis
         function loadVoices() {
             const voiceSelection = document.getElementById('voiceSelection');
             speechSynthesis.onvoiceschanged = () => {
@@ -261,93 +408,228 @@
                     voiceSelection.appendChild(option);
                 });
                 if (voiceSelection.options.length > 0) {
-                    selectedVoice = voices[0];
+                    selectedVoice = voices[0]; // Set default to first voice
                 }
             };
         }
 
-        // Function to send a message
-        function sendMessage() {
+        function loadMusic(event) {
+            const file = event.target.files[0];
+            const musicPlayer = document.getElementById('musicPlayer');
+
+            if (file) {
+                const url = URL.createObjectURL(file);
+                musicPlayer.src = url;
+                musicPlayer.volume = document.getElementById('volumeControl').value;
+                // Reset play status
+                musicPlaying = false;
+                document.getElementById("musicControlButton").innerText = "Play Music";
+            }
+        }
+
+        function changeVoice() {
+            const voiceSelection = document.getElementById('voiceSelection');
+            selectedVoice = voices.find(voice => voice.name === voiceSelection.value);
+        }
+
+        function changeBackground(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const url = URL.createObjectURL(file);
+                document.body.style.backgroundImage = `url('${url}')`;
+                localStorage.setItem('backgroundImage', url);
+            }
+        }
+
+        function setVolume(volume) {
+            const musicPlayer = document.getElementById('musicPlayer');
+            musicPlayer.volume = volume;
+            localStorage.setItem('volume', volume);
+        }
+
+        function toggleMusic() {
+            const musicPlayer = document.getElementById('musicPlayer');
+            const musicControlButton = document.getElementById('musicControlButton');
+
+            if (musicPlaying) {
+                musicPlayer.pause();
+                musicControlButton.innerText = "Play Music";
+                musicPlaying = false;
+            } else {
+                musicPlayer.play();
+                musicControlButton.innerText = "Pause Music";
+                musicPlaying = true;
+            }
+        }
+
+        async function sendMessage() {
             const userInput = document.getElementById("userInput");
             const chatbox = document.getElementById("chatbox");
 
             if (userInput.value.trim()) {
                 const userMessage = userInput.value.trim();
-                addUserMessage(chatbox, userMessage);
-                
-                // Simulate user intent recognition and response
-                simulateNLPResponse(userMessage).then(responseText => {
-                    addBotMessage(chatbox, responseText);
-                }).catch(error => {
-                    handleError(error);
-                    addBotMessage(chatbox, "Oops! Something went wrong. Please try again.");
-                });
+                const userMessageDiv = document.createElement("div");
+                userMessageDiv.className = "message user";
+                userMessageDiv.textContent = "🧑: " + userMessage;
+                chatbox.appendChild(userMessageDiv);
+                chatMessages.push(userMessage); // Store question
 
-                chatbox.scrollTop = chatbox.scrollHeight;
+                // Stop any ongoing speech
+                if (speechSynthesis.speaking) {
+                    speechSynthesis.cancel();
+                }
+
+                const typingIndicator = document.createElement("div");
+                typingIndicator.innerHTML = "<em>🤖 Mikasa is typing...</em>";
+                chatbox.appendChild(typingIndicator);
+
+                try {
+                    await delayResponse(); // Delay for effect
+
+                    let response;
+                    const query = userMessage;
+
+                    // Responding with clear responses
+                    if (/what's your name|who are you/i.test(query)) {
+                        response = `My name is ${chatbotName}.`;
+                    } else if (/who made you|your creator/i.test(query)) {
+                        response = "I was made by Rishab.";
+                    } else if (/reminder/i.test(query)) {
+                        response = "I will remind you in a minute.";
+                    } else {
+                        response = await puter.ai.chat(query); // Replace with your AI call if available
+                    }
+
+                    chatbox.removeChild(typingIndicator);
+
+                    const botMessageDiv = document.createElement("div");
+                    botMessageDiv.className = "message bot";
+                    botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
+                    chatbox.appendChild(botMessageDiv);
+
+                    // Store answer
+                    chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
+
+                    // Speak response only if reader is enabled
+                    if (voiceEnabled) {
+                        speakResponse(response);
+                    }
+
+                } catch (error) {
+                    const errorMessageDiv = document.createElement("div");
+                    errorMessageDiv.className = "message bot";
+                    errorMessageDiv.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
+                    chatbox.appendChild(errorMessageDiv);
+                }
+
+                chatbox.scrollTop = chatbox.scrollHeight; // Auto scroll
                 userInput.value = ""; // Clear input
             }
         }
 
-        // Add user message to chat
-        function addUserMessage(chatbox, message) {
-            const userMessageDiv = document.createElement("div");
-            userMessageDiv.className = "message user";
-            userMessageDiv.textContent = "🧑: " + message;
-            chatbox.appendChild(userMessageDiv);
-            chatMessages.push("You: " + message);
+        function toggleReader() {
+            voiceEnabled = !voiceEnabled; // Toggle voiceEnabled
+            const readerToggleButton = document.getElementById("readerToggle");
+            readerToggleButton.classList.toggle("active", voiceEnabled);
+            if (!voiceEnabled && speechSynthesis.speaking) {
+                speechSynthesis.cancel(); // Stop reading if reader is turned off
+            }
         }
 
-        // Add bot message to chat
-        function addBotMessage(chatbox, response) {
-            const botMessageDiv = document.createElement("div");
-            botMessageDiv.className = "message bot";
-            botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
-            chatbox.appendChild(botMessageDiv);
-            chatMessages.push(`${chatbotName}: ${response}`);
+        function delayResponse() {
+            return new Promise(resolve => setTimeout(resolve, 1)); // Simulate a response delay
         }
 
-        // Simulate user's intent recognition
-        function simulateNLPResponse(userMessage) {
-            return new Promise((resolve, reject) => {
-                const lowerCaseMessage = userMessage.toLowerCase();
-                setTimeout(() => {
-                    if (lowerCaseMessage.includes("hello")) {
-                        resolve("Hello! How can I assist you today?");
-                    } else if (lowerCaseMessage.includes("help")) {
-                        resolve("Sure! What do you need help with?");
-                    } else if (lowerCaseMessage.includes("bye")) {
-                        resolve("Goodbye! Have a great day!");
-                    } else {
-                        resolve("I'm still learning. Can you please elaborate?");
-                    }
-                }, 1000);
-            });
-        }
-
-        // Error handling function
-        function handleError(error) {
-            console.error("An error occurred:", error);
-            alert("An issue occurred: " + error.message);
-        }
-
-        // Volume control for music
-        function setVolume(volume) {
-            const musicPlayer = document.getElementById("musicPlayer");
-            musicPlayer.volume = volume / 100; // Scale volume to 0-1
-            localStorage.setItem('volume', volume);
-        }
-
-        // Start voice input (mock functionality)
         function startVoiceInput() {
-            alert("Voice input is not implemented in this demo.");
+            // Stop reading when using voice input
+            if (speechSynthesis.speaking) {
+                speechSynthesis.cancel();
+            }
+            const recognition = new webkitSpeechRecognition();
+            recognition.onresult = function (event) {
+                const userInput = document.getElementById("userInput");
+                userInput.value = event.results[0][0].transcript;
+                sendMessage();
+            };
+            recognition.start();
         }
 
-        // Function to change user settings
+        function exportChat() {
+            let exportText = "";
+            for (let i = 0; i < chatMessages.length; i++) {
+                exportText += `🧑: ${chatMessages[i]}\n${chatAnswers[i] || ''}\n`;
+            }
+            const blob = new Blob([exportText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'chat_history.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+
+        function speakResponse(response) {
+            if (voiceEnabled) {
+                const utterance = new SpeechSynthesisUtterance(response);
+                utterance.voice = selectedVoice; // Use selected voice
+                utterance.onend = () => {
+                    console.log('Speech finished.');
+                };
+                utterance.lang = "en-US";
+                speechSynthesis.speak(utterance);
+            }
+        }
+
+        function changeLanguage() {
+            const selectedLanguage = document.getElementById("language").value;
+            localStorage.setItem('language', selectedLanguage);
+            showPopup("Language changed to: " + selectedLanguage); // Change alert to popup
+        }
+
+        function resetChat() {
+            const chatbox = document.getElementById("chatbox");
+            chatbox.innerHTML = ""; // Clear chat history
+            chatMessages = []; // Reset message array
+            chatAnswers = []; // Reset answer array
+        }
+
+        function resetAllSettings() {
+            localStorage.clear(); // Clear everything stored in localStorage
+            loadPreferences(); // Reset preferences to defaults
+            showPopup("All settings have been reset!"); // Show confirmation popup
+        }
+
+        function setReminder() {
+            const reminderText = document.getElementById("reminderInput").value;
+            const reminderTime = document.getElementById("reminderTimeInput").value;
+
+            if (reminderText && reminderTime) {
+                const reminderDate = new Date();
+                const [hours, minutes] = reminderTime.split(':');
+                reminderDate.setHours(hours);
+                reminderDate.setMinutes(minutes);
+                reminderDate.setSeconds(0);
+
+                const timeUntilReminder = reminderDate.getTime() - Date.now();
+
+                if (timeUntilReminder > 0) {
+                    setTimeout(() => {
+                        showPopup(`🛎️ Reminder: ${reminderText}`);
+                    }, timeUntilReminder);
+                    showPopup("Reminder set for " + reminderTime);
+                } else {
+                    showPopup("Please set a future time for the reminder.");
+                }
+            } else {
+                showPopup("Please enter a reminder message and select a time.");
+            }
+        }
+
         function openSettings() {
             document.getElementById("settingsModal").style.display = "block";
         }
 
-        // Function to close settings and update preferences
         function closeSettings() {
             const newBotName = document.getElementById("botNameInput").value;
             if (newBotName) {
@@ -358,29 +640,18 @@
             document.getElementById("settingsModal").style.display = "none";
         }
 
-        // Show info popup on load
         function openPopup() {
             document.getElementById("infoPopup").style.display = "block";
-            document.getElementById("infoPopup").setAttribute("aria-hidden", "false");
         }
 
-        // Close info popup
         function closePopup() {
             document.getElementById("infoPopup").style.display = "none";
-            document.getElementById("infoPopup").setAttribute("aria-hidden", "true");
         }
 
-        // Export chat functionality (mock implementation)
-        function exportChat() {
-            const blob = new Blob([chatMessages.join('\n')], { type: 'text/plain' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'chat.txt';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+        function showPopup(message) {
+            const popup = document.getElementById("infoPopup");
+            popup.innerHTML = `<h2>${message}</h2>`;
+            popup.style.display = "block";
         }
     </script>
 </body>
