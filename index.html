@@ -521,20 +521,8 @@
                 try {
                     await delayResponse();
 
-                    let response;
-                    const query = userMessage;
-
-                    // Basic responses for testing
-                    if (/what's your name|who are you/i.test(query)) {
-                        response = `My name is ${chatbotName}.`;
-                    } else if (/who made you|your creator/i.test(query)) {
-                        response = "I was made by Rishab.";
-                    } else if (/reminder/i.test(query)) {
-                        response = "I can help set reminders!";
-                    } else {
-                        // Placeholder for an actual chatbot response or AI logic
-                        response = `You said: ${userMessage}`; // Echoing the user input for testing
-                    }
+                    // Call puter.js to get the response
+                    const response = await puter.ai.chat(userMessage);
 
                     chatbox.removeChild(typingIndicator);
 
