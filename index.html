@@ -12,7 +12,7 @@
             font-family: 'Arial', sans-serif;
             color: #fff;
             overflow: hidden;
-            background: linear-gradient(180deg, rgba(10, 10, 20, 0.9), rgba(0, 0, 0, 0.8)), 
+            background: linear-gradient(180deg, rgba(10, 10, 20, 0.9), rgba(0, 0, 0, 0.8)),
                 url('https://source.unsplash.com/random/1920x1080/?space');
             background-size: cover;
             animation: gradientAnimation 30s ease infinite;
@@ -535,16 +535,14 @@
 
                     chatbox.removeChild(typingIndicator);
 
-                    // Only update chat if there is an actual response
-                    if (response) {
+                    // Check if there's a valid response before populating the bot message
+                    if (response && response.trim() !== "") {
                         const botMessageDiv = document.createElement("div");
                         botMessageDiv.className = "message bot";
                         botMessageDiv.textContent = `🤖 ${chatbotName}: ${response}`;
                         chatbox.appendChild(botMessageDiv);
 
-                        chatAnswers.push(`🤖 ${chatbotName}: ${response}`);
-
-                        // Speak the response
+                        // Speak the response without emojis
                         speakResponse(response);
                     }
 
@@ -552,16 +550,16 @@
                     console.error("An error occurred:", error);
                 }
 
-                chatbox.scrollTop = chatbox.scrollHeight;
-                userInput.value = "";
+                chatbox.scrollTop = chatbox.scrollHeight; // Auto scroll
+                userInput.value = ""; // Clear input
             }
         }
 
+        // Speak responses without emojis
         function speakResponse(response) {
-            if (voiceEnabled && response) {
-                const filteredResponse = response.replace(/[\u{1F600}-\u{1F64F}]/gu, ''); // Remove emojis
-                const utterance = new SpeechSynthesisUtterance(filteredResponse);
-                utterance.voice = selectedVoice;
+            if (voiceEnabled) {
+                const utterance = new SpeechSynthesisUtterance(response.replace(/[\u{1F600}-\u{1F64F}]/gu, '')); // Remove emojis
+                utterance.voice = selectedVoice; // Use selected voice
                 utterance.lang = "en-US";
                 speechSynthesis.speak(utterance);
             }
@@ -631,7 +629,7 @@
                     colorScheme = { text: '#fff', button: '#00ccff', buttonHover: '#00b3e3' };
                     break;
                 case 'naruto':
-                    backgroundImage = "url('https://images.wallpapersden.com/image/download/naruto-uzumaki-intense-look_bmdlaG6UmZqaraWkpJRmbmdlrWZlZms.jpg')";
+                    backgroundImage = "url('https://wallpaperaccess.com/full/1372007.jpg')";
                     colorScheme = { text: '#ffde00', button: '#ff9900', buttonHover: '#e68a00' };
                     break;
                 case 'onepiece':
