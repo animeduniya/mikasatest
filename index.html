@@ -12,21 +12,25 @@
             font-family: 'Arial', sans-serif;
             color: #fff;
             overflow: hidden;
-            position: relative;
+            background: linear-gradient(180deg, rgba(10, 10, 20, 0.9), rgba(0, 0, 0, 0.8)),
+                url('https://source.unsplash.com/random/1920x1080/?space');
+            background-size: cover;
+            animation: gradientAnimation 30s ease infinite;
             height: 100vh;
-            width: 100vw;
-            background-color: #0a0a20; /* Fallback background color */
         }
 
-        /* Particle Effect */
-        #particles {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: -1;
+        @keyframes gradientAnimation {
+            0% {
+                background-color: rgba(10, 10, 20, 0.9);
+            }
+
+            50% {
+                background-color: rgba(0, 255, 255, 0.7);
+            }
+
+            100% {
+                background-color: rgba(10, 10, 20, 0.9);
+            }
         }
 
         /* Main Container */
@@ -38,11 +42,10 @@
             margin: auto;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 4px 30px rgba(0, 255, 255, 0.8);
-            backdrop-filter: blur(15px);
-            animation: fadeIn 2s forwards;
+            box-shadow: 0 4px 30px rgba(0, 255, 255, 0.6);
+            backdrop-filter: blur(10px);
             position: relative;
-            z-index: 10; /* Ensure the chat container is above the background */
+            animation: fadeIn 2s forwards;
         }
 
         /* Chat Window */
@@ -51,7 +54,7 @@
             display: flex;
             flex-direction: column;
             padding: 20px;
-            background: rgba(20, 20, 30, 0.8);
+            background: rgba(0, 0, 0, 0.8);
             border-radius: 15px;
             overflow-y: auto;
             box-shadow: 0 4px 20px rgba(0, 255, 255, 0.5);
@@ -78,6 +81,13 @@
         }
 
         /* Messages */
+        .messages {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+
         .message {
             padding: 15px;
             border-radius: 15px;
@@ -92,13 +102,13 @@
         }
 
         .message.user {
-            background-color: rgba(0, 204, 255, 0.8);
+            background-color: rgba(0, 204, 255, 0.7);
             color: #000;
             align-self: flex-end;
         }
 
         .message.bot {
-            background-color: rgba(63, 81, 181, 0.8);
+            background-color: rgba(63, 81, 181, 0.7);
             color: #fff;
             align-self: flex-start;
         }
@@ -108,14 +118,14 @@
             display: flex;
             align-items: center;
             padding: 15px;
-            background: rgba(0, 255, 240, 0.6);
+            background: rgba(0, 255, 240, 0.3);
             border-radius: 30px;
         }
 
         .user-input input {
             flex: 1;
-            padding: 15px;
-            font-size: 1.1em;
+            padding: 12px;
+            font-size: 1em;
             border: none;
             border-radius: 30px;
             background: rgba(255, 255, 255, 0.1);
@@ -159,7 +169,8 @@
             border-radius: 15px;
             width: 90%;
             max-width: 600px;
-            overflow: hidden;
+            max-height: 80%;
+            overflow-y: auto; /* Allow scrolling */
             animation: fadeIn 0.5s;
         }
 
@@ -181,62 +192,123 @@
             font-weight: bold;
         }
 
-        /* Select and File Upload Styles */
-        select,
-        .custom-file-input {
+        /* Epic Select Style */
+        select {
+            padding: 12px;
             border-radius: 10px;
             background: linear-gradient(90deg, #00ccff, #00ff99);
             color: white;
             border: none;
             outline: none;
-            padding: 12px;
+            font-size: 1em;
             margin-top: 5px;
             transition: background 0.3s, box-shadow 0.3s;
+            box-shadow: 0 2px 6px rgba(0, 255, 255, 0.5);
         }
 
-        select:hover,
-        .custom-file-input:hover {
+        select:hover {
             background: linear-gradient(90deg, #00b3e3, #00ccff);
             box-shadow: 0 4px 12px rgba(0, 255, 255, 0.7);
         }
 
-        /* Media Query for Mobile Responsiveness */
+        /* Custom File Input */
+        .custom-file-input {
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            padding: 10px;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.3s;
+            display: inline-block;
+            margin-top: 5px;
+            box-shadow: 0 2px 6px rgba(0, 255, 255, 0.5);
+        }
+
+        .custom-file-input:hover {
+            background: linear-gradient(90deg, #ff5f5f, #00b3e3);
+            transform: scale(1.05);
+        }
+
+        /* File Input - Hidden */
+        .file-input {
+            display: none;
+        }
+
+        /* Popup styles */
+        .popup {
+            position: fixed;
+            top: 20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(50, 50, 50, 0.9);
+            border: 2px solid #00fff0;
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            display: none;
+            z-index: 2000;
+            animation: fadeIn 0.5s;
+            box-shadow: 0 0 40px rgba(0, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Epic button for Reader Toggle */
+        .epic-toggle-button {
+            background: linear-gradient(90deg, #ff00ff, #00ffff);
+            border: none;
+            color: #fff;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
+        }
+
+        .epic-toggle-button.active {
+            background: linear-gradient(90deg, #00ff99, #00ccff);
+        }
+
+        .epic-toggle-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.6);
+        }
+
         @media (max-width: 768px) {
             .header {
                 font-size: 2em;
             }
 
             .user-input input {
-                padding: 10px;
-                font-size: 0.9em;
-            }
-
-            .user-input button {
                 padding: 8px;
                 font-size: 0.9em;
             }
 
-            .message {
+            .user-input button {
+                padding-left: 8px;
+                padding-right: 8px;
                 font-size: 0.9em;
             }
-        }
 
-        /* Animation Keyframes */
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
+            select {
+                padding: 10px;
+                font-size: 0.9em;
             }
-            to {
-                opacity: 1;
+
+            .modal-content {
+                max-height: 60vh;
+                overflow-y: auto; /* Added scroll for modal */
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- Particle Background -->
-    <canvas id="particles"></canvas>
-
     <div class="container" id="chatContainer">
         <div class="chat-window">
             <div class="header" id="chatbotName">Mikasa - Your AI Companion</div>
@@ -267,6 +339,13 @@
                 <option value="fr">French</option>
                 <option value="de">German</option>
                 <option value="it">Italian</option>
+            </select>
+
+            <label for="themeSelection">Select Theme:</label>
+            <select id="themeSelection" onchange="changeTheme()">
+                <option value="default">Default</option>
+                <option value="dark">Dark</option>
+                <option value="light">Light</option>
             </select>
 
             <label for="voiceSelection">Select Voice:</label>
@@ -308,80 +387,31 @@
         <h2>Welcome to MikasaAI — Your Ultimate AI Companion! 🌟</h2>
         <p>Unlock the power of intelligent conversations, get instant answers, and explore the limitless potential of AI. Whether you're seeking knowledge, inspiration, or just a friendly chat, MikasaAI is here for you. Start your journey into the future of AI now!</p>
         <p>🚀 Let's dive in and experience the brilliance of MikasaAI!</p>
-        <p>Made By Rishab!</p>
+        <p>Made by Rishab!</p>
         <button onclick="closePopup()" class="epic-toggle-button">Got It</button>
     </div>
 
     <script src="https://js.puter.com/v2/"></script>
     <script>
-        // Particle effect
-        const canvas = document.getElementById('particles');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        function Particle(x, y) {
-            this.x = x;
-            this.y = y;
-            this.size = Math.random() * 5 + 1;
-            this.speedX = Math.random() * 3 - 1.5;
-            this.speedY = Math.random() * 3 - 1.5;
-        }
-
-        Particle.prototype.update = function () {
-            this.x += this.speedX;
-            this.y += this.speedY;
-
-            // Decrease particle size to create a dying effect
-            if (this.size > 0.2) this.size -= 0.1;
-        };
-
-        Particle.prototype.draw = function () {
-            ctx.fillStyle = 'rgba(0, 255, 255, 0.7)';
-            ctx.beginPath();
-            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-            ctx.fill();
-        };
-
-        function init() {
-            particles = [];
-            for (let i = 0; i < 100; i++) {
-                particles.push(new Particle(Math.random() * canvas.width, Math.random() * canvas.height));
-            }
-        }
-
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            particles.forEach(particle => {
-                particle.update();
-                particle.draw();
-            });
-            requestAnimationFrame(animate);
-        }
-
-        init();
-        animate();
-
         let chatbotName = "Mikasa";
-        let chatMessages = []; // Store chat messages for export
-        let chatAnswers = []; // Store chat answers for export
-        let voiceEnabled = true; // Default voice enabled
-        let musicPlaying = false; // Track music status
-        let voices = []; // Array to store available voices
-        let selectedVoice = null; // Currently selected voice
+        let chatMessages = [];
+        let chatAnswers = [];
+        let voiceEnabled = true;
+        let musicPlaying = false;
+        let voices = [];
+        let selectedVoice = null;
 
         window.onload = function () {
             loadPreferences();
-            loadVoices(); // Load available voices
-            openPopup(); // Show the welcome popup on load
+            loadVoices();
+            openPopup();
         }
 
         function loadPreferences() {
             const savedBotName = localStorage.getItem('botName');
             const savedVolume = localStorage.getItem('volume');
             const savedBackgroundImage = localStorage.getItem('backgroundImage');
+            const savedTheme = localStorage.getItem('theme');
 
             if (savedBotName) {
                 chatbotName = savedBotName;
@@ -394,6 +424,9 @@
             }
             if (savedBackgroundImage) {
                 document.body.style.backgroundImage = `url('${savedBackgroundImage}')`;
+            }
+            if (savedTheme) {
+                changeThemeTheme(savedTheme);
             }
         }
 
@@ -408,7 +441,7 @@
                     voiceSelection.appendChild(option);
                 });
                 if (voiceSelection.options.length > 0) {
-                    selectedVoice = voices[0]; // Set default to first voice
+                    selectedVoice = voices[0];
                 }
             };
         }
@@ -421,7 +454,6 @@
                 const url = URL.createObjectURL(file);
                 musicPlayer.src = url;
                 musicPlayer.volume = document.getElementById('volumeControl').value;
-                // Reset play status
                 musicPlaying = false;
                 document.getElementById("musicControlButton").innerText = "Play Music";
             }
@@ -472,9 +504,8 @@
                 userMessageDiv.className = "message user";
                 userMessageDiv.textContent = "🧑: " + userMessage;
                 chatbox.appendChild(userMessageDiv);
-                chatMessages.push(userMessage); // Store question
+                chatMessages.push(userMessage);
 
-                // Stop any ongoing speech
                 if (speechSynthesis.speaking) {
                     speechSynthesis.cancel();
                 }
@@ -484,12 +515,11 @@
                 chatbox.appendChild(typingIndicator);
 
                 try {
-                    await delayResponse(); // Delay for effect
+                    await delayResponse();
 
                     let response;
                     const query = userMessage;
 
-                    // Responding with clear responses
                     if (/what's your name|who are you/i.test(query)) {
                         response = `My name is ${chatbotName}.`;
                     } else if (/who made you|your creator/i.test(query)) {
@@ -497,7 +527,7 @@
                     } else if (/reminder/i.test(query)) {
                         response = "I will remind you in a minute.";
                     } else {
-                        response = await puter.ai.chat(query); // Replace with your AI call if available
+                        response = await puter.ai.chat(query);
                     }
 
                     chatbox.removeChild(typingIndicator);
@@ -507,10 +537,8 @@
                     botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
                     chatbox.appendChild(botMessageDiv);
 
-                    // Store answer
                     chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
 
-                    // Speak response only if reader is enabled
                     if (voiceEnabled) {
                         speakResponse(response);
                     }
@@ -522,26 +550,35 @@
                     chatbox.appendChild(errorMessageDiv);
                 }
 
-                chatbox.scrollTop = chatbox.scrollHeight; // Auto scroll
-                userInput.value = ""; // Clear input
+                chatbox.scrollTop = chatbox.scrollHeight;
+                userInput.value = "";
+            }
+        }
+
+        function speakResponse(response) {
+            if (voiceEnabled) {
+                const filteredResponse = response.replace(/[\u{1F600}-\u{1F64F}]/gu, ''); // Remove emojis
+                const utterance = new SpeechSynthesisUtterance(filteredResponse);
+                utterance.voice = selectedVoice;
+                utterance.lang = "en-US";
+                speechSynthesis.speak(utterance);
             }
         }
 
         function toggleReader() {
-            voiceEnabled = !voiceEnabled; // Toggle voiceEnabled
+            voiceEnabled = !voiceEnabled;
             const readerToggleButton = document.getElementById("readerToggle");
             readerToggleButton.classList.toggle("active", voiceEnabled);
             if (!voiceEnabled && speechSynthesis.speaking) {
-                speechSynthesis.cancel(); // Stop reading if reader is turned off
+                speechSynthesis.cancel();
             }
         }
 
         function delayResponse() {
-            return new Promise(resolve => setTimeout(resolve, 1)); // Simulate a response delay
+            return new Promise(resolve => setTimeout(resolve, 1000)); // Simulate a response delay
         }
 
         function startVoiceInput() {
-            // Stop reading when using voice input
             if (speechSynthesis.speaking) {
                 speechSynthesis.cancel();
             }
@@ -569,35 +606,43 @@
             document.body.removeChild(a);
         }
 
-        function speakResponse(response) {
-            if (voiceEnabled) {
-                const utterance = new SpeechSynthesisUtterance(response);
-                utterance.voice = selectedVoice; // Use selected voice
-                utterance.onend = () => {
-                    console.log('Speech finished.');
-                };
-                utterance.lang = "en-US";
-                speechSynthesis.speak(utterance);
-            }
-        }
-
         function changeLanguage() {
             const selectedLanguage = document.getElementById("language").value;
             localStorage.setItem('language', selectedLanguage);
-            showPopup("Language changed to: " + selectedLanguage); // Change alert to popup
+            showPopup("Language changed to: " + selectedLanguage); 
+        }
+
+        function changeTheme() {
+            const themeSelection = document.getElementById("themeSelection");
+            const selectedTheme = themeSelection.value;
+            localStorage.setItem('theme', selectedTheme);
+            changeThemeTheme(selectedTheme);
+        }
+
+        function changeThemeTheme(theme) {
+            if (theme === "dark") {
+                document.body.style.backgroundColor = "#121212";
+                document.body.style.color = "#ffffff";
+            } else if (theme === "light") {
+                document.body.style.backgroundColor = "#ffffff";
+                document.body.style.color = "#000000";
+            } else {
+                document.body.style.backgroundColor = '';
+                document.body.style.color = '#fff';
+            }
         }
 
         function resetChat() {
             const chatbox = document.getElementById("chatbox");
-            chatbox.innerHTML = ""; // Clear chat history
-            chatMessages = []; // Reset message array
-            chatAnswers = []; // Reset answer array
+            chatbox.innerHTML = "";
+            chatMessages = [];
+            chatAnswers = [];
         }
 
         function resetAllSettings() {
-            localStorage.clear(); // Clear everything stored in localStorage
-            loadPreferences(); // Reset preferences to defaults
-            showPopup("All settings have been reset!"); // Show confirmation popup
+            localStorage.clear();
+            loadPreferences();
+            showPopup("All settings have been reset!");
         }
 
         function setReminder() {
