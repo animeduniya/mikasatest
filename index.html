@@ -523,42 +523,43 @@
                     let response;
                     const query = userMessage;
 
+                    // Replace with actual AI processing or function to handle the query
                     if (/what's your name|who are you/i.test(query)) {
                         response = `My name is ${chatbotName}.`;
                     } else if (/who made you|your creator/i.test(query)) {
                         response = "I was made by Rishab.";
                     } else if (/reminder/i.test(query)) {
-                        response = "I will remind you in a minute.";
+                        response = "I can help set reminders!";
                     } else {
-                        response = await puter.ai.chat(query);
+                        // Here, you would integrate with your AI or external function
+                        response = await puter.ai.chat(query); // Placeholder for response
                     }
 
                     chatbox.removeChild(typingIndicator);
 
-                    // Check if there's a valid response before populating the bot message
                     if (response && response.trim() !== "") {
                         const botMessageDiv = document.createElement("div");
                         botMessageDiv.className = "message bot";
                         botMessageDiv.textContent = `🤖 ${chatbotName}: ${response}`;
                         chatbox.appendChild(botMessageDiv);
+                        chatAnswers.push(`🤖 ${chatbotName}: ${response}`);
 
-                        // Speak the response without emojis
-                        speakResponse(response);
+                        speakResponse(response); // Call the speak function
                     }
 
                 } catch (error) {
                     console.error("An error occurred:", error);
                 }
 
-                chatbox.scrollTop = chatbox.scrollHeight; // Auto scroll
+                chatbox.scrollTop = chatbox.scrollHeight;
                 userInput.value = ""; // Clear input
             }
         }
 
-        // Speak responses without emojis
         function speakResponse(response) {
             if (voiceEnabled) {
-                const utterance = new SpeechSynthesisUtterance(response.replace(/[\u{1F600}-\u{1F64F}]/gu, '')); // Remove emojis
+                const filteredResponse = response.replace(/[\u{1F600}-\u{1F64F}]/gu, ''); // Remove emojis
+                const utterance = new SpeechSynthesisUtterance(filteredResponse);
                 utterance.voice = selectedVoice; // Use selected voice
                 utterance.lang = "en-US";
                 speechSynthesis.speak(utterance);
