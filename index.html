@@ -344,8 +344,11 @@
             <label for="themeSelection">Select Theme:</label>
             <select id="themeSelection" onchange="changeTheme()">
                 <option value="default">Default</option>
-                <option value="dark">Dark</option>
-                <option value="light">Light</option>
+                <option value="naruto">Naruto</option>
+                <option value="onepiece">One Piece</option>
+                <option value="attackontitan">Attack on Titan</option>
+                <option value="myheroacademia">My Hero Academia</option>
+                <option value="demonhunter">Demon Hunter</option>
             </select>
 
             <label for="voiceSelection">Select Voice:</label>
@@ -534,20 +537,18 @@
 
                     const botMessageDiv = document.createElement("div");
                     botMessageDiv.className = "message bot";
-                    botMessageDiv.textContent = `🤖 ${chatbotName}: ${response || "I'm still learning!"}`;
+                    botMessageDiv.textContent = `🤖 ${chatbotName}: ${response}`;
                     chatbox.appendChild(botMessageDiv);
 
-                    chatAnswers.push(`🤖 ${chatbotName}: ${response || "I'm still learning!"}`);
+                    chatAnswers.push(`🤖 ${chatbotName}: ${response}`);
 
                     if (voiceEnabled) {
                         speakResponse(response);
                     }
 
                 } catch (error) {
-                    const errorMessageDiv = document.createElement("div");
-                    errorMessageDiv.className = "message bot";
-                    errorMessageDiv.textContent = `🤖 ${chatbotName}: Oops! Something went wrong. Please try again.`;
-                    chatbox.appendChild(errorMessageDiv);
+                    // Log error for debugging without displaying to user
+                    console.error(error);
                 }
 
                 chatbox.scrollTop = chatbox.scrollHeight;
@@ -609,7 +610,7 @@
         function changeLanguage() {
             const selectedLanguage = document.getElementById("language").value;
             localStorage.setItem('language', selectedLanguage);
-            showPopup("Language changed to: " + selectedLanguage); 
+            showPopup("Language changed to: " + selectedLanguage);
         }
 
         function changeTheme() {
@@ -620,16 +621,50 @@
         }
 
         function changeThemeTheme(theme) {
-            if (theme === "dark") {
-                document.body.style.backgroundColor = "#121212";
-                document.body.style.color = "#ffffff";
-            } else if (theme === "light") {
-                document.body.style.backgroundColor = "#ffffff";
-                document.body.style.color = "#000000";
-            } else {
-                document.body.style.backgroundColor = '';
-                document.body.style.color = '#fff';
+            let backgroundImage = '';
+            let colorScheme = {};
+
+            switch (theme) {
+                case 'default':
+                    backgroundImage = "linear-gradient(180deg, rgba(10, 10, 20, 0.9), rgba(0, 0, 0, 0.8))";
+                    colorScheme = { text: '#fff', button: '#00ccff', buttonHover: '#00b3e3' };
+                    break;
+                case 'naruto':
+                    backgroundImage = "url('https://images.wallpapersden.com/image/download/naruto-uzumaki-intense-look_bmdlaG6UmZqaraWkpJRmbmdlrWZlZms.jpg')";
+                    colorScheme = { text: '#ffde00', button: '#00b3e3', buttonHover: '#0091bc' };
+                    break;
+                case 'onepiece':
+                    backgroundImage = "url('https://wallpapercave.com/wp/wp4358588.jpg')";
+                    colorScheme = { text: '#ffb300', button: '#ff5722', buttonHover: '#e64a19' };
+                    break;
+                case 'attackontitan':
+                    backgroundImage = "url('https://wallpapercave.com/wp/wp1820162.jpg')";
+                    colorScheme = { text: '#fff', button: '#757575', buttonHover: '#616161' };
+                    break;
+                case 'myheroacademia':
+                    backgroundImage = "url('https://wallpapercave.com/wp/wp2563165.jpg')";
+                    colorScheme = { text: '#ffffff', button: '#3f51b5', buttonHover: '#303f9f' };
+                    break;
+                case 'demonhunter':
+                    backgroundImage = "url('https://wallpapercave.com/wp/wp7787482.jpg')";
+                    colorScheme = { text: '#ff616f', button: '#6200ea', buttonHover: '#3700b3' };
+                    break;
             }
+
+            document.body.style.backgroundImage = backgroundImage;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.color = colorScheme.text;
+
+            const buttons = document.querySelectorAll('.user-input button, .epic-toggle-button');
+            buttons.forEach(button => {
+                button.style.background = colorScheme.button;
+                button.onmouseover = function () {
+                    this.style.background = colorScheme.buttonHover;
+                };
+                button.onmouseout = function () {
+                    this.style.background = colorScheme.button;
+                };
+            });
         }
 
         function resetChat() {
