@@ -437,6 +437,7 @@
             const voiceSelection = document.getElementById('voiceSelection');
             speechSynthesis.onvoiceschanged = () => {
                 voices = speechSynthesis.getVoices();
+                voiceSelection.innerHTML = ''; // Clear existing options to avoid duplicates
                 voices.forEach((voice) => {
                     const option = document.createElement('option');
                     option.value = voice.name;
@@ -444,7 +445,7 @@
                     voiceSelection.appendChild(option);
                 });
                 if (voiceSelection.options.length > 0) {
-                    selectedVoice = voices[0];
+                    selectedVoice = voices[0]; // Set default to the first voice
                 }
             };
         }
@@ -523,7 +524,7 @@
                     let response;
                     const query = userMessage;
 
-                    // Replace with actual AI processing or function to handle the query
+                    // Basic responses for testing
                     if (/what's your name|who are you/i.test(query)) {
                         response = `My name is ${chatbotName}.`;
                     } else if (/who made you|your creator/i.test(query)) {
@@ -531,8 +532,8 @@
                     } else if (/reminder/i.test(query)) {
                         response = "I can help set reminders!";
                     } else {
-                        // Here, you would integrate with your AI or external function
-                        response = await puter.ai.chat(query); // Placeholder for response
+                        // Placeholder for an actual chatbot response or AI logic
+                        response = `You said: ${userMessage}`; // Echoing the user input for testing
                     }
 
                     chatbox.removeChild(typingIndicator);
@@ -544,18 +545,20 @@
                         chatbox.appendChild(botMessageDiv);
                         chatAnswers.push(`🤖 ${chatbotName}: ${response}`);
 
-                        speakResponse(response); // Call the speak function
+                        // Speak the response without emojis
+                        speakResponse(response);
                     }
 
                 } catch (error) {
                     console.error("An error occurred:", error);
                 }
 
-                chatbox.scrollTop = chatbox.scrollHeight;
+                chatbox.scrollTop = chatbox.scrollHeight; // Auto scroll
                 userInput.value = ""; // Clear input
             }
         }
 
+        // Speak responses without emojis
         function speakResponse(response) {
             if (voiceEnabled) {
                 const filteredResponse = response.replace(/[\u{1F600}-\u{1F64F}]/gu, ''); // Remove emojis
