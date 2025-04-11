@@ -60,7 +60,7 @@
   <script>
     const searchAnime = () => {
       const query = document.getElementById("searchInput").value;
-      fetch(`https://api.anitaku.to/ajax/search?keyword=${query}`)
+      fetch(`https://api.anitaku.bz/ajax/search?keyword=${query}`)
         .then(res => res.json())
         .then(data => {
           const results = document.getElementById("animeResults");
@@ -83,7 +83,7 @@
       document.getElementById("watchView").style.display = "none";
       document.getElementById("animeTitle").textContent = title;
 
-      fetch(`https://api.anitaku.to/ajax/episode/list/${id}`)
+      fetch(`https://api.anitaku.bz/ajax/episode/list/${id}`)
         .then(res => res.json())
         .then(data => {
           const list = document.getElementById("episodeList");
@@ -102,7 +102,7 @@
       document.getElementById("homeView").style.display = "none";
       document.getElementById("animeView").style.display = "none";
       document.getElementById("watchView").style.display = "block";
-      document.getElementById("video").src = `https://anitaku.to/streaming.php?id=${episodeId}`;
+      document.getElementById("video").src = `https://anitaku.bz/streaming.php?id=${episodeId}`;
     };
 
     const goBack = () => {
