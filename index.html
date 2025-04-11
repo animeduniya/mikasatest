@@ -2,188 +2,119 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>SkyAnime Free Streaming</title>
+  <title>SkyAnime</title>
   <style>
     body {
+      font-family: sans-serif;
       background: #1e1e1e;
       color: white;
-      font-family: 'Segoe UI', sans-serif;
-      margin: 0;
-      padding: 0;
-    }
-
-    header {
-      background: #121212;
       padding: 20px;
-      text-align: center;
     }
-
     input {
-      width: 80%;
-      max-width: 600px;
-      padding: 10px;
-      border-radius: 5px;
-      border: none;
-      font-size: 16px;
-      margin-top: 10px;
+      padding: 8px;
+      width: 200px;
     }
-
-    section {
-      padding: 1rem;
-    }
-
-    h2 {
-      margin-left: 1rem;
-      margin-top: 2rem;
-    }
-
-    .anime-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-      gap: 1rem;
-      padding: 1rem;
-    }
-
-    .anime-card {
-      background: #2b2b2b;
-      border-radius: 8px;
-      overflow: hidden;
-      text-align: center;
-      padding-bottom: 10px;
-    }
-
-    .anime-card img {
-      width: 100%;
-      height: 230px;
-      object-fit: cover;
-    }
-
-    .episodes {
-      margin-top: 5px;
-    }
-
-    .episodes a {
+    a {
       color: #00bfff;
       text-decoration: none;
-      display: block;
-      margin-top: 5px;
-      font-size: 14px;
+      margin-bottom: 5px;
+      display: inline-block;
     }
-
+    #animeResults div, #episodeList a {
+      margin-top: 8px;
+    }
+    #episodeList, #playerContainer {
+      margin-top: 20px;
+    }
     iframe {
-      display: block;
-      margin: 20px auto;
-      width: 95%;
+      width: 100%;
       height: 500px;
       border: none;
-      border-radius: 10px;
-    }
-
-    @media (max-width: 600px) {
-      iframe {
-        height: 300px;
-      }
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
+  <h1>SkyAnime</h1>
 
-  <header>
-    <h1>SkyAnime</h1>
-    <input type="text" id="searchBox" placeholder="Search Anime...">
-  </header>
+  <div id="homeView">
+    <input type="text" id="searchInput" placeholder="Search anime...">
+    <button onclick="searchAnime()">Search</button>
+    <div id="animeResults"></div>
+  </div>
 
-  <section>
-    <h2>Search Results</h2>
-    <div id="animeList" class="anime-grid"></div>
-  </section>
+  <div id="animeView" style="display:none;">
+    <h2 id="animeTitle">Anime Title</h2>
+    <button onclick="goBack()">Back</button>
+    <div id="episodeList"></div>
+  </div>
 
-  <section>
-    <h2>Trending Anime</h2>
-    <div id="trendingList" class="anime-grid"></div>
-  </section>
-
-  <section>
-    <h2>New Anime</h2>
-    <div id="newList" class="anime-grid"></div>
-  </section>
-
-  <iframe id="player" src="" allowfullscreen></iframe>
+  <div id="watchView" style="display:none;">
+    <h2>Episode Player</h2>
+    <button onclick="goBackToAnime()">Back to Episodes</button>
+    <div id="playerContainer">
+      <iframe id="video" allowfullscreen></iframe>
+    </div>
+  </div>
 
   <script>
-    const searchBox = document.getElementById('searchBox');
-    const animeList = document.getElementById('animeList');
-    const trendingList = document.getElementById('trendingList');
-    const newList = document.getElementById('newList');
-    const player = document.getElementById('player');
+    const searchAnime = () => {
+      const query = document.getElementById("searchInput").value;
+      fetch(`https://api.anitaku.to/ajax/search?keyword=${query}`)
+        .then(res => res.json())
+        .then(data => {
+          const results = document.getElementById("animeResults");
+          results.innerHTML = "";
+          data.result.forEach(anime => {
+            const div = document.createElement("div");
+            const a = document.createElement("a");
+            a.href = "#";
+            a.textContent = anime.name;
+            a.onclick = () => loadAnime(anime.id, anime.name);
+            div.appendChild(a);
+            results.appendChild(div);
+          });
+        });
+    };
 
-    async function searchAnime(query) {
-      const res = await fetch(`https://animeapi.skin/search?q=${encodeURIComponent(query)}`);
-      return await res.json();
-    }
+    const loadAnime = (id, title) => {
+      document.getElementById("homeView").style.display = "none";
+      document.getElementById("animeView").style.display = "block";
+      document.getElementById("watchView").style.display = "none";
+      document.getElementById("animeTitle").textContent = title;
 
-    async function getEpisodes(title) {
-      const res = await fetch(`https://animeapi.skin/episodes?title=${encodeURIComponent(title)}`);
-      const data = await res.json();
-      return data.episodes || [];
-    }
+      fetch(`https://api.anitaku.to/ajax/episode/list/${id}`)
+        .then(res => res.json())
+        .then(data => {
+          const list = document.getElementById("episodeList");
+          list.innerHTML = "";
+          Object.entries(data.episode).reverse().forEach(([key, ep]) => {
+            const link = document.createElement("a");
+            link.href = "#";
+            link.textContent = `Episode ${key}`;
+            link.onclick = () => watchEpisode(ep.id);
+            list.appendChild(link);
+          });
+        });
+    };
 
-    async function loadTrending() {
-      const res = await fetch(`https://animeapi.skin/trending`);
-      const results = await res.json();
-      renderAnimeCards(results, trendingList);
-    }
+    const watchEpisode = (episodeId) => {
+      document.getElementById("homeView").style.display = "none";
+      document.getElementById("animeView").style.display = "none";
+      document.getElementById("watchView").style.display = "block";
+      document.getElementById("video").src = `https://anitaku.to/streaming.php?id=${episodeId}`;
+    };
 
-    async function loadNew() {
-      const res = await fetch(`https://animeapi.skin/new?page=1`);
-      const results = await res.json();
-      renderAnimeCards(results, newList);
-    }
+    const goBack = () => {
+      document.getElementById("homeView").style.display = "block";
+      document.getElementById("animeView").style.display = "none";
+      document.getElementById("watchView").style.display = "none";
+    };
 
-    async function renderAnime(query) {
-      animeList.innerHTML = '';
-      const results = await searchAnime(query);
-      renderAnimeCards(results, animeList);
-    }
-
-    async function renderAnimeCards(results, container) {
-      container.innerHTML = '';
-      results.forEach(async anime => {
-        const episodes = await getEpisodes(anime.title);
-        const card = document.createElement('div');
-        card.className = 'anime-card';
-        card.innerHTML = `
-          <img src="${anime.image}" alt="${anime.title}">
-          <h3>${anime.title}</h3>
-          <div class="episodes">
-            ${episodes.slice(0, 3).map(ep => `<a href="#" data-title="${anime.title}" data-ep="${ep.number}">Watch Ep ${ep.number}</a>`).join('')}
-          </div>
-        `;
-        container.appendChild(card);
-      });
-    }
-
-    searchBox.addEventListener('input', (e) => {
-      const query = e.target.value.trim();
-      if (query.length > 2) renderAnime(query);
-      else animeList.innerHTML = '';
-    });
-
-    document.addEventListener('click', (e) => {
-      if (e.target.matches('.episodes a')) {
-        e.preventDefault();
-        const title = e.target.dataset.title;
-        const ep = e.target.dataset.ep;
-        const embedUrl = `https://2anime.xyz/embed/${encodeURIComponent(title)}-episode-${ep}`;
-        player.src = embedUrl;
-        player.scrollIntoView({ behavior: 'smooth' });
-      }
-    });
-
-    loadTrending();
-    loadNew();
+    const goBackToAnime = () => {
+      document.getElementById("animeView").style.display = "block";
+      document.getElementById("watchView").style.display = "none";
+    };
   </script>
-
 </body>
 </html>
