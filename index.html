@@ -2,95 +2,83 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AnimePahe Stream</title>
+  <title>Zoro Anime Streaming</title>
   <style>
     body {
+      background-color: #121212;
+      color: white;
       font-family: Arial, sans-serif;
-      background: #111;
-      color: #eee;
-      margin: 0;
+      text-align: center;
       padding: 20px;
     }
-    h1, h2 {
-      text-align: center;
-    }
-    #search-box {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-    input, button {
+    input {
       padding: 10px;
+      width: 300px;
       font-size: 16px;
     }
-    .anime-list, .episode-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
+    button {
+      padding: 10px 15px;
+      font-size: 16px;
+      cursor: pointer;
     }
     .anime-card, .episode-card {
-      background: #222;
-      padding: 10px;
+      background: #1e1e1e;
+      padding: 15px;
+      margin: 10px;
+      display: inline-block;
       border-radius: 8px;
-      width: 180px;
-      text-align: center;
+      max-width: 200px;
     }
     .anime-card img {
       width: 100%;
       border-radius: 5px;
     }
-    iframe {
-      display: block;
-      margin: 20px auto;
+    video {
       width: 80%;
-      height: 480px;
+      margin-top: 20px;
     }
   </style>
 </head>
 <body>
+  <h1>🌸 Zoro Anime Streaming</h1>
+  <input type="text" id="search" placeholder="Search for an anime..." />
+  <button onclick="searchAnime()">Search</button>
 
-  <h1>🍿 AnimePahe Streaming</h1>
-
-  <div id="search-box">
-    <input type="text" id="search" placeholder="Search Anime Title...">
-    <button onclick="searchAnime()">Search</button>
-  </div>
-
-  <div id="anime-results" class="anime-list"></div>
+  <div id="anime-results"></div>
   <h2 id="episodes-title"></h2>
-  <div id="episode-results" class="episode-list"></div>
+  <div id="episode-results"></div>
   <div id="player"></div>
 
   <script>
-    const BASE_URL = 'https://api-consumet-org-mx31.vercel.app/anime/zoro';
+    const BASE_URL = "https://api-consumet-org-mx31.vercel.app/anime/zoro";
 
     async function searchAnime() {
-      const query = document.getElementById('search').value.trim();
+      const query = document.getElementById("search").value.trim();
       if (!query) return;
 
-      document.getElementById('anime-results').innerHTML = '<p>Searching...</p>';
-      document.getElementById('episode-results').innerHTML = '';
-      document.getElementById('player').innerHTML = '';
-      document.getElementById('episodes-title').innerText = '';
+      document.getElementById("anime-results").innerHTML = "Searching...";
+      document.getElementById("episode-results").innerHTML = "";
+      document.getElementById("player").innerHTML = "";
+      document.getElementById("episodes-title").innerText = "";
 
       const res = await fetch(`${BASE_URL}/${encodeURIComponent(query)}`);
       const data = await res.json();
 
-      const container = document.getElementById('anime-results');
-      container.innerHTML = '';
+      const container = document.getElementById("anime-results");
+      container.innerHTML = "";
 
-      if (!data || !data.results) {
-        container.innerHTML = '<p>No anime found.</p>';
+      if (!data.results || data.results.length === 0) {
+        container.innerHTML = "<p>No results found.</p>";
         return;
       }
 
       data.results.forEach(anime => {
-        const card = document.createElement('div');
-        card.className = 'anime-card';
+        const card = document.createElement("div");
+        card.className = "anime-card";
         card.innerHTML = `
           <img src="${anime.image}" alt="${anime.title}">
           <h4>${anime.title}</h4>
-          <button onclick="loadEpisodes('${anime.id}', '${anime.title}')">View Episodes</button>
+          <button onclick="loadEpisodes('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')">View Episodes</button>
         `;
         container.appendChild(card);
       });
@@ -100,15 +88,20 @@
       const res = await fetch(`${BASE_URL}/info/${id}`);
       const data = await res.json();
 
-      const epContainer = document.getElementById('episode-results');
-      const player = document.getElementById('player');
-      epContainer.innerHTML = '';
-      player.innerHTML = '';
-      document.getElementById('episodes-title').innerText = `Episodes - ${title}`;
+      const epContainer = document.getElementById("episode-results");
+      const player = document.getElementById("player");
+      epContainer.innerHTML = "";
+      player.innerHTML = "";
+      document.getElementById("episodes-title").innerText = `Episodes - ${title}`;
+
+      if (!data.episodes || data.episodes.length === 0) {
+        epContainer.innerHTML = "<p>No episodes found.</p>";
+        return;
+      }
 
       data.episodes.reverse().forEach(episode => {
-        const ep = document.createElement('div');
-        ep.className = 'episode-card';
+        const ep = document.createElement("div");
+        ep.className = "episode-card";
         ep.innerHTML = `
           <p>Episode ${episode.number}</p>
           <button onclick="playEpisode('${episode.id}')">▶️ Watch</button>
@@ -117,22 +110,25 @@
       });
     }
 
-    async function playEpisode(epId) {
-      const res = await fetch(`${BASE_URL}/watch/${epId}`);
+    async function playEpisode(episodeId) {
+      const res = await fetch(`${BASE_URL}/watch/${episodeId}`);
       const data = await res.json();
 
-      const player = document.getElementById('player');
-      player.innerHTML = '';
+      const player = document.getElementById("player");
+      player.innerHTML = "";
 
-      if (data.headers?.Referer || data?.sources?.[0]?.url) {
-        const source = data.sources.find(src => src.quality === '720p') || data.sources[0];
+      if (data.sources && data.sources.length > 0) {
+        const bestSource = data.sources.find(src => src.quality === "default") || data.sources[0];
 
         player.innerHTML = `
-          <h2>🎥 Now Playing</h2>
-          <iframe src="${source.url}" frameborder="0" allowfullscreen></iframe>
+          <h2>🎬 Now Playing</h2>
+          <video controls autoplay>
+            <source src="${bestSource.url}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video>
         `;
       } else {
-        player.innerHTML = '<p>⚠️ Video not available.</p>';
+        player.innerHTML = "<p>⚠️ Video not available.</p>";
       }
     }
   </script>
