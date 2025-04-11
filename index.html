@@ -106,7 +106,7 @@
 
         const mangaDiv = document.createElement("div");
         mangaDiv.innerHTML = `<img src="${img}" alt="${title}" title="${title}"><br><strong>${title}</strong>`;
-        mangaDiv.onclick = () => loadChaptersByTitle(title);
+        mangaDiv.onclick = () => loadAllChaptersByTitle(title);
         resultsDiv.appendChild(mangaDiv);
       });
 
@@ -114,11 +114,11 @@
       document.getElementById("reader").innerHTML = "";
     }
 
-    async function loadChaptersByTitle(title) {
+    async function loadAllChaptersByTitle(title) {
       const encodedTitle = encodeURIComponent(title);
-      const mangadexSearchUrl = `https://api.mangadex.org/manga?title=${encodedTitle}`;
+      const searchUrl = `https://api.mangadex.org/manga?title=${encodedTitle}`;
 
-      const response = await fetch(`${CORS_PROXY}${encodeURIComponent(mangadexSearchUrl)}`);
+      const response = await fetch(`${CORS_PROXY}${encodeURIComponent(searchUrl)}`);
       const data = JSON.parse(await response.text());
       const mangaList = JSON.parse(data.contents).data;
 
@@ -128,20 +128,38 @@
       }
 
       const mangaId = mangaList[0].id;
-      const chaptersUrl = `https://api.mangadex.org/chapter?manga=${mangaId}&translatedLanguage[]=en&order[chapter]=asc`;
+      await fetchAllChapters(mangaId);
+    }
 
-      const chaptersResponse = await fetch(`${CORS_PROXY}${encodeURIComponent(chaptersUrl)}`);
-      const chaptersData = JSON.parse(await chaptersResponse.text());
-      const chapters = JSON.parse(chaptersData.contents).data;
+    async function fetchAllChapters(mangaId, offset = 0, allChapters = []) {
+      const limit = 100;
+      const chaptersUrl = `https://api.mangadex.org/chapter?manga=${mangaId}&translatedLanguage[]=en&order[chapter]=asc&limit=${limit}&offset=${offset}`;
+      const response = await fetch(`${CORS_PROXY}${encodeURIComponent(chaptersUrl)}`);
+      const data = JSON.parse(await response.text());
+      const json = JSON.parse(data.contents);
 
+      const newChapters = json.data;
+      const total = json.total;
+
+      allChapters.push(...newChapters);
+
+      if (offset + limit < total) {
+        return fetchAllChapters(mangaId, offset + limit, allChapters);
+      } else {
+        displayChapters(allChapters);
+      }
+    }
+
+    function displayChapters(chapters) {
       const chaptersDiv = document.getElementById("chapters");
-      chaptersDiv.innerHTML = "<h2>Chapters</h2>";
+      chaptersDiv.innerHTML = "<h2>All Chapters</h2>";
 
       chapters.forEach(chap => {
         const chapId = chap.id;
-        const chapTitle = chap.attributes.title || `Chapter ${chap.attributes.chapter || "?"}`;
+        const chapterNumber = chap.attributes.chapter || "?";
+        const title = chap.attributes.title || `Chapter ${chapterNumber}`;
         const btn = document.createElement("button");
-        btn.textContent = chapTitle;
+        btn.textContent = title.length > 30 ? `Chapter ${chapterNumber}` : title;
         btn.onclick = () => readChapter(chapId);
         chaptersDiv.appendChild(btn);
       });
