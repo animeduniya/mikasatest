@@ -2,103 +2,139 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>AnimePahe Search</title>
+  <title>AnimePahe Stream</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      background: #111;
+      color: #eee;
+      margin: 0;
       padding: 20px;
     }
-    h1 {
+    h1, h2 {
       text-align: center;
     }
-    #search-form {
+    #search-box {
       text-align: center;
       margin-bottom: 20px;
     }
-    #search-input {
-      width: 300px;
+    input, button {
       padding: 10px;
       font-size: 16px;
     }
-    #search-button {
-      padding: 10px 20px;
-      font-size: 16px;
-    }
-    #results {
+    .anime-list, .episode-list {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
+      gap: 15px;
     }
-    .anime-card {
-      background-color: #fff;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      width: 200px;
-      margin: 10px;
+    .anime-card, .episode-card {
+      background: #222;
       padding: 10px;
+      border-radius: 8px;
+      width: 180px;
       text-align: center;
     }
     .anime-card img {
       width: 100%;
-      height: auto;
       border-radius: 5px;
     }
-    .anime-title {
-      font-weight: bold;
-      margin-top: 10px;
+    iframe {
+      display: block;
+      margin: 20px auto;
+      width: 80%;
+      height: 480px;
     }
   </style>
 </head>
 <body>
-  <h1>AnimePahe Search</h1>
-  <div id="search-form">
-    <input type="text" id="search-input" placeholder="Enter anime title">
-    <button id="search-button">Search</button>
+
+  <h1>🍿 AnimePahe Streaming</h1>
+
+  <div id="search-box">
+    <input type="text" id="search" placeholder="Search Anime Title...">
+    <button onclick="searchAnime()">Search</button>
   </div>
-  <div id="results"></div>
+
+  <div id="anime-results" class="anime-list"></div>
+  <h2 id="episodes-title"></h2>
+  <div id="episode-results" class="episode-list"></div>
+  <div id="player"></div>
 
   <script>
-    document.getElementById('search-button').addEventListener('click', function() {
-      const query = document.getElementById('search-input').value.trim();
-      if (!query) {
-        alert('Please enter an anime title.');
+    const BASE_URL = 'https://api-consumet-org-mx31.vercel.app/anime/animepahe';
+
+    async function searchAnime() {
+      const query = document.getElementById('search').value.trim();
+      if (!query) return;
+
+      document.getElementById('anime-results').innerHTML = '<p>Searching...</p>';
+      document.getElementById('episode-results').innerHTML = '';
+      document.getElementById('player').innerHTML = '';
+      document.getElementById('episodes-title').innerText = '';
+
+      const res = await fetch(`${BASE_URL}/${encodeURIComponent(query)}`);
+      const data = await res.json();
+
+      const container = document.getElementById('anime-results');
+      container.innerHTML = '';
+
+      if (!data || !data.results) {
+        container.innerHTML = '<p>No anime found.</p>';
         return;
       }
 
-      const resultsContainer = document.getElementById('results');
-      resultsContainer.innerHTML = '<p>Loading...</p>';
+      data.results.forEach(anime => {
+        const card = document.createElement('div');
+        card.className = 'anime-card';
+        card.innerHTML = `
+          <img src="${anime.image}" alt="${anime.title}">
+          <h4>${anime.title}</h4>
+          <button onclick="loadEpisodes('${anime.id}', '${anime.title}')">View Episodes</button>
+        `;
+        container.appendChild(card);
+      });
+    }
 
-      fetch(`https://api-consumet-org-mx31.vercel.app/anime/animepahe/${encodeURIComponent(query)}`)
-        .then(response => response.json())
-        .then(data => {
-          resultsContainer.innerHTML = '';
-          if (data && data.results && data.results.length > 0) {
-            data.results.forEach(anime => {
-              const card = document.createElement('div');
-              card.className = 'anime-card';
+    async function loadEpisodes(id, title) {
+      const res = await fetch(`${BASE_URL}/info/${id}`);
+      const data = await res.json();
 
-              const img = document.createElement('img');
-              img.src = anime.image;
-              img.alt = anime.title;
+      const epContainer = document.getElementById('episode-results');
+      const player = document.getElementById('player');
+      epContainer.innerHTML = '';
+      player.innerHTML = '';
+      document.getElementById('episodes-title').innerText = `Episodes - ${title}`;
 
-              const title = document.createElement('div');
-              title.className = 'anime-title';
-              title.textContent = anime.title;
+      data.episodes.reverse().forEach(episode => {
+        const ep = document.createElement('div');
+        ep.className = 'episode-card';
+        ep.innerHTML = `
+          <p>Episode ${episode.number}</p>
+          <button onclick="playEpisode('${episode.id}')">▶️ Watch</button>
+        `;
+        epContainer.appendChild(ep);
+      });
+    }
 
-              card.appendChild(img);
-              card.appendChild(title);
-              resultsContainer.appendChild(card);
-            });
-          } else {
-            resultsContainer.innerHTML = '<p>No results found.</p>';
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-          resultsContainer.innerHTML = '<p>Error fetching data. Please try again later.</p>';
-        });
-    });
+    async function playEpisode(epId) {
+      const res = await fetch(`${BASE_URL}/watch/${epId}`);
+      const data = await res.json();
+
+      const player = document.getElementById('player');
+      player.innerHTML = '';
+
+      if (data.headers?.Referer || data?.sources?.[0]?.url) {
+        const source = data.sources.find(src => src.quality === '720p') || data.sources[0];
+
+        player.innerHTML = `
+          <h2>🎥 Now Playing</h2>
+          <iframe src="${source.url}" frameborder="0" allowfullscreen></iframe>
+        `;
+      } else {
+        player.innerHTML = '<p>⚠️ Video not available.</p>';
+      }
+    }
   </script>
 </body>
 </html>
