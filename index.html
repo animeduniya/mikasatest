@@ -2,135 +2,134 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Anime Streaming</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SkyAnime Free Streaming</title>
   <style>
     body {
-      background-color: #121212;
-      color: white;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      padding: 20px;
-    }
-    input {
-      padding: 10px;
-      width: 300px;
-      font-size: 16px;
-    }
-    button {
-      padding: 10px 15px;
-      font-size: 16px;
-      cursor: pointer;
-    }
-    .anime-card, .episode-card {
       background: #1e1e1e;
-      padding: 15px;
-      margin: 10px;
-      display: inline-block;
-      border-radius: 8px;
-      max-width: 200px;
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
     }
+
+    header {
+      background: #121212;
+      padding: 20px;
+      text-align: center;
+    }
+
+    input {
+      width: 60%;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      font-size: 16px;
+    }
+
+    .anime-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    .anime-card {
+      background: #2b2b2b;
+      border-radius: 8px;
+      overflow: hidden;
+      text-align: center;
+      padding-bottom: 10px;
+    }
+
     .anime-card img {
       width: 100%;
-      border-radius: 5px;
+      height: 250px;
+      object-fit: cover;
     }
-    video {
-      width: 80%;
-      margin-top: 20px;
+
+    .episodes {
+      margin-top: 5px;
+    }
+
+    .episodes a {
+      color: #00bfff;
+      text-decoration: none;
+      display: block;
+      margin-top: 5px;
+    }
+
+    iframe {
+      display: block;
+      margin: 20px auto;
+      width: 90%;
+      height: 500px;
+      border: none;
+      border-radius: 10px;
     }
   </style>
 </head>
 <body>
-  <h1>🌸 Anime Streaming</h1>
-  <input type="text" id="search" placeholder="Search for an anime..." />
-  <button onclick="searchAnime()">Search</button>
 
-  <div id="anime-results"></div>
-  <h2 id="episodes-title"></h2>
-  <div id="episode-results"></div>
-  <div id="player"></div>
+  <header>
+    <h1>SkyAnime</h1>
+    <input type="text" id="searchBox" placeholder="Search Anime...">
+  </header>
+
+  <div id="animeList" class="anime-grid"></div>
+  <iframe id="player" src="" allowfullscreen></iframe>
 
   <script>
-    const BASE_URL = "https://api-consumet-org-mx31.vercel.app/anime/animefox";
+    const searchBox = document.getElementById('searchBox');
+    const animeList = document.getElementById('animeList');
+    const player = document.getElementById('player');
 
-    async function searchAnime() {
-      const query = document.getElementById("search").value.trim();
-      if (!query) return;
+    async function searchAnime(query) {
+      const res = await fetch(`https://animeapi.skin/search?q=${encodeURIComponent(query)}`);
+      return await res.json();
+    }
 
-      document.getElementById("anime-results").innerHTML = "Searching...";
-      document.getElementById("episode-results").innerHTML = "";
-      document.getElementById("player").innerHTML = "";
-      document.getElementById("episodes-title").innerText = "";
-
-      const res = await fetch(`${BASE_URL}/${encodeURIComponent(query)}`);
+    async function getEpisodes(title) {
+      const res = await fetch(`https://animeapi.skin/episodes?title=${encodeURIComponent(title)}`);
       const data = await res.json();
+      return data.episodes || [];
+    }
 
-      const container = document.getElementById("anime-results");
-      container.innerHTML = "";
+    async function renderAnime(query) {
+      animeList.innerHTML = '';
+      const results = await searchAnime(query);
 
-      if (!data.results || data.results.length === 0) {
-        container.innerHTML = "<p>No results found.</p>";
-        return;
-      }
-
-      data.results.forEach(anime => {
-        const card = document.createElement("div");
-        card.className = "anime-card";
+      results.forEach(async anime => {
+        const episodes = await getEpisodes(anime.title);
+        const card = document.createElement('div');
+        card.className = 'anime-card';
         card.innerHTML = `
           <img src="${anime.image}" alt="${anime.title}">
-          <h4>${anime.title}</h4>
-          <button onclick="loadEpisodes('${anime.id}', '${anime.title.replace(/'/g, "\\'")}')">View Episodes</button>
+          <h3>${anime.title}</h3>
+          <div class="episodes">
+            ${episodes.slice(0, 5).map(ep => `<a href="#" data-title="${anime.title}" data-ep="${ep.number}">Watch Episode ${ep.number}</a>`).join('')}
+          </div>
         `;
-        container.appendChild(card);
+        animeList.appendChild(card);
       });
     }
 
-    async function loadEpisodes(id, title) {
-      const res = await fetch(`${BASE_URL}/info/${id}`);
-      const data = await res.json();
+    searchBox.addEventListener('keyup', (e) => {
+      const query = e.target.value.trim();
+      if (query.length > 2) renderAnime(query);
+    });
 
-      const epContainer = document.getElementById("episode-results");
-      const player = document.getElementById("player");
-      epContainer.innerHTML = "";
-      player.innerHTML = "";
-      document.getElementById("episodes-title").innerText = `Episodes - ${title}`;
-
-      if (!data.episodes || data.episodes.length === 0) {
-        epContainer.innerHTML = "<p>No episodes found.</p>";
-        return;
+    document.addEventListener('click', (e) => {
+      if (e.target.matches('.episodes a')) {
+        e.preventDefault();
+        const title = e.target.dataset.title;
+        const ep = e.target.dataset.ep;
+        const embedUrl = `https://2anime.xyz/embed/${encodeURIComponent(title)}-episode-${ep}`;
+        player.src = embedUrl;
+        player.scrollIntoView({ behavior: 'smooth' });
       }
-
-      data.episodes.reverse().forEach(episode => {
-        const ep = document.createElement("div");
-        ep.className = "episode-card";
-        ep.innerHTML = `
-          <p>Episode ${episode.number}</p>
-          <button onclick="playEpisode('${episode.id}')">▶️ Watch</button>
-        `;
-        epContainer.appendChild(ep);
-      });
-    }
-
-    async function playEpisode(episodeId) {
-      const res = await fetch(`${BASE_URL}/watch/${episodeId}`);
-      const data = await res.json();
-
-      const player = document.getElementById("player");
-      player.innerHTML = "";
-
-      if (data.sources && data.sources.length > 0) {
-        const bestSource = data.sources.find(src => src.quality === "default") || data.sources[0];
-
-        player.innerHTML = `
-          <h2>🎬 Now Playing</h2>
-          <video controls autoplay>
-            <source src="${bestSource.url}" type="video/mp4">
-            Your browser does not support the video tag.
-          </video>
-        `;
-      } else {
-        player.innerHTML = "<p>⚠️ Video not available.</p>";
-      }
-    }
+    });
   </script>
+
 </body>
 </html>
