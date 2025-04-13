@@ -59,15 +59,15 @@
   <div id="reader"></div>
 
   <script>
-    const CORS_PROXY = "https://api.allorigins.win/get?url=";
     const CONSUMET_API_BASE_URL = "https://api-consumet-org-mx31.vercel.app";
 
+    // Function to handle manga search
     async function searchManga() {
       const query = document.getElementById("searchInput").value.trim();
       if (!query) return;
 
-      const encodedQuery = encodeURIComponent(`/manga/mangapill/${query}`);
-      const response = await fetch(`${CONSUMET_API_BASE_URL}/manga/mangapill/${encodedQuery}`);
+      const searchUrl = `${CONSUMET_API_BASE_URL}/manga/mangapill/search?query=${encodeURIComponent(query)}`;
+      const response = await fetch(searchUrl);
       const data = await response.json();
 
       console.log("Search Results:", data); // Debugging: Show search results
@@ -85,7 +85,7 @@
 
           const mangaDiv = document.createElement("div");
           mangaDiv.innerHTML = `<img src="${img}" alt="${title}" title="${title}"><br><strong>${title}</strong>`;
-          mangaDiv.onclick = () => loadConsumetManga(mangaUrl);
+          mangaDiv.onclick = () => loadMangaChapters(mangaUrl);
           resultsDiv.appendChild(mangaDiv);
         });
       } else {
@@ -97,8 +97,10 @@
       document.getElementById("reader").innerHTML = "";
     }
 
-    async function loadConsumetManga(mangaUrl) {
-      const response = await fetch(`${CONSUMET_API_BASE_URL}/manga/mangapill/chapters?url=${encodeURIComponent(mangaUrl)}`);
+    // Function to load manga chapters
+    async function loadMangaChapters(mangaUrl) {
+      const chaptersUrl = `${CONSUMET_API_BASE_URL}/manga/mangapill/chapters?url=${encodeURIComponent(mangaUrl)}`;
+      const response = await fetch(chaptersUrl);
       const data = await response.json();
 
       console.log("Fetched Manga Chapters:", data); // Debugging: Check chapter data
@@ -115,15 +117,17 @@
         const chapTitle = chap.title || `Chapter ${chap.chapter}`;
         const btn = document.createElement("button");
         btn.textContent = chapTitle;
-        btn.onclick = () => readConsumetChapter(chap.chapterUrl);
+        btn.onclick = () => readChapter(chap.chapterUrl);
         chaptersDiv.appendChild(btn);
       });
 
       document.getElementById("reader").innerHTML = "";
     }
 
-    async function readConsumetChapter(chapterUrl) {
-      const response = await fetch(`${CONSUMET_API_BASE_URL}/manga/mangapill/chapter?url=${encodeURIComponent(chapterUrl)}`);
+    // Function to read manga chapter
+    async function readChapter(chapterUrl) {
+      const chapterDetailsUrl = `${CONSUMET_API_BASE_URL}/manga/mangapill/chapter?url=${encodeURIComponent(chapterUrl)}`;
+      const response = await fetch(chapterDetailsUrl);
       const data = await response.json();
 
       console.log("Chapter Data:", data); // Debugging: Check individual chapter data
