@@ -72,21 +72,27 @@
 
       console.log("Search Results:", data); // Debugging: Show search results
 
-      const results = data.results || [];
       const resultsDiv = document.getElementById("results");
-      resultsDiv.innerHTML = "<h2>Search Results</h2>";
+      resultsDiv.innerHTML = "";
 
-      results.forEach(manga => {
-        const title = manga.title;
-        const img = manga.image || "";
-        const mangaUrl = manga.url;
+      if (data && data.results && data.results.length > 0) {
+        const results = data.results;
 
-        const mangaDiv = document.createElement("div");
-        mangaDiv.innerHTML = `<img src="${img}" alt="${title}" title="${title}"><br><strong>${title}</strong>`;
-        mangaDiv.onclick = () => loadConsumetManga(mangaUrl);
-        resultsDiv.appendChild(mangaDiv);
-      });
+        results.forEach(manga => {
+          const title = manga.title;
+          const img = manga.image || "";
+          const mangaUrl = manga.url;
 
+          const mangaDiv = document.createElement("div");
+          mangaDiv.innerHTML = `<img src="${img}" alt="${title}" title="${title}"><br><strong>${title}</strong>`;
+          mangaDiv.onclick = () => loadConsumetManga(mangaUrl);
+          resultsDiv.appendChild(mangaDiv);
+        });
+      } else {
+        resultsDiv.innerHTML = "<h2>No Results Found</h2>";
+      }
+
+      // Clear chapters and reader when new search happens
       document.getElementById("chapters").innerHTML = "";
       document.getElementById("reader").innerHTML = "";
     }
@@ -97,8 +103,8 @@
 
       console.log("Fetched Manga Chapters:", data); // Debugging: Check chapter data
 
-      if (!data.chapters || data.chapters.length === 0) {
-        alert("No chapters found for this manga.");
+      if (!data || !data.chapters || data.chapters.length === 0) {
+        document.getElementById("chapters").innerHTML = "<h2>No chapters found for this manga.</h2>";
         return;
       }
 
@@ -122,8 +128,8 @@
 
       console.log("Chapter Data:", data); // Debugging: Check individual chapter data
 
-      if (!data.images || data.images.length === 0) {
-        alert("No images found for this chapter.");
+      if (!data || !data.images || data.images.length === 0) {
+        document.getElementById("reader").innerHTML = "<h2>No images found for this chapter.</h2>";
         return;
       }
 
