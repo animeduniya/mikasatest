@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Manga Reader with Comick API</title>
+  <title>Manga Reader (Comick API)</title>
   <style>
     body {
       background-color: #1e1e1e;
@@ -28,6 +28,9 @@
       object-fit: cover;
       border-radius: 10px;
       border: 2px solid white;
+    }
+    #chapters {
+      margin-top: 20px;
     }
     #chapters button {
       margin: 5px;
@@ -59,7 +62,7 @@
     const CORS_PROXY = "https://api.allorigins.win/get?url=";
 
     async function searchManga() {
-      const query = document.getElementById("searchInput").value;
+      const query = document.getElementById("searchInput").value.trim();
       if (!query) return;
 
       const encodedQuery = encodeURIComponent(`https://kitsu.io/api/edge/manga?filter[text]=${query}`);
@@ -102,7 +105,7 @@
     }
 
     async function fetchComickChapters(slug) {
-      const url = `https://api.comick.io/v1.0/comic/${slug}/chapters`;
+      const url = `https://api.comick.io/v1.0/comic/${slug}/chapters?lang=en`; // restrict to English
       const response = await fetch(`${CORS_PROXY}${encodeURIComponent(url)}`);
       const data = JSON.parse(await response.text());
       const chapters = JSON.parse(data.contents).chapters;
@@ -110,9 +113,18 @@
       const chaptersDiv = document.getElementById("chapters");
       chaptersDiv.innerHTML = "<h2>All Chapters</h2>";
 
-      chapters.reverse().forEach(chap => {
+      if (!chapters.length) {
+        chaptersDiv.innerHTML += "<p>No English chapters found.</p>";
+        return;
+      }
+
+      chapters.sort((a, b) => parseFloat(b.chap || 0) - parseFloat(a.chap || 0)); // descending order
+
+      chapters.forEach(chap => {
+        const chapNum = chap.chap || "?";
+        const chapTitle = chap.title || `Chapter ${chapNum}`;
         const btn = document.createElement("button");
-        btn.textContent = chap.title || `Chapter ${chap.chap}`;
+        btn.textContent = chapTitle;
         btn.onclick = () => readComickChapter(chap.hid);
         chaptersDiv.appendChild(btn);
       });
