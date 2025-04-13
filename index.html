@@ -67,7 +67,9 @@
 
       const encodedQuery = encodeURIComponent(`https://kitsu.io/api/edge/manga?filter[text]=${query}`);
       const response = await fetch(`${CORS_PROXY}${encodedQuery}`);
-      const data = JSON.parse(await response.text());
+      const data = await response.json();
+      
+      console.log("Search Results:", data); // Debugging: Show search results
 
       const results = data.contents ? JSON.parse(data.contents).data : [];
       const resultsDiv = document.getElementById("results");
@@ -92,10 +94,12 @@
       const encodedTitle = encodeURIComponent(title);
       const url = `https://api.comick.io/v1.0/search?q=${encodedTitle}`;
       const response = await fetch(`${CORS_PROXY}${encodeURIComponent(url)}`);
-      const data = JSON.parse(await response.text());
-      const results = JSON.parse(data.contents);
+      const data = await response.json();
 
-      if (!results.length) {
+      console.log("Comick Search Result:", data); // Debugging: Check search result from Comick API
+
+      const results = JSON.parse(data.contents);
+      if (!results || results.length === 0) {
         alert("Manga not found on Comick.");
         return;
       }
@@ -107,8 +111,11 @@
     async function fetchComickChapters(slug) {
       const url = `https://api.comick.io/v1.0/comic/${slug}/chapters?lang=en`; // restrict to English
       const response = await fetch(`${CORS_PROXY}${encodeURIComponent(url)}`);
-      const data = JSON.parse(await response.text());
-      const chapters = JSON.parse(data.contents).chapters;
+      const data = await response.json();
+
+      console.log("Fetched Chapters:", data); // Debugging: Check chapter data
+
+      const chapters = JSON.parse(data.contents)?.chapters || [];
 
       const chaptersDiv = document.getElementById("chapters");
       chaptersDiv.innerHTML = "<h2>All Chapters</h2>";
@@ -135,7 +142,10 @@
     async function readComickChapter(hid) {
       const url = `https://api.comick.io/v1.0/chapter/${hid}`;
       const response = await fetch(`${CORS_PROXY}${encodeURIComponent(url)}`);
-      const data = JSON.parse(await response.text());
+      const data = await response.json();
+
+      console.log("Chapter Data:", data); // Debugging: Check individual chapter data
+
       const chapterData = JSON.parse(data.contents);
 
       const readerDiv = document.getElementById("reader");
