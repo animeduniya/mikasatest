@@ -1,154 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Manga Reader (Consumet API)</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Anime Streaming - SkyAnime</title>
   <style>
     body {
-      background-color: #1e1e1e;
-      color: white;
       font-family: Arial, sans-serif;
+      background-color: #1c1c1c;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background-color: #111;
+      padding: 20px;
+      text-align: center;
+    }
+
+    header input {
+      padding: 10px;
+      width: 300px;
+      font-size: 16px;
+    }
+
+    .anime-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 20px;
       padding: 20px;
     }
-    input, button {
-      padding: 10px;
-      font-size: 16px;
-      margin: 5px;
-    }
-    #results div {
-      display: inline-block;
-      margin: 10px;
-      text-align: center;
-      cursor: pointer;
-    }
-    #results img {
-      width: 120px;
-      height: 180px;
-      object-fit: cover;
+
+    .anime-card {
+      background-color: #2a2a2a;
       border-radius: 10px;
-      border: 2px solid white;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.2s ease;
     }
-    #chapters {
-      margin-top: 20px;
+
+    .anime-card:hover {
+      transform: scale(1.05);
     }
-    #chapters button {
+
+    .anime-card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+    }
+
+    .anime-title {
+      padding: 10px;
+      font-weight: bold;
+      font-size: 16px;
+      text-align: center;
+    }
+
+    .popup {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      z-index: 10;
+    }
+
+    .popup-content {
+      background: #2b2b2b;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 700px;
+      width: 100%;
+    }
+
+    .popup h2 {
+      margin-top: 0;
+    }
+
+    .episode-list button {
       margin: 5px;
-      padding: 8px 12px;
-      background-color: #444;
+      padding: 8px 10px;
+      background: #444;
       border: none;
       border-radius: 5px;
       color: white;
       cursor: pointer;
     }
-    #reader img {
+
+    iframe {
       width: 100%;
-      margin-bottom: 10px;
-      border-radius: 8px;
+      height: 400px;
+      margin-top: 10px;
     }
   </style>
 </head>
 <body>
+  <header>
+    <h1>SkyAnime</h1>
+    <input type="text" id="searchInput" placeholder="Search anime..." />
+  </header>
 
-  <h1>Manga Reader (Consumet API)</h1>
-  <input type="text" id="searchInput" placeholder="Search for manga...">
-  <button onclick="searchManga()">Search</button>
+  <div class="anime-container" id="animeContainer"></div>
 
-  <div id="results"></div>
-  <div id="chapters"></div>
-  <div id="reader"></div>
+  <div class="popup" id="popup">
+    <div class="popup-content">
+      <h2 id="animeTitle"></h2>
+      <p id="animeDescription"></p>
+      <div class="episode-list" id="episodeList"></div>
+      <iframe id="videoPlayer" src="" frameborder="0" allowfullscreen></iframe>
+      <br/>
+      <button onclick="closePopup()">Close</button>
+    </div>
+  </div>
 
   <script>
-    const CONSUMET_API_BASE_URL = "https://api-consumet-org-mx31.vercel.app";
+    const BASE = 'https://idk-swart-three.vercel.app/aniwatch';
 
-    // Function to handle manga search
-    async function searchManga() {
-      const query = document.getElementById("searchInput").value.trim();
-      if (!query) return;
-
-      const searchUrl = `${CONSUMET_API_BASE_URL}/manga/mangapill/search?query=${encodeURIComponent(query)}`;
-      const response = await fetch(searchUrl);
-      const data = await response.json();
-
-      console.log("Search Results:", data); // Debugging: Show search results
-
-      const resultsDiv = document.getElementById("results");
-      resultsDiv.innerHTML = "";
-
-      if (data && data.results && data.results.length > 0) {
-        const results = data.results;
-
-        results.forEach(manga => {
-          const title = manga.title;
-          const img = manga.image || "";
-          const mangaUrl = manga.url;
-
-          const mangaDiv = document.createElement("div");
-          mangaDiv.innerHTML = `<img src="${img}" alt="${title}" title="${title}"><br><strong>${title}</strong>`;
-          mangaDiv.onclick = () => loadMangaChapters(mangaUrl);
-          resultsDiv.appendChild(mangaDiv);
-        });
-      } else {
-        resultsDiv.innerHTML = "<h2>No Results Found</h2>";
-      }
-
-      // Clear chapters and reader when new search happens
-      document.getElementById("chapters").innerHTML = "";
-      document.getElementById("reader").innerHTML = "";
+    async function fetchAnimeList() {
+      const res = await fetch(BASE);
+      const data = await res.json();
+      displayAnime(data.results);
     }
 
-    // Function to load manga chapters
-    async function loadMangaChapters(mangaUrl) {
-      const chaptersUrl = `${CONSUMET_API_BASE_URL}/manga/mangapill/chapters?url=${encodeURIComponent(mangaUrl)}`;
-      const response = await fetch(chaptersUrl);
-      const data = await response.json();
+    async function searchAnime(query) {
+      const res = await fetch(`${BASE}/search?keyword=${query}&page=1`);
+      const data = await res.json();
+      displayAnime(data.results);
+    }
 
-      console.log("Fetched Manga Chapters:", data); // Debugging: Check chapter data
-
-      if (!data || !data.chapters || data.chapters.length === 0) {
-        document.getElementById("chapters").innerHTML = "<h2>No chapters found for this manga.</h2>";
-        return;
-      }
-
-      const chaptersDiv = document.getElementById("chapters");
-      chaptersDiv.innerHTML = "<h2>All Chapters</h2>";
-
-      data.chapters.forEach(chap => {
-        const chapTitle = chap.title || `Chapter ${chap.chapter}`;
-        const btn = document.createElement("button");
-        btn.textContent = chapTitle;
-        btn.onclick = () => readChapter(chap.chapterUrl);
-        chaptersDiv.appendChild(btn);
+    function displayAnime(animeList) {
+      const container = document.getElementById('animeContainer');
+      container.innerHTML = '';
+      animeList.forEach(anime => {
+        const card = document.createElement('div');
+        card.className = 'anime-card';
+        card.innerHTML = `
+          <img src="${anime.image}" alt="${anime.title}" />
+          <div class="anime-title">${anime.title}</div>
+        `;
+        card.onclick = () => openAnime(anime.id, anime.title);
+        container.appendChild(card);
       });
-
-      document.getElementById("reader").innerHTML = "";
     }
 
-    // Function to read manga chapter
-    async function readChapter(chapterUrl) {
-      const chapterDetailsUrl = `${CONSUMET_API_BASE_URL}/manga/mangapill/chapter?url=${encodeURIComponent(chapterUrl)}`;
-      const response = await fetch(chapterDetailsUrl);
-      const data = await response.json();
+    async function openAnime(id, title) {
+      document.getElementById('popup').style.display = 'flex';
+      document.getElementById('animeTitle').innerText = title;
 
-      console.log("Chapter Data:", data); // Debugging: Check individual chapter data
+      const res = await fetch(`${BASE}/episodes/${id}`);
+      const data = await res.json();
 
-      if (!data || !data.images || data.images.length === 0) {
-        document.getElementById("reader").innerHTML = "<h2>No images found for this chapter.</h2>";
-        return;
-      }
-
-      const readerDiv = document.getElementById("reader");
-      readerDiv.innerHTML = "<h2>Reading Chapter</h2>";
-
-      data.images.forEach(image => {
-        const page = document.createElement("img");
-        page.src = image;
-        readerDiv.appendChild(page);
+      const list = document.getElementById('episodeList');
+      list.innerHTML = '';
+      data.episodes.forEach(ep => {
+        const btn = document.createElement('button');
+        btn.textContent = `EP ${ep.number}`;
+        btn.onclick = () => playEpisode(ep.id);
+        list.appendChild(btn);
       });
-
-      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
     }
+
+    async function playEpisode(episodeId) {
+      const serverRes = await fetch(`${BASE}/servers?id=${episodeId}`);
+      const serverData = await serverRes.json();
+      const selectedServer = serverData[0].name.toLowerCase();
+      const category = 'sub';
+
+      const srcRes = await fetch(`${BASE}/episode-srcs?id=${episodeId}?server=${selectedServer}&category=${category}`);
+      const srcData = await srcRes.json();
+
+      const player = document.getElementById('videoPlayer');
+      player.src = srcData.sources[0].url || '';
+    }
+
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      document.getElementById('videoPlayer').src = '';
+    }
+
+    document.getElementById('searchInput').addEventListener('keydown', function (e) {
+      if (e.key === 'Enter') {
+        const query = e.target.value.trim();
+        if (query.length > 0) searchAnime(query);
+      }
+    });
+
+    fetchAnimeList();
   </script>
-
 </body>
 </html>
