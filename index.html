@@ -3,527 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AnimeFlix - Watch Anime Online</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Anime Watch</title>
     <style>
-        :root {
-            --primary-color: #e50914;
-            --dark-color: #141414;
-            --light-color: #f4f4f4;
-            --gray-color: #999;
-        }
-
-        * {
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #1e1e1e;
+            color: white;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
         }
-
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: var(--dark-color);
-            color: var(--light-color);
-            line-height: 1.6;
-        }
-
-        a {
-            text-decoration: none;
-            color: var(--light-color);
-        }
-
-        ul {
-            list-style: none;
-        }
-
-        img {
-            width: 100%;
-        }
-
-        /* Header */
-        .header {
-            padding: 1rem 2rem;
-            background-color: rgba(0, 0, 0, 0.9);
-            position: fixed;
-            width: 100%;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            color: var(--primary-color);
-            font-size: 2rem;
-            font-weight: bold;
-        }
-
-        .search-bar {
-            flex-grow: 1;
-            margin: 0 2rem;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 0.5rem;
-            border-radius: 5px;
-            border: none;
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-        }
-
-        .nav-links {
-            display: flex;
-        }
-
-        .nav-links li {
-            margin-left: 1.5rem;
-        }
-
-        .nav-links a:hover {
-            color: var(--primary-color);
-        }
-
-        /* Hero Section */
-        .hero {
-            height: 70vh;
-            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('https://via.placeholder.com/1920x1080') no-repeat center center/cover;
-            display: flex;
-            align-items: center;
-            padding: 0 5rem;
-            padding-top: 80px;
-        }
-
-        .hero-content {
-            max-width: 600px;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .hero p {
-            margin-bottom: 1.5rem;
-        }
-
-        .btn {
-            display: inline-block;
-            background: var(--primary-color);
-            color: #fff;
-            padding: 0.5rem 1.5rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin-right: 1rem;
-        }
-
-        .btn:hover {
-            opacity: 0.9;
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--light-color);
-        }
-
-        /* Anime Sections */
         .container {
-            padding: 2rem 5rem;
+            padding: 20px;
         }
-
-        .section-title {
-            margin-bottom: 1.5rem;
+        .anime-list {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            flex-wrap: wrap;
         }
-
-        .section-title h2 {
-            font-size: 1.8rem;
+        .anime-item {
+            width: 200px;
+            margin: 10px;
+            text-align: center;
         }
-
-        .see-all {
-            color: var(--primary-color);
-            font-size: 0.9rem;
-        }
-
-        .anime-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .anime-card {
-            position: relative;
-            transition: transform 0.3s;
-        }
-
-        .anime-card:hover {
-            transform: scale(1.05);
-        }
-
-        .anime-card img {
-            border-radius: 5px;
-            height: 280px;
-            object-fit: cover;
-        }
-
-        .anime-card h3 {
-            margin-top: 0.5rem;
-            font-size: 1rem;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .anime-card .episodes {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 0.2rem 0.5rem;
-            border-radius: 3px;
-            font-size: 0.8rem;
-        }
-
-        .rank-badge {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background-color: var(--primary-color);
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-        }
-
-        /* Anime Details */
-        .anime-detail {
-            padding-top: 100px;
-            display: flex;
-            gap: 2rem;
-        }
-
-        .anime-poster {
-            flex: 0 0 300px;
-        }
-
-        .anime-info {
-            flex: 1;
-        }
-
-        .anime-title {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .meta-info {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            color: var(--gray-color);
-        }
-
-        .rating {
-            color: gold;
-        }
-
-        .description {
-            margin-bottom: 2rem;
-        }
-
-        .details-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .detail-item strong {
-            color: var(--primary-color);
-        }
-
-        /* Episodes */
-        .episodes-list {
-            margin-top: 2rem;
-        }
-
-        .episode-card {
-            background-color: rgba(255, 255, 255, 0.1);
-            padding: 1rem;
-            border-radius: 5px;
-            margin-bottom: 1rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .episode-card:hover {
-            background-color: rgba(255, 255, 255, 0.2);
-        }
-
-        /* Player */
-        .player-container {
-            padding-top: 100px;
-            width: 90%;
-            margin: 0 auto;
-        }
-
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%;
-            height: 0;
-            overflow: hidden;
-        }
-
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
+        .anime-item img {
             width: 100%;
-            height: 100%;
+            border-radius: 8px;
         }
-
-        .server-options {
-            display: flex;
-            gap: 1rem;
-            margin: 1rem 0;
+        .anime-item a {
+            color: #fff;
+            text-decoration: none;
         }
-
-        .server-btn {
-            padding: 0.5rem 1rem;
-            background-color: rgba(255, 255, 255, 0.1);
+        .anime-item a:hover {
+            color: #ff4500;
+        }
+        .button {
+            background-color: #ff4500;
             border: none;
-            border-radius: 5px;
             color: white;
+            padding: 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
             cursor: pointer;
         }
-
-        .server-btn.active {
-            background-color: var(--primary-color);
-        }
-
-        /* Footer */
-        .footer {
-            background-color: #000;
-            padding: 2rem 5rem;
-            text-align: center;
-            margin-top: 2rem;
-        }
-
-        .footer-links {
-            display: flex;
-            justify-content: center;
-            gap: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .footer p {
-            color: var(--gray-color);
-            font-size: 0.9rem;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header {
-                flex-direction: column;
-                padding: 1rem;
-            }
-
-            .search-bar {
-                margin: 1rem 0;
-                width: 100%;
-            }
-
-            .nav-links {
-                margin-top: 1rem;
-            }
-
-            .hero {
-                padding: 0 1rem;
-                padding-top: 150px;
-                text-align: center;
-            }
-
-            .container {
-                padding: 2rem 1rem;
-            }
-
-            .anime-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
-
-            .anime-detail {
-                flex-direction: column;
-                padding: 100px 1rem 1rem;
-            }
-
-            .anime-poster {
-                margin: 0 auto;
-            }
-
-            .details-grid {
-                grid-template-columns: 1fr;
-            }
+        .button:hover {
+            background-color: #ff6347;
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <a href="index.html" class="logo">AnimeFlix</a>
-        <div class="search-bar">
-            <input type="text" id="search-input" placeholder="Search anime...">
-        </div>
-        <ul class="nav-links">
-            <li><a href="index.html">Home</a></li>
-            <li><a href="az-list.html">A-Z List</a></li>
-            <li><a href="categories.html">Categories</a></li>
-            <li><a href="favorites.html">Favorites</a></li>
-        </ul>
-    </header>
 
-    <!-- Main Content -->
-    <main>
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-content">
-                <h1>Jujutsu Kaisen Season 2</h1>
-                <p>The second season of Jujutsu Kaisen. Hidden Inventory / Premature Death arc: This arc focuses on Satoru Gojo's past as a student at Tokyo Jujutsu High.</p>
-                <div class="buttons">
-                    <a href="watch.html" class="btn"><i class="fas fa-play"></i> Watch Now</a>
-                    <a href="details.html" class="btn btn-outline"><i class="fas fa-info-circle"></i> More Info</a>
-                </div>
-            </div>
-        </section>
+<div class="container">
+    <h1>Anime Watch</h1>
+    <div id="anime-list" class="anime-list"></div>
+    <div id="anime-details"></div>
+</div>
 
-        <!-- Anime Sections -->
-        <div class="container">
-            <!-- Spotlight Anime -->
-            <section>
-                <div class="section-title">
-                    <h2>Spotlight Anime</h2>
-                    <a href="#" class="see-all">See All</a>
-                </div>
-                <div class="anime-grid" id="spotlight-anime">
-                    <!-- Will be populated by JavaScript -->
-                </div>
-            </section>
+<script>
+// Base URL of the API
+const BASE_URL = "https://api-consumet-idk.vercel.app";
 
-            <!-- Trending Anime -->
-            <section>
-                <div class="section-title">
-                    <h2>Trending Now</h2>
-                    <a href="#" class="see-all">See All</a>
-                </div>
-                <div class="anime-grid" id="trending-anime">
-                    <!-- Will be populated by JavaScript -->
-                </div>
-            </section>
+// Function to fetch anime list from AnimeKai server
+async function fetchAnimeList() {
+    try {
+        const response = await fetch(`${BASE_URL}/animekai/anime?page=1`);
+        const data = await response.json();
+        displayAnimeList(data);
+    } catch (error) {
+        console.error('Error fetching anime list:', error);
+    }
+}
 
-            <!-- Latest Episodes -->
-            <section>
-                <div class="section-title">
-                    <h2>Latest Episodes</h2>
-                    <a href="#" class="see-all">See All</a>
-                </div>
-                <div class="anime-grid" id="latest-episodes">
-                    <!-- Will be populated by JavaScript -->
-                </div>
-            </section>
+// Function to display anime list on the page
+function displayAnimeList(animeList) {
+    const animeListContainer = document.getElementById('anime-list');
+    animeListContainer.innerHTML = ''; // Clear previous content
 
-            <!-- Top 10 Anime -->
-            <section>
-                <div class="section-title">
-                    <h2>Top 10 Anime Today</h2>
-                    <a href="#" class="see-all">See All</a>
-                </div>
-                <div class="anime-grid" id="top10-anime">
-                    <!-- Will be populated by JavaScript -->
-                </div>
-            </section>
-        </div>
-    </main>
+    animeList.forEach(anime => {
+        const animeItem = document.createElement('div');
+        animeItem.classList.add('anime-item');
+        animeItem.innerHTML = `
+            <img src="${anime.image}" alt="${anime.title}">
+            <a href="javascript:void(0);" onclick="fetchAnimeDetails(${anime.id})">${anime.title}</a>
+        `;
+        animeListContainer.appendChild(animeItem);
+    });
+}
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="footer-links">
-            <a href="#">About</a>
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-            <a href="#">Contact Us</a>
-        </div>
-        <p>&copy; 2023 AnimeFlix. All rights reserved.</p>
-    </footer>
+// Function to fetch anime details
+async function fetchAnimeDetails(animeId) {
+    try {
+        const response = await fetch(`${BASE_URL}/animekai/anime/${animeId}`);
+        const data = await response.json();
+        displayAnimeDetails(data);
+    } catch (error) {
+        console.error('Error fetching anime details:', error);
+    }
+}
 
-    <script>
-        // Base URL for your API
-        const API_BASE_URL = 'https://idk-swart-three.vercel.app/aniwatch';
+// Function to display anime details and episodes
+function displayAnimeDetails(anime) {
+    const animeDetailsContainer = document.getElementById('anime-details');
+    animeDetailsContainer.innerHTML = `
+        <h2>${anime.title}</h2>
+        <img src="${anime.image}" alt="${anime.title}" style="max-width: 300px;">
+        <p>${anime.description}</p>
+        <h3>Episodes</h3>
+        <div id="episodes"></div>
+        <button class="button" onclick="playFirstEpisode(${anime.id})">Play First Episode</button>
+    `;
 
-        // Fetch home page data
-        async function fetchHomeData() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/`);
-                const data = await response.json();
-                return data;
-            } catch (error) {
-                console.error('Error fetching home data:', error);
-                return null;
-            }
-        }
+    // Fetch and display episodes
+    fetchEpisodes(anime.id);
+}
 
-        // Render anime cards
-        function renderAnimeCards(containerId, animeList, showRank = false) {
-            const container = document.getElementById(containerId);
-            if (!container || !animeList) return;
+// Function to fetch episodes for a specific anime
+async function fetchEpisodes(animeId) {
+    try {
+        const response = await fetch(`${BASE_URL}/animekai/anime/${animeId}/episodes`);
+        const data = await response.json();
+        displayEpisodes(data);
+    } catch (error) {
+        console.error('Error fetching episodes:', error);
+    }
+}
 
-            container.innerHTML = animeList.map(anime => `
-                <a href="details.html?id=${anime.id}" class="anime-card">
-                    ${showRank && anime.rank ? `<div class="rank-badge">${anime.rank}</div>` : ''}
-                    <img src="${anime.img}" alt="${anime.name}">
-                    <div class="episodes">${anime.episodes.sub} ${anime.episodes.dub ? `| ${anime.episodes.dub}` : ''}</div>
-                    <h3>${anime.name}</h3>
-                </a>
-            `).join('');
-        }
+// Function to display episodes
+function displayEpisodes(episodes) {
+    const episodesContainer = document.getElementById('episodes');
+    episodesContainer.innerHTML = ''; // Clear previous episodes
 
-        // Initialize the page
-        async function init() {
-            const homeData = await fetchHomeData();
-            if (homeData) {
-                renderAnimeCards('spotlight-anime', homeData.spotlightAnimes, true);
-                renderAnimeCards('trending-anime', homeData.trendingAnimes);
-                renderAnimeCards('latest-episodes', homeData.latestEpisodes);
-                renderAnimeCards('top10-anime', homeData.top10Animes.day, true);
-                
-                // Set hero section with first spotlight anime
-                if (homeData.spotlightAnimes.length > 0) {
-                    const firstAnime = homeData.spotlightAnimes[0];
-                    document.querySelector('.hero h1').textContent = firstAnime.name;
-                    document.querySelector('.hero p').textContent = firstAnime.descriptions;
-                    document.querySelector('.hero').style.backgroundImage = `linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), url('${firstAnime.img}')`;
-                    document.querySelector('.buttons a:first-child').href = `watch.html?id=${firstAnime.id}`;
-                    document.querySelector('.buttons a:last-child').href = `details.html?id=${firstAnime.id}`;
-                }
-            }
+    episodes.forEach(episode => {
+        const episodeItem = document.createElement('div');
+        episodeItem.classList.add('episode-item');
+        episodeItem.innerHTML = `
+            <a href="javascript:void(0);" onclick="playEpisode(${episode.id})">${episode.title}</a>
+        `;
+        episodesContainer.appendChild(episodeItem);
+    });
+}
 
-            // Search functionality
-            document.getElementById('search-input').addEventListener('keypress', async (e) => {
-                if (e.key === 'Enter') {
-                    const query = e.target.value.trim();
-                    if (query) {
-                        window.location.href = `search.html?query=${encodeURIComponent(query)}`;
-                    }
-                }
-            });
-        }
+// Function to play the first episode or a specific episode
+async function playFirstEpisode(animeId) {
+    const episodesResponse = await fetch(`${BASE_URL}/animekai/anime/${animeId}/episodes`);
+    const episodesData = await episodesResponse.json();
+    const firstEpisode = episodesData[0]; // First episode
+    playEpisode(firstEpisode.id);
+}
 
-        // Initialize when DOM is loaded
-        document.addEventListener('DOMContentLoaded', init);
-    </script>
+// Function to fetch and play a specific episode
+async function playEpisode(episodeId) {
+    try {
+        const response = await fetch(`${BASE_URL}/animekai/episode/${episodeId}/sources`);
+        const data = await response.json();
+        const streamUrl = data.sources[0].url; // Get the first stream URL
+        window.open(streamUrl, '_blank'); // Open the stream URL in a new tab
+    } catch (error) {
+        console.error('Error fetching episode stream URL:', error);
+    }
+}
+
+// Initial call to fetch the anime list
+fetchAnimeList();
+</script>
+
 </body>
 </html>
