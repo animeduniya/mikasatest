@@ -68,7 +68,6 @@
 <div id="anime-list-container" class="content">
     <h1>Top Anime</h1>
     <ul id="anime-list"></ul>
-    <video id="video-player" controls></video>
 </div>
 
 <div id="episode-list-container" class="content">
@@ -83,29 +82,25 @@
     const baseUrl = "https://opapi-lyart.vercel.app";
     const animeListElement = document.getElementById('anime-list');
     const episodeListElement = document.getElementById('episode-list');
-    const videoPlayer = document.getElementById('video-player');
     const videoPlayerEpisode = document.getElementById('video-player-episode');
     const home = document.getElementById('home');
     const animeListContainer = document.getElementById('anime-list-container');
     const episodeListContainer = document.getElementById('episode-list-container');
-    let currentAnimeId = ""; // To track which anime is being viewed
+    let currentAnimeId = ""; // Variable to hold current anime ID
 
-    // Show Home
     document.getElementById('home-link').addEventListener('click', function() {
         home.classList.add('active');
         animeListContainer.classList.remove('active');
         episodeListContainer.classList.remove('active');
     });
 
-    // Show Anime List
     document.getElementById('anime-list-link').addEventListener('click', function() {
         animeListContainer.classList.add('active');
         home.classList.remove('active');
         episodeListContainer.classList.remove('active');
-        fetchAnimeList(); // Fetch the anime list when the page is opened
+        fetchAnimeList(); // Fetch anime list when the page is opened
     });
 
-    // Function to fetch anime episodes
     async function fetchAnimeList() {
         try {
             const response = await axios.get(`${baseUrl}/api/most-popular?page=1`);
@@ -123,9 +118,8 @@
         }
     }
 
-    // Function to fetch episodes for the selected anime
     async function fetchEpisodes(animeId) {
-        currentAnimeId = animeId; // Store current anime ID to use for playing episodes
+        currentAnimeId = animeId; // Store current anime ID
         animeListContainer.classList.remove('active');
         episodeListContainer.classList.add('active');
 
@@ -146,26 +140,24 @@
         }
     }
 
-    // Function to play the selected episode
     async function playEpisode(animeId, episodeNo) {
         try {
             const streamResponse = await axios.get(`${baseUrl}/api/episodes/${animeId}`);
             const episodes = streamResponse.data.results.episodes;
 
             const episode = episodes.find(ep => ep.episode_no === episodeNo);
-            const streamLinkResponse = await axios.get(`${baseUrl}/api/stream?id=${animeId}&server=hd-2&type=sub`);
-            const streamingLink = streamLinkResponse.data.results.streamingLink[0].link.file; // Get the streaming link
+            const streamingLinkResponse = await axios.get(`${baseUrl}/api/stream?id=${animeId}&server=hd-2&type=sub`);
+            const streamingLink = streamingLinkResponse.data.results.streamingLink.find(link => link.episode_no === episodeNo).link.file; // Get the streaming link
             
-            // Hide main video player and show specific episode player
+            // Show the video player and play the episode
             videoPlayerEpisode.src = streamingLink;
-            videoPlayerEpisode.style.display = "block"; // Show episode video player
-            videoPlayerEpisode.play(); // Auto play
+            videoPlayerEpisode.style.display = "block"; // Show player
+            videoPlayerEpisode.play(); // Start playing
         } catch (error) {
             console.error("Error playing episode:", error);
         }
     }
 
-    // Function to go back to the anime list
     function goBackToAnimeList() {
         episodeListContainer.classList.remove('active');
         animeListContainer.classList.add('active');
