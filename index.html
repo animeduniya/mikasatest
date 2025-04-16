@@ -2,21 +2,20 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Zoro Anime Streaming</title>
   <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
     body {
-      background: #111;
+      background: #121212;
       color: #fff;
-      font-family: sans-serif;
+      font-family: Arial, sans-serif;
       padding: 20px;
     }
     input, button {
       padding: 10px;
-      margin: 10px 0;
-      width: 100%;
       font-size: 16px;
+      margin-bottom: 10px;
+      width: 100%;
     }
     video {
       width: 100%;
@@ -26,37 +25,31 @@
       border: 2px solid #fff;
       border-radius: 10px;
     }
-    .anime-card {
-      background-color: #222;
-      padding: 15px;
-      margin: 10px 0;
+    .anime {
+      border: 1px solid #444;
+      padding: 10px;
+      margin-bottom: 15px;
       border-radius: 8px;
+      background: #1e1e1e;
     }
-    .anime-card img {
+    .anime img {
       width: 120px;
-      border-radius: 8px;
+      float: left;
+      margin-right: 10px;
     }
-    .anime-card h3 {
-      margin: 5px 0;
+    .anime h3 {
+      margin: 0;
+      font-size: 20px;
     }
     .episode-button {
-      margin: 5px 0;
-      padding: 10px;
-      background-color: #444;
-      border: none;
+      background: #333;
       color: #fff;
-      cursor: pointer;
-      display: block;
+      padding: 10px;
+      margin: 5px 0;
       width: 100%;
+      border: none;
       border-radius: 6px;
-    }
-    .episode-button:hover {
-      background-color: #666;
-    }
-    #loading {
-      display: none;
-      margin: 20px 0;
-      color: yellow;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -65,104 +58,75 @@
   <input type="text" id="animeName" placeholder="Search anime...">
   <button onclick="searchAnime()">Search</button>
 
-  <div id="loading">Loading...</div>
   <div id="results"></div>
   <video id="player" controls></video>
 
   <script>
     const BASE_URL = "https://apiconsumetorghhh.vercel.app/anime/zoro";
-    const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+    const M3U8_PROXY = "https://newpro-ten-roan.vercel.app/api/proxy?url=";
     let hls;
 
     async function searchAnime() {
-      const query = document.getElementById("animeName").value.trim();
-      if (!query) return;
-
-      document.getElementById("loading").style.display = "block";
+      const query = document.getElementById("animeName").value;
       const res = await fetch(`${BASE_URL}/${encodeURIComponent(query)}`);
       const data = await res.json();
-      document.getElementById("loading").style.display = "none";
-
       const results = document.getElementById("results");
-      results.innerHTML = '';
+      results.innerHTML = "";
 
-      if (data.results?.length > 0) {
-        data.results.forEach(anime => {
-          const div = document.createElement('div');
-          div.className = 'anime-card';
-          div.innerHTML = `
-            <h3>${anime.title}</h3>
-            <img src="${anime.image}" alt="${anime.title}">
-            <br>
-            <button onclick="loadAnime('${anime.id}')">View Episodes</button>
-          `;
-          results.appendChild(div);
-        });
-      } else {
-        results.innerHTML = '<p>No results found.</p>';
-      }
+      (data.results || []).forEach(anime => {
+        const div = document.createElement("div");
+        div.className = "anime";
+        div.innerHTML = `
+          <img src="${anime.image}" alt="${anime.title}">
+          <h3>${anime.title}</h3>
+          <button onclick="loadAnime('${anime.id}')">View Episodes</button>
+          <div style="clear:both;"></div>
+        `;
+        results.appendChild(div);
+      });
     }
 
     async function loadAnime(id) {
-      document.getElementById("loading").style.display = "block";
-      const res = await fetch(`${BASE_URL}/info?id=${encodeURIComponent(id)}`);
+      const res = await fetch(`${BASE_URL}/info?id=${id}`);
       const data = await res.json();
-      document.getElementById("loading").style.display = "none";
-
       const results = document.getElementById("results");
       results.innerHTML = `<h2>${data.title}</h2>`;
 
-      data.episodes.slice(-20).reverse().forEach(ep => {
-        const btn = document.createElement('button');
+      (data.episodes || []).reverse().forEach(ep => {
+        const btn = document.createElement("button");
         btn.className = "episode-button";
-        btn.textContent = `Play Episode ${ep.number}`;
+        btn.innerText = `Episode ${ep.number}`;
         btn.onclick = () => streamEpisode(ep.id);
         results.appendChild(btn);
       });
     }
 
     async function streamEpisode(episodeId) {
-      document.getElementById("loading").style.display = "block";
-      try {
-        const res = await fetch(`${BASE_URL}/watch?episodeId=${encodeURIComponent(episodeId)}&server=vidstreaming`);
-        const data = await res.json();
+      const res = await fetch(`${BASE_URL}/watch?episodeId=${episodeId}&server=vidstreaming`);
+      const data = await res.json();
+      const video = document.getElementById("player");
+      const source = data.sources.find(src => src.url.includes(".m3u8"));
+      
+      if (!source) return alert("No stream found.");
 
-        const m3u8Source = data.sources.find(s => s.url.includes(".m3u8"));
-        if (!m3u8Source) throw new Error("No .m3u8 stream found");
+      const proxiedUrl = M3U8_PROXY + encodeURIComponent(source.url);
+      video.style.display = "block";
 
-        const finalURL = CORS_PROXY + encodeURIComponent(m3u8Source.url);
-        const video = document.getElementById("player");
-        video.style.display = 'block';
+      if (hls) hls.destroy();
 
-        if (hls) {
-          hls.destroy();
-        }
-
-        if (Hls.isSupported()) {
-          hls = new Hls();
-          hls.loadSource(finalURL);
-          hls.attachMedia(video);
-          hls.on(Hls.Events.MANIFEST_PARSED, function () {
-            video.play();
-            document.getElementById("loading").style.display = "none";
-          });
-          hls.on(Hls.Events.ERROR, function (event, data) {
-            alert("Video playback error: " + data.details);
-            document.getElementById("loading").style.display = "none";
-          });
-        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          video.src = finalURL;
-          video.addEventListener('loadedmetadata', () => {
-            video.play();
-            document.getElementById("loading").style.display = "none";
-          });
-        } else {
-          alert("HLS not supported");
-          document.getElementById("loading").style.display = "none";
-        }
-      } catch (err) {
-        alert("Error loading episode: " + err.message);
-        document.getElementById("loading").style.display = "none";
+      if (Hls.isSupported()) {
+        hls = new Hls();
+        hls.loadSource(proxiedUrl);
+        hls.attachMedia(video);
+        hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+        hls.on(Hls.Events.ERROR, (event, data) => {
+          alert("Playback Error: " + data.details);
+        });
+      } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
+        video.src = proxiedUrl;
+        video.play();
+      } else {
+        alert("HLS is not supported on this browser.");
       }
     }
   </script>
