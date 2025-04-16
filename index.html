@@ -1,170 +1,137 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anime Streaming</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-        }
-        nav {
-            background: #333;
-            color: white;
-            padding: 10px;
-            text-align: center;
-        }
-        nav a {
-            color: white;
-            margin: 0 15px;
-            text-decoration: none;
-        }
-        h1 {
-            text-align: center;
-        }
-        #anime-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        .anime-item, .episode-item {
-            background: white;
-            margin: 10px 0;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .anime-item h2, .episode-item h2 {
-            margin: 0;
-        }
-        video {
-            width: 100%;
-            max-width: 600px;
-            margin: 20px auto;
-            display: none;
-        }
-        .content {
-            display: none;
-        }
-        .active {
-            display: block;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Anime Streaming</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #1e1e1e;
+      color: white;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #333;
+      padding: 10px;
+      text-align: center;
+    }
+    h1 {
+      color: #fff;
+    }
+    .anime-list {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      padding: 20px;
+    }
+    .anime-card {
+      background-color: #444;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .anime-card img {
+      width: 100%;
+      height: auto;
+      border-radius: 8px;
+    }
+    .anime-card h3 {
+      margin-top: 10px;
+    }
+    .anime-card p {
+      color: #bbb;
+    }
+    .anime-card button {
+      padding: 10px 20px;
+      background-color: #5cb85c;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .anime-card button:hover {
+      background-color: #4cae4c;
+    }
+  </style>
 </head>
 <body>
 
-<nav>
-    <a href="#" id="home-link">Home</a>
-    <a href="#" id="anime-list-link">Top Anime</a>
-</nav>
+  <header>
+    <h1>Anime Streaming</h1>
+  </header>
 
-<div id="home" class="content active">
-    <h1>Welcome to Anime Streaming</h1>
-    <p>Your one-stop destination for streaming anime episodes. Explore various titles and enjoy your favorite anime!</p>
-</div>
+  <div class="anime-list" id="anime-list">
+    <!-- Anime cards will be populated here -->
+  </div>
 
-<div id="anime-list-container" class="content">
-    <h1>Top Anime</h1>
-    <ul id="anime-list"></ul>
-</div>
+  <script>
+    const CORS_PROXY = "https://api.allorigins.win/get?url=";
+    const API_BASE_URL = "https://hianime-up.vercel.app";
+    
+    // Fetch anime homepage data
+    async function fetchAnimeData() {
+      try {
+        const response = await fetch(`${CORS_PROXY}${API_BASE_URL}/api/v2/hianime/home`);
+        const data = await response.json();
+        const animeData = data.contents;
 
-<div id="episode-list-container" class="content">
-    <h1>Episode List</h1>
-    <ul id="episode-list"></ul>
-    <video id="video-player-episode" controls></video>
-    <button onclick="goBackToAnimeList()">Back to Anime List</button>
-</div>
+        // Populate anime list
+        const animeListContainer = document.getElementById('anime-list');
+        animeData.latestEpisodeAnimes.forEach(anime => {
+          const animeCard = document.createElement('div');
+          animeCard.classList.add('anime-card');
 
-<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-<script>
-    const baseUrl = "https://opapi-lyart.vercel.app";
-    const animeListElement = document.getElementById('anime-list');
-    const episodeListElement = document.getElementById('episode-list');
-    const videoPlayerEpisode = document.getElementById('video-player-episode');
-    const home = document.getElementById('home');
-    const animeListContainer = document.getElementById('anime-list-container');
-    const episodeListContainer = document.getElementById('episode-list-container');
-    let currentAnimeId = ""; // Variable to hold current anime ID
+          const animeImg = document.createElement('img');
+          animeImg.src = anime.poster;
+          animeCard.appendChild(animeImg);
 
-    document.getElementById('home-link').addEventListener('click', function() {
-        home.classList.add('active');
-        animeListContainer.classList.remove('active');
-        episodeListContainer.classList.remove('active');
-    });
+          const animeTitle = document.createElement('h3');
+          animeTitle.textContent = anime.name;
+          animeCard.appendChild(animeTitle);
 
-    document.getElementById('anime-list-link').addEventListener('click', function() {
-        animeListContainer.classList.add('active');
-        home.classList.remove('active');
-        episodeListContainer.classList.remove('active');
-        fetchAnimeList(); // Fetch anime list when the page is opened
-    });
+          const animeDescription = document.createElement('p');
+          animeDescription.textContent = `Episodes: Sub - ${anime.episodes.sub}, Dub - ${anime.episodes.dub}`;
+          animeCard.appendChild(animeDescription);
 
-    async function fetchAnimeList() {
-        try {
-            const response = await axios.get(`${baseUrl}/api/most-popular?page=1`);
-            const animeList = response.data.results.data;
+          const watchButton = document.createElement('button');
+          watchButton.textContent = "Watch Now";
+          watchButton.onclick = () => fetchEpisodeLinks(anime.id);
+          animeCard.appendChild(watchButton);
 
-            animeListElement.innerHTML = ""; // Clear previous list
-            animeList.forEach(anime => {
-                const animeItem = document.createElement('li');
-                animeItem.classList.add('anime-item');
-                animeItem.innerHTML = `<h2>${anime.title}</h2><button onclick="fetchEpisodes('${anime.id}')">Watch Episode</button>`;
-                animeListElement.appendChild(animeItem);
-            });
-        } catch (error) {
-            console.error("Error fetching anime:", error);
-        }
+          animeListContainer.appendChild(animeCard);
+        });
+      } catch (error) {
+        console.error("Error fetching anime data:", error);
+      }
     }
 
-    async function fetchEpisodes(animeId) {
-        currentAnimeId = animeId; // Store current anime ID
-        animeListContainer.classList.remove('active');
-        episodeListContainer.classList.add('active');
+    // Fetch episode links for a given anime
+    async function fetchEpisodeLinks(animeId) {
+      try {
+        const episodeResponse = await fetch(`${CORS_PROXY}${API_BASE_URL}/api/v2/hianime/anime/${animeId}/episodes`);
+        const episodeData = await episodeResponse.json();
+        
+        const episodes = episodeData.data.episodes;
+        const episodeLinks = episodes.map(async (episode) => {
+          const sourceResponse = await fetch(`${CORS_PROXY}${API_BASE_URL}/api/v2/hianime/episode/sources?animeEpisodeId=${episode.episodeId}&server=hd-2&category=sub`);
+          const sourceData = await sourceResponse.json();
+          return sourceData.data.sources;
+        });
 
-        try {
-            const response = await axios.get(`${baseUrl}/api/episodes/${animeId}`);
-            const episodes = response.data.results.episodes;
+        // Display episodes (this can be expanded to show a video player)
+        const episodeLinksData = await Promise.all(episodeLinks);
+        console.log(episodeLinksData);
 
-            episodeListElement.innerHTML = ""; // Clear previous episode list
-
-            episodes.forEach(episode => {
-                const episodeItem = document.createElement('li');
-                episodeItem.classList.add('episode-item');
-                episodeItem.innerHTML = `<h2>Episode ${episode.episode_no}: ${episode.title}</h2><button onclick="playEpisode('${animeId}', '${episode.episode_no}')">Watch</button>`;
-                episodeListElement.appendChild(episodeItem);
-            });
-        } catch (error) {
-            console.error("Error fetching episodes:", error);
-        }
+      } catch (error) {
+        console.error("Error fetching episode links:", error);
+      }
     }
 
-    async function playEpisode(animeId, episodeNo) {
-        try {
-            const streamResponse = await axios.get(`${baseUrl}/api/episodes/${animeId}`);
-            const episodes = streamResponse.data.results.episodes;
-
-            const episode = episodes.find(ep => ep.episode_no === episodeNo);
-            const streamingLinkResponse = await axios.get(`${baseUrl}/api/stream?id=${animeId}&server=hd-2&type=sub`);
-            const streamingLink = streamingLinkResponse.data.results.streamingLink.find(link => link.episode_no === episodeNo).link.file; // Get the streaming link
-            
-            // Show the video player and play the episode
-            videoPlayerEpisode.src = streamingLink;
-            videoPlayerEpisode.style.display = "block"; // Show player
-            videoPlayerEpisode.play(); // Start playing
-        } catch (error) {
-            console.error("Error playing episode:", error);
-        }
-    }
-
-    function goBackToAnimeList() {
-        episodeListContainer.classList.remove('active');
-        animeListContainer.classList.add('active');
-        videoPlayerEpisode.src = ""; // Stop any currently playing episode
-        videoPlayerEpisode.style.display = "none"; // Hide player
-    }
-</script>
+    // Initialize the page by fetching data
+    fetchAnimeData();
+  </script>
 
 </body>
 </html>
