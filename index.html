@@ -53,6 +53,11 @@
     .episode-button:hover {
       background-color: #666;
     }
+    #loading {
+      display: none;
+      margin: 20px 0;
+      color: yellow;
+    }
   </style>
 </head>
 <body>
@@ -60,24 +65,28 @@
   <input type="text" id="animeName" placeholder="Search anime...">
   <button onclick="searchAnime()">Search</button>
 
+  <div id="loading">Loading...</div>
   <div id="results"></div>
   <video id="player" controls></video>
 
   <script>
     const BASE_URL = "https://apiconsumetorghhh.vercel.app/anime/zoro";
     const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+    let hls;
 
     async function searchAnime() {
       const query = document.getElementById("animeName").value.trim();
       if (!query) return;
 
+      document.getElementById("loading").style.display = "block";
       const res = await fetch(`${BASE_URL}/${encodeURIComponent(query)}`);
       const data = await res.json();
+      document.getElementById("loading").style.display = "none";
 
       const results = document.getElementById("results");
       results.innerHTML = '';
 
-      if (data.results && data.results.length > 0) {
+      if (data.results?.length > 0) {
         data.results.forEach(anime => {
           const div = document.createElement('div');
           div.className = 'anime-card';
@@ -95,8 +104,10 @@
     }
 
     async function loadAnime(id) {
+      document.getElementById("loading").style.display = "block";
       const res = await fetch(`${BASE_URL}/info?id=${encodeURIComponent(id)}`);
       const data = await res.json();
+      document.getElementById("loading").style.display = "none";
 
       const results = document.getElementById("results");
       results.innerHTML = `<h2>${data.title}</h2>`;
@@ -111,30 +122,47 @@
     }
 
     async function streamEpisode(episodeId) {
-      const res = await fetch(`${BASE_URL}/watch?episodeId=${encodeURIComponent(episodeId)}&server=vidstreaming`);
-      const data = await res.json();
+      document.getElementById("loading").style.display = "block";
+      try {
+        const res = await fetch(`${BASE_URL}/watch?episodeId=${encodeURIComponent(episodeId)}&server=vidstreaming`);
+        const data = await res.json();
 
-      const m3u8Source = data.sources.find(s => s.url.includes(".m3u8"));
-      if (!m3u8Source) return alert("No playable .m3u8 source found");
+        const m3u8Source = data.sources.find(s => s.url.includes(".m3u8"));
+        if (!m3u8Source) throw new Error("No .m3u8 stream found");
 
-      const finalURL = CORS_PROXY + encodeURIComponent(m3u8Source.url);
-      const video = document.getElementById("player");
-      video.style.display = 'block';
+        const finalURL = CORS_PROXY + encodeURIComponent(m3u8Source.url);
+        const video = document.getElementById("player");
+        video.style.display = 'block';
 
-      if (Hls.isSupported()) {
-        const hls = new Hls();
-        hls.loadSource(finalURL);
-        hls.attachMedia(video);
-        hls.on(Hls.Events.MANIFEST_PARSED, function () {
-          video.play();
-        });
-      } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = finalURL;
-        video.addEventListener('loadedmetadata', () => {
-          video.play();
-        });
-      } else {
-        alert("HLS not supported in this browser.");
+        if (hls) {
+          hls.destroy();
+        }
+
+        if (Hls.isSupported()) {
+          hls = new Hls();
+          hls.loadSource(finalURL);
+          hls.attachMedia(video);
+          hls.on(Hls.Events.MANIFEST_PARSED, function () {
+            video.play();
+            document.getElementById("loading").style.display = "none";
+          });
+          hls.on(Hls.Events.ERROR, function (event, data) {
+            alert("Video playback error: " + data.details);
+            document.getElementById("loading").style.display = "none";
+          });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = finalURL;
+          video.addEventListener('loadedmetadata', () => {
+            video.play();
+            document.getElementById("loading").style.display = "none";
+          });
+        } else {
+          alert("HLS not supported");
+          document.getElementById("loading").style.display = "none";
+        }
+      } catch (err) {
+        alert("Error loading episode: " + err.message);
+        document.getElementById("loading").style.display = "none";
       }
     }
   </script>
