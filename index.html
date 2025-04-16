@@ -20,6 +20,17 @@
       width: 100%;
       max-width: 800px;
       margin-top: 20px;
+      display: none;
+    }
+    .episode-button {
+      margin: 5px 0;
+      padding: 10px;
+      background-color: #222;
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      display: block;
+      width: 100%;
     }
   </style>
 </head>
@@ -63,9 +74,10 @@
       const results = document.getElementById("results");
       results.innerHTML = `<h2>${data.title}</h2>`;
 
-      data.episodes.slice(-5).reverse().forEach(ep => {
+      data.episodes.slice(-10).reverse().forEach(ep => {
         const btn = document.createElement('button');
-        btn.textContent = `Play ${ep.number}`;
+        btn.className = "episode-button";
+        btn.textContent = `Play Episode ${ep.number}`;
         btn.onclick = () => streamEpisode(ep.id);
         results.appendChild(btn);
       });
@@ -74,18 +86,24 @@
     async function streamEpisode(episodeId) {
       const res = await fetch(`${BASE_URL}/watch?episodeId=${encodeURIComponent(episodeId)}&server=vidstreaming`);
       const data = await res.json();
+
       const m3u8Source = data.sources.find(s => s.url.includes('.m3u8'));
 
       if (m3u8Source) {
-        const video = document.getElementById("player");
         const proxied = CORS_PROXY + encodeURIComponent(m3u8Source.url);
-
         const corsRes = await fetch(proxied);
         const corsData = await corsRes.json();
-        const finalURL = new URL(corsData.contents.match(/(https:\/\/[^"\n]*\.m3u8)/)[0]);
+        const matchedUrl = corsData.contents.match(/(https:\/\/[^"\n]*\.m3u8)/);
 
-        video.src = finalURL.href;
-        video.play();
+        if (matchedUrl) {
+          const finalURL = matchedUrl[0];
+          const video = document.getElementById("player");
+          video.style.display = 'block';
+          video.src = finalURL;
+          video.play();
+        } else {
+          alert("Could not extract video stream.");
+        }
       } else {
         alert("M3U8 source not found.");
       }
