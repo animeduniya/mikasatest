@@ -1,133 +1,95 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Anime Streaming</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #1e1e1e;
-            color: white;
-        }
-        header {
-            text-align: center;
-            margin-top: 50px;
-        }
-        input[type="text"] {
-            padding: 10px;
-            width: 300px;
-            margin: 20px;
-        }
-        .anime-list, .episode-list {
-            list-style-type: none;
-            padding: 0;
-        }
-        .anime-list li, .episode-list li {
-            background-color: #333;
-            padding: 10px;
-            margin-bottom: 10px;
-            cursor: pointer;
-        }
-        .episode-list li {
-            cursor: pointer;
-            color: #4CAF50;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zoro Anime Streaming</title>
+  <style>
+    body {
+      background: #111;
+      color: #fff;
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    input, button {
+      padding: 10px;
+      margin: 10px 0;
+      width: 100%;
+    }
+    video {
+      width: 100%;
+      max-width: 800px;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-    <header>
-        <h1>Anime Streaming Website</h1>
-        <input type="text" id="anime-search" placeholder="Search for Anime..." oninput="searchAnime()">
-    </header>
+  <h1>Zoro Anime Streaming</h1>
+  <input type="text" id="animeName" placeholder="Search anime...">
+  <button onclick="searchAnime()">Search</button>
 
-    <section id="anime-results">
-        <h2>Search Results</h2>
-        <ul class="anime-list" id="anime-list"></ul>
-    </section>
+  <div id="results"></div>
+  <video id="player" controls></video>
 
-    <section id="episode-results" style="display:none;">
-        <h2>Episodes</h2>
-        <ul class="episode-list" id="episode-list"></ul>
-    </section>
+  <script>
+    const BASE_URL = "https://apiconsumetorghhh.vercel.app/anime/zoro";
+    const CORS_PROXY = "https://api.allorigins.win/get?url=";
 
-    <section id="video-player" style="display:none;">
-        <h2>Video Player</h2>
-        <video id="anime-player" controls></video>
-    </section>
+    async function searchAnime() {
+      const query = document.getElementById("animeName").value;
+      const res = await fetch(`${BASE_URL}/${encodeURIComponent(query)}`);
+      const data = await res.json();
 
-    <script>
-        const CORS_PROXY = "https://api.allorigins.win/get?url=";
-        const HIANIME_API = "https://hianime-up.vercel.app/api/v2/hianime/";
+      const results = document.getElementById("results");
+      results.innerHTML = '';
 
-        // Search for anime using Anilist or Kitsu API
-        async function searchAnime() {
-            const searchQuery = document.getElementById('anime-search').value;
-            if (searchQuery.length < 3) return;
+      if (data.results) {
+        data.results.forEach(anime => {
+          const div = document.createElement('div');
+          div.innerHTML = `
+            <h3>${anime.title}</h3>
+            <img src="${anime.image}" width="150">
+            <button onclick="loadAnime('${anime.id}')">View Episodes</button>
+          `;
+          results.appendChild(div);
+        });
+      }
+    }
 
-            // Call an external API (like Anilist or Kitsu) to search for anime based on the query
-            const response = await fetch(`https://api.anilist.co/graphql?query={media(search: "${searchQuery}") {id title {english}}}`);
-            const data = await response.json();
+    async function loadAnime(id) {
+      const res = await fetch(`${BASE_URL}/info?id=${encodeURIComponent(id)}`);
+      const data = await res.json();
 
-            displayAnimeResults(data);
-        }
+      const results = document.getElementById("results");
+      results.innerHTML = `<h2>${data.title}</h2>`;
 
-        // Display search results
-        function displayAnimeResults(data) {
-            const animeList = document.getElementById('anime-list');
-            animeList.innerHTML = '';  // Clear previous results
-            data.data.Page.media.forEach(anime => {
-                const li = document.createElement('li');
-                li.textContent = anime.title.english || 'Unknown Title';
-                li.onclick = () => fetchAnimeEpisodes(anime.id);
-                animeList.appendChild(li);
-            });
-        }
+      data.episodes.slice(-5).reverse().forEach(ep => {
+        const btn = document.createElement('button');
+        btn.textContent = `Play ${ep.number}`;
+        btn.onclick = () => streamEpisode(ep.id);
+        results.appendChild(btn);
+      });
+    }
 
-        // Fetch episodes for the selected anime
-        async function fetchAnimeEpisodes(animeId) {
-            const response = await fetch(CORS_PROXY + encodeURIComponent(`${HIANIME_API}anime/${animeId}/episodes`));
-            const data = await response.json();
-            displayEpisodes(data);
-        }
+    async function streamEpisode(episodeId) {
+      const res = await fetch(`${BASE_URL}/watch?episodeId=${encodeURIComponent(episodeId)}&server=vidstreaming`);
+      const data = await res.json();
+      const m3u8Source = data.sources.find(s => s.url.includes('.m3u8'));
 
-        // Display episodes
-        function displayEpisodes(data) {
-            const episodeList = document.getElementById('episode-list');
-            episodeList.innerHTML = '';  // Clear previous episodes
-            data.data.episodes.forEach(episode => {
-                const li = document.createElement('li');
-                li.textContent = episode.title;
-                li.onclick = () => fetchEpisodeServers(episode.episodeId);
-                episodeList.appendChild(li);
-            });
-            document.getElementById('episode-results').style.display = 'block';
-        }
+      if (m3u8Source) {
+        const video = document.getElementById("player");
+        const proxied = CORS_PROXY + encodeURIComponent(m3u8Source.url);
 
-        // Fetch episode servers (video sources)
-        async function fetchEpisodeServers(episodeId) {
-            const response = await fetch(CORS_PROXY + encodeURIComponent(`${HIANIME_API}episode/servers?animeEpisodeId=${episodeId}`));
-            const data = await response.json();
-            displayStreamingLinks(data);
-        }
+        const corsRes = await fetch(proxied);
+        const corsData = await corsRes.json();
+        const finalURL = new URL(corsData.contents.match(/(https:\/\/[^"\n]*\.m3u8)/)[0]);
 
-        // Display video sources and start playing
-        function displayStreamingLinks(data) {
-            const episodeId = data.data.episodeId;
-            const server = 'hd-2';
-            const category = 'sub';  // or 'dub' or 'raw'
-            
-            fetch(CORS_PROXY + encodeURIComponent(`${HIANIME_API}episode/sources?animeEpisodeId=${episodeId}&server=${server}&category=${category}`))
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success && data.data.sources.length > 0) {
-                        const videoUrl = data.data.sources[0].url;
-                        const videoPlayer = document.getElementById('anime-player');
-                        videoPlayer.src = videoUrl;
-                        videoPlayer.style.display = 'block';
-                    }
-                });
-        }
-    </script>
+        video.src = finalURL.href;
+        video.play();
+      } else {
+        alert("M3U8 source not found.");
+      }
+    }
+  </script>
 </body>
 </html>
