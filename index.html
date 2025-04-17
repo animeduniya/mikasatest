@@ -63,7 +63,7 @@
 
   <script>
     const BASE_URL = "https://apiconsumetorghhh.vercel.app/anime/zoro";
-    const M3U8_PROXY = "https://cors-anywhere.herokuapp.com/";
+    const M3U8_PROXY = "https://newproxy-chi.vercel.app";
 
     let hls;
 
@@ -104,6 +104,10 @@
       });
     }
 
+    function base64Encode(str) {
+      return btoa(unescape(encodeURIComponent(str)));
+    }
+
     async function streamEpisode(episodeId) {
       try {
         const res = await fetch(`${BASE_URL}/watch?episodeId=${episodeId}&server=vidstreaming`);
@@ -116,8 +120,8 @@
           return;
         }
 
-        const proxiedUrl = M3U8_PROXY + encodeURIComponent(source.url); // Using the CORS proxy here
-        // const proxiedUrl = source.url; // Uncomment if no proxy is needed
+        const encodedUrl = base64Encode(`${source.url}|https://zoro.to`);
+        const proxiedUrl = `${M3U8_PROXY}/${encodedUrl}.m3u8`;
 
         video.style.display = "block";
         video.pause();
