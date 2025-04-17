@@ -63,7 +63,7 @@
 
   <script>
     const BASE_URL = "https://apiconsumetorghhh.vercel.app/anime/zoro";
-    const M3U8_PROXY = "https://m3u8-proxy.xdsystemspotify.workers.dev/?url=";
+    const M3U8_PROXY = "https://cors-anywhere.herokuapp.com/";
 
     let hls;
 
@@ -116,9 +116,8 @@
           return;
         }
 
-        const proxiedUrl = M3U8_PROXY + encodeURIComponent(source.url); // Add proxy here if required
-        // Use this line if the proxy isn't needed:
-        // const proxiedUrl = source.url;
+        const proxiedUrl = M3U8_PROXY + encodeURIComponent(source.url); // Using the CORS proxy here
+        // const proxiedUrl = source.url; // Uncomment if no proxy is needed
 
         video.style.display = "block";
         video.pause();
