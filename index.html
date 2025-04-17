@@ -64,11 +64,13 @@
   <script>
     const BASE_URL = "https://apiconsumetorghhh.vercel.app/anime/zoro";
     const M3U8_PROXY = "https://m3u8-proxy.xdsystemspotify.workers.dev/?url=";
+
     let hls;
 
     async function searchAnime() {
-      const query = document.getElementById("animeName").value;
+      const query = document.getElementById("animeName").value.trim();
       if (!query) return alert("Please enter an anime name.");
+
       const res = await fetch(`${BASE_URL}/${encodeURIComponent(query)}`);
       const data = await res.json();
       const results = document.getElementById("results");
@@ -107,27 +109,28 @@
         const res = await fetch(`${BASE_URL}/watch?episodeId=${episodeId}&server=vidstreaming`);
         const data = await res.json();
         const video = document.getElementById("player");
-
         const source = data.sources.find(src => src.url.includes(".m3u8"));
-        if (!source) return alert("No .m3u8 stream found for this episode.");
 
-        const proxiedUrl = `${M3U8_PROXY}${encodeURIComponent(source.url)}`;
-        video.style.display = "block";
-
-        if (hls) {
-          hls.destroy();
+        if (!source) {
+          alert("No .m3u8 stream found. Try another episode.");
+          return;
         }
+
+        const proxiedUrl = M3U8_PROXY + encodeURIComponent(source.url);
+        video.style.display = "block";
+        video.pause();
+        video.src = "";
+
+        if (hls) hls.destroy();
 
         if (Hls.isSupported()) {
           hls = new Hls();
           hls.loadSource(proxiedUrl);
           hls.attachMedia(video);
-          hls.on(Hls.Events.MANIFEST_PARSED, () => {
-            video.play();
-          });
-          hls.on(Hls.Events.ERROR, (event, data) => {
+          hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
+          hls.on(Hls.Events.ERROR, function (event, data) {
             console.error("HLS.js error:", data);
-            alert("Error playing the video: " + data.details);
+            alert("Error playing the video: " + data.type);
           });
         } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
           video.src = proxiedUrl;
@@ -137,7 +140,7 @@
         }
       } catch (err) {
         console.error("Streaming error:", err);
-        alert("Failed to stream this episode.");
+        alert("Failed to load episode.");
       }
     }
   </script>
