@@ -1,154 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Zoro Anime Streaming</title>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <meta charset="UTF-8">
+  <title>Anime Stream</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     body {
-      background: #121212;
+      background-color: #1e1e1e;
       color: #fff;
       font-family: Arial, sans-serif;
       padding: 20px;
     }
-    input, button {
-      padding: 10px;
-      font-size: 16px;
-      margin-bottom: 10px;
-      width: 100%;
+    button {
+      padding: 10px 15px;
+      margin: 5px;
+      border: none;
+      background-color: #3498db;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #2980b9;
     }
     video {
+      margin-top: 20px;
       width: 100%;
       max-width: 800px;
-      margin-top: 20px;
-      display: none;
-      border: 2px solid #fff;
+      height: auto;
+      border: 2px solid #3498db;
       border-radius: 10px;
-    }
-    .anime {
-      border: 1px solid #444;
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 8px;
-      background: #1e1e1e;
-    }
-    .anime img {
-      width: 120px;
-      float: left;
-      margin-right: 10px;
-    }
-    .anime h3 {
-      margin: 0;
-      font-size: 20px;
-    }
-    .episode-button {
-      background: #333;
-      color: #fff;
-      padding: 10px;
-      margin: 5px 0;
-      width: 100%;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
     }
   </style>
 </head>
 <body>
-  <h1>Zoro Anime Streaming</h1>
-  <input type="text" id="animeName" placeholder="Search anime...">
-  <button onclick="searchAnime()">Search</button>
 
-  <div id="results"></div>
-  <video id="player" controls></video>
+  <h1>Anime Streaming</h1>
+
+  <label for="animeId">Anime ID:</label>
+  <input type="text" id="animeId" placeholder="e.g. frieren-beyond-journeys-end-18542">
+  <br><br>
+
+  <label for="episodeId">Episode ID:</label>
+  <input type="text" id="episodeId" placeholder="e.g. 107257">
+  <br><br>
+
+  <button onclick="loadServers()">Load Servers</button>
+
+  <h3>Available Servers:</h3>
+  <div id="servers"></div>
+
+  <h3>Player:</h3>
+  <video id="animePlayer" controls></video>
 
   <script>
-    const BASE_URL = "https://apiconsumetorghhh.vercel.app/anime/zoro";
-    const M3U8_PROXY = "https://newproxy-chi.vercel.app";
+    const BASE_URL = "https://opapi-lyart.vercel.app";
+    const PROXY_URL = "https://newproxy-chi.vercel.app";
 
-    let hls;
+    async function loadServers() {
+      const animeId = document.getElementById("animeId").value;
+      const episodeId = document.getElementById("episodeId").value;
+      const param = `${animeId}?ep=${episodeId}`;
+      const serversDiv = document.getElementById("servers");
+      serversDiv.innerHTML = "Loading...";
 
-    async function searchAnime() {
-      const query = document.getElementById("animeName").value.trim();
-      if (!query) return alert("Please enter an anime name.");
-
-      const res = await fetch(`${BASE_URL}/${encodeURIComponent(query)}`);
-      const data = await res.json();
-      const results = document.getElementById("results");
-      results.innerHTML = "";
-
-      (data.results || []).forEach(anime => {
-        const div = document.createElement("div");
-        div.className = "anime";
-        div.innerHTML = `
-          <img src="${anime.image}" alt="${anime.title}">
-          <h3>${anime.title}</h3>
-          <button onclick="loadAnime('${anime.id}')">View Episodes</button>
-          <div style="clear:both;"></div>
-        `;
-        results.appendChild(div);
-      });
-    }
-
-    async function loadAnime(id) {
-      const res = await fetch(`${BASE_URL}/info?id=${id}`);
-      const data = await res.json();
-      const results = document.getElementById("results");
-      results.innerHTML = `<h2>${data.title}</h2>`;
-
-      (data.episodes || []).reverse().forEach(ep => {
-        const btn = document.createElement("button");
-        btn.className = "episode-button";
-        btn.innerText = `Episode ${ep.number}`;
-        btn.onclick = () => streamEpisode(ep.id);
-        results.appendChild(btn);
-      });
-    }
-
-    function base64Encode(str) {
-      return btoa(unescape(encodeURIComponent(str)));
-    }
-
-    async function streamEpisode(episodeId) {
       try {
-        const res = await fetch(`${BASE_URL}/watch?episodeId=${episodeId}&server=vidstreaming`);
+        const res = await fetch(`${BASE_URL}/api/servers/${param}`);
         const data = await res.json();
-        const video = document.getElementById("player");
-        const source = data.sources.find(src => src.url.includes(".m3u8"));
 
-        if (!source) {
-          alert("No .m3u8 stream found. Try another episode.");
+        if (!data.success) {
+          serversDiv.innerHTML = "Failed to load servers.";
           return;
         }
 
-        const encodedUrl = base64Encode(`${source.url}|https://zoro.to`);
-        const proxiedUrl = `${M3U8_PROXY}/${encodedUrl}.m3u8`;
-
-        video.style.display = "block";
-        video.pause();
-        video.src = "";
-
-        if (hls) hls.destroy();
-
-        if (Hls.isSupported()) {
-          hls = new Hls();
-          hls.loadSource(proxiedUrl);
-          hls.attachMedia(video);
-          hls.on(Hls.Events.MANIFEST_PARSED, () => video.play());
-          hls.on(Hls.Events.ERROR, function (event, data) {
-            console.error("HLS.js error:", data);
-            alert("Error playing the video: " + data.type);
-          });
-        } else if (video.canPlayType("application/vnd.apple.mpegurl")) {
-          video.src = proxiedUrl;
-          video.play();
-        } else {
-          alert("HLS is not supported in your browser.");
-        }
+        serversDiv.innerHTML = "";
+        data.results.forEach(server => {
+          const btn = document.createElement("button");
+          btn.innerText = `${server.serverName} (${server.type})`;
+          btn.onclick = () => loadStream(animeId, episodeId, server);
+          serversDiv.appendChild(btn);
+        });
       } catch (err) {
-        console.error("Streaming error:", err);
-        alert("Failed to load episode.");
+        serversDiv.innerHTML = "Error loading servers.";
+        console.error(err);
+      }
+    }
+
+    async function loadStream(animeId, episodeId, server) {
+      const streamURL = `${BASE_URL}/api/stream?id=${animeId}?ep=${episodeId}&server=${server.serverName.toLowerCase().replace(/ /g, "-")}&type=${server.type}`;
+      try {
+        const res = await fetch(streamURL);
+        const data = await res.json();
+
+        if (!data.success || !data.results.streamingLink.length) {
+          alert("Failed to get streaming link.");
+          return;
+        }
+
+        const file = data.results.streamingLink[0].link.file;
+        const proxied = `${PROXY_URL}/proxy?url=${encodeURIComponent(file)}`;
+        const video = document.getElementById("animePlayer");
+        video.src = proxied;
+        video.load();
+        video.play();
+      } catch (err) {
+        alert("Error loading video.");
+        console.error(err);
       }
     }
   </script>
+
 </body>
 </html>
