@@ -116,7 +116,10 @@
           return;
         }
 
-        const proxiedUrl = M3U8_PROXY + encodeURIComponent(source.url);
+        const proxiedUrl = M3U8_PROXY + encodeURIComponent(source.url); // Add proxy here if required
+        // Use this line if the proxy isn't needed:
+        // const proxiedUrl = source.url;
+
         video.style.display = "block";
         video.pause();
         video.src = "";
