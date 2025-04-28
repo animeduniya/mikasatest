@@ -3,196 +3,157 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Manga Reader (Live Search)</title>
+  <title>Manga Reader</title>
   <style>
     body {
-      background: #1e1e1e;
-      color: #fff;
       font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background-color: #1f1f1f;
       padding: 20px;
+      text-align: center;
+      font-size: 24px;
     }
-    .container {
-      max-width: 900px;
-      margin: auto;
+    #search-form {
+      margin: 20px;
+      text-align: center;
     }
-    input, button {
+    #search-input {
+      width: 60%;
       padding: 10px;
-      margin: 5px 0;
-      width: 100%;
       font-size: 16px;
-      border-radius: 6px;
+    }
+    #search-button {
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    #results, #chapters, #pages {
+      margin: 20px;
+      display: grid;
+      gap: 20px;
+    }
+    .manga, .chapter, .page {
+      background: #1f1f1f;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      cursor: pointer;
     }
     img {
       max-width: 100%;
-      margin-top: 10px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(255,255,255,0.1);
-    }
-    .chapter-images img {
-      margin-bottom: 20px;
-    }
-    .cover {
-      width: 200px;
-      margin-top: 20px;
-      border-radius: 8px;
-    }
-    .search-results {
-      margin-top: 10px;
-    }
-    .search-item {
-      padding: 10px;
-      background: #333;
-      margin: 5px 0;
-      cursor: pointer;
-      border-radius: 6px;
-    }
-    .search-item:hover {
-      background: #555;
+      border-radius: 10px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>Manga Reader 📖</h1>
-    <input type="text" id="searchInput" placeholder="Type Manga Name..." oninput="searchManga()">
-    <div id="searchResults" class="search-results"></div>
 
-    <h2>Manga Details</h2>
-    <div id="mangaDetails"></div>
+<header>Manga Reader</header>
 
-    <h2>Chapter Pages</h2>
-    <div id="chapterPages" class="chapter-images"></div>
-  </div>
+<div id="search-form">
+  <input type="text" id="search-input" placeholder="Search Manga...">
+  <button id="search-button">Search</button>
+</div>
 
-  <script>
-    let timeout = null;
+<div id="results"></div>
+<div id="chapters"></div>
+<div id="pages"></div>
 
-    async function searchManga() {
-      clearTimeout(timeout);
-      timeout = setTimeout(async () => {
-        const query = document.getElementById('searchInput').value.trim();
-        const searchResults = document.getElementById('searchResults');
-        searchResults.innerHTML = '';
+<script>
+const baseURL = "https://apiconsumetorghhh.vercel.app/manga/mangapill";
 
-        if (!query) return;
+const searchButton = document.getElementById('search-button');
+const searchInput = document.getElementById('search-input');
+const resultsDiv = document.getElementById('results');
+const chaptersDiv = document.getElementById('chapters');
+const pagesDiv = document.getElementById('pages');
 
-        try {
-          const anilistQuery = `
-            query ($search: String) {
-              Page(perPage: 5) {
-                media(search: $search, type: MANGA) {
-                  id
-                  title {
-                    romaji
-                    english
-                    native
-                  }
-                  coverImage {
-                    medium
-                  }
-                }
-              }
-            }
-          `;
+searchButton.addEventListener('click', () => {
+  const query = searchInput.value.trim();
+  if (query) {
+    searchManga(query);
+  }
+});
 
-          const response = await fetch('https://graphql.anilist.co', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              query: anilistQuery,
-              variables: { search: query }
-            })
-          });
+async function searchManga(query) {
+  resultsDiv.innerHTML = "Searching...";
+  chaptersDiv.innerHTML = "";
+  pagesDiv.innerHTML = "";
 
-          const data = await response.json();
-          const mangas = data.data.Page.media;
+  try {
+    const res = await fetch(`${baseURL}/${encodeURIComponent(query)}`);
+    const data = await res.json();
 
-          mangas.forEach(manga => {
-            const item = document.createElement('div');
-            item.className = 'search-item';
-            item.innerHTML = `
-              <img src="${manga.coverImage.medium}" alt="cover" style="height:50px;vertical-align:middle;margin-right:10px;">
-              ${manga.title.romaji || manga.title.english || manga.title.native}
-            `;
-            item.onclick = () => loadManga(manga);
-            searchResults.appendChild(item);
-          });
-        } catch (error) {
-          console.error('Search Error:', error);
-          searchResults.innerHTML = '<p>Error loading search results.</p>';
-        }
-      }, 400); // Delay typing by 400ms
+    if (!data.results) {
+      resultsDiv.innerHTML = "No manga found.";
+      return;
     }
 
-    async function loadManga(manga) {
-      document.getElementById('mangaDetails').innerHTML = 'Loading manga details...';
-      document.getElementById('chapterPages').innerHTML = '';
-      document.getElementById('searchResults').innerHTML = '';
+    resultsDiv.innerHTML = "";
+    data.results.forEach(manga => {
+      const mangaDiv = document.createElement('div');
+      mangaDiv.className = 'manga';
+      mangaDiv.innerHTML = `
+        <img src="${manga.image}" alt="${manga.title}">
+        <p>${manga.title}</p>
+      `;
+      mangaDiv.addEventListener('click', () => loadChapters(manga.id));
+      resultsDiv.appendChild(mangaDiv);
+    });
+  } catch (error) {
+    console.error(error);
+    resultsDiv.innerHTML = "An error occurred.";
+  }
+}
 
-      try {
-        // Load manga details
-        const anilistQuery = `
-          query ($id: Int) {
-            Media(id: $id, type: MANGA) {
-              title {
-                romaji
-                english
-                native
-              }
-              description(asHtml: false)
-              coverImage {
-                large
-              }
-            }
-          }
-        `;
+async function loadChapters(mangaId) {
+  resultsDiv.innerHTML = "";
+  chaptersDiv.innerHTML = "Loading chapters...";
+  pagesDiv.innerHTML = "";
 
-        const response = await fetch('https://graphql.anilist.co', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            query: anilistQuery,
-            variables: { id: manga.id }
-          })
-        });
+  try {
+    const res = await fetch(`${baseURL}/info/${encodeURIComponent(mangaId)}`);
+    const data = await res.json();
 
-        const data = await response.json();
-        const mangaDetails = data.data.Media;
+    chaptersDiv.innerHTML = "";
+    data.chapters.forEach(chapter => {
+      const chapterDiv = document.createElement('div');
+      chapterDiv.className = 'chapter';
+      chapterDiv.textContent = chapter.title;
+      chapterDiv.addEventListener('click', () => loadPages(chapter.id));
+      chaptersDiv.appendChild(chapterDiv);
+    });
+  } catch (error) {
+    console.error(error);
+    chaptersDiv.innerHTML = "An error occurred loading chapters.";
+  }
+}
 
-        document.getElementById('mangaDetails').innerHTML = `
-          <h2>${mangaDetails.title.romaji || mangaDetails.title.english || mangaDetails.title.native}</h2>
-          <img class="cover" src="${mangaDetails.coverImage.large}" alt="Manga Cover">
-          <p>${mangaDetails.description || 'No description available.'}</p>
-        `;
+async function loadPages(chapterId) {
+  chaptersDiv.innerHTML = "";
+  pagesDiv.innerHTML = "Loading pages...";
 
-        // Now load chapter images (for now, dummy chapter CID or you can link a real one)
-        const mangaName = manga.title.romaji || manga.title.english || manga.title.native;
-        const dummyCid = "dd6ab2dd-115b-4ee5-bf9f-d2f210e4e5a4"; // <-- You can update dynamically if you have chapter info
+  try {
+    const res = await fetch(`${baseURL}/read/${encodeURIComponent(chapterId)}`);
+    const data = await res.json();
 
-        try {
-          const chapterResponse = await fetch(`https://jimov-api.vercel.app/manga/inmanga/chapter/${encodeURIComponent(mangaName)}?cid=${dummyCid}`);
-          const chapterData = await chapterResponse.json();
+    pagesDiv.innerHTML = "";
+    data.pages.forEach(page => {
+      const pageDiv = document.createElement('div');
+      pageDiv.className = 'page';
+      pageDiv.innerHTML = `<img src="${page}" alt="Page">`;
+      pagesDiv.appendChild(pageDiv);
+    });
+  } catch (error) {
+    console.error(error);
+    pagesDiv.innerHTML = "An error occurred loading pages.";
+  }
+}
+</script>
 
-          if (!chapterData.images || chapterData.images.length === 0) {
-            document.getElementById('chapterPages').innerHTML = '<p>No images found for this chapter.</p>';
-            return;
-          }
-
-          chapterData.images.forEach(image => {
-            const img = document.createElement('img');
-            img.src = image.url;
-            document.getElementById('chapterPages').appendChild(img);
-          });
-        } catch (error) {
-          console.error('Chapter fetch error:', error);
-          document.getElementById('chapterPages').innerHTML = '<p>Error loading chapter pages.</p>';
-        }
-
-      } catch (error) {
-        console.error('Manga fetch error:', error);
-        document.getElementById('mangaDetails').innerHTML = '<p>Error loading manga details.</p>';
-      }
-    }
-  </script>
 </body>
 </html>
