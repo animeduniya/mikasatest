@@ -5,40 +5,33 @@
     <title>Manga Chapter Fetcher (Comick API)</title>
     <style>
         body {
-            background-color: #1e1e1e;
-            color: white;
+            background-color: #121212;
+            color: #f0f0f0;
             font-family: Arial, sans-serif;
+            text-align: center;
             padding: 20px;
         }
         input, button {
             padding: 10px;
-            margin-right: 10px;
-            border: none;
-            border-radius: 5px;
+            margin: 5px;
+            font-size: 16px;
         }
-        input {
-            width: 300px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
+        #results {
+            margin-top: 20px;
+            text-align: left;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
         .chapter {
-            margin-top: 10px;
             padding: 10px;
-            background-color: #2e2e2e;
-            border-radius: 5px;
+            border-bottom: 1px solid #333;
         }
     </style>
 </head>
 <body>
 
     <h1>Manga Chapter Fetcher</h1>
-
     <input type="text" id="searchInput" placeholder="Enter manga title...">
     <button onclick="searchManga()">Search</button>
 
@@ -56,11 +49,17 @@
             }
 
             try {
-                // Step 1: Search Manga
-                const searchResponse = await fetch(`https://api.comick.fun/v1.0/search?q=${encodeURIComponent(title)}`);
+                // Using CORS proxy to avoid browser block
+                const proxyUrl = "https://corsproxy.io/?";
+                const apiUrl = `https://api.comick.fun/v1.0/search?q=${encodeURIComponent(title)}`;
+                const fullUrl = proxyUrl + encodeURIComponent(apiUrl);
+
+                resultsDiv.innerHTML = "<p>Searching manga...</p>";
+
+                const searchResponse = await fetch(fullUrl);
                 const searchData = await searchResponse.json();
 
-                if (!searchData.data.length) {
+                if (!searchData.data || searchData.data.length === 0) {
                     resultsDiv.innerHTML = "<p>No manga found.</p>";
                     return;
                 }
@@ -70,13 +69,16 @@
 
                 resultsDiv.innerHTML = `<h2>Found Manga: ${manga.title}</h2><p>Fetching chapters...</p>`;
 
-                // Step 2: Fetch ALL chapters
+                // Fetch chapters
                 let chapters = [];
                 let page = 1;
                 let hasMore = true;
 
                 while (hasMore) {
-                    const chapterResponse = await fetch(`https://api.comick.fun/v1.0/chapter?oid=${mangaHID}&limit=100&page=${page}&order=asc`);
+                    const chaptersUrl = `https://api.comick.fun/v1.0/chapter?oid=${mangaHID}&limit=100&page=${page}&order=asc`;
+                    const fullChaptersUrl = proxyUrl + encodeURIComponent(chaptersUrl);
+
+                    const chapterResponse = await fetch(fullChaptersUrl);
                     const chapterData = await chapterResponse.json();
 
                     if (chapterData.chapters && chapterData.chapters.length > 0) {
@@ -98,7 +100,7 @@
                     const chapterDiv = document.createElement("div");
                     chapterDiv.className = "chapter";
                     chapterDiv.innerHTML = `
-                        <strong>Chapter ${chapter.chap}</strong> - ${chapter.title ? chapter.title : "No title"}
+                        <strong>Chapter ${chapter.chap ? chapter.chap : "?"}</strong> - ${chapter.title ? chapter.title : "No title"}
                         <br>
                         <small>Chapter ID: ${chapter.hid}</small>
                     `;
@@ -107,7 +109,7 @@
 
             } catch (error) {
                 console.error(error);
-                resultsDiv.innerHTML = "<p>Error fetching manga data. Check console.</p>";
+                resultsDiv.innerHTML = "<p>Error fetching manga data. Check console for details.</p>";
             }
         }
     </script>
