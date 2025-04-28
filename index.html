@@ -101,7 +101,7 @@ async function searchManga(query) {
         <img src="${manga.image}" alt="${manga.title}">
         <p>${manga.title}</p>
       `;
-      mangaDiv.addEventListener('click', () => loadChapters(manga.id));
+      mangaDiv.addEventListener('click', () => loadChapters(manga.id));  // Pass manga.id to loadChapters
       resultsDiv.appendChild(mangaDiv);
     });
   } catch (error) {
@@ -116,11 +116,15 @@ async function loadChapters(mangaId) {
   pagesDiv.innerHTML = "";
 
   try {
-    // Ensure the mangaId is properly encoded
-    const res = await fetch(`${baseURL}/info/${encodeURIComponent(mangaId)}`);
+    // Log the manga ID to verify it's being passed correctly
+    console.log('Manga ID:', mangaId);
+
+    // Replace slashes in mangaId if needed
+    const formattedMangaId = mangaId.replace(/\//g, '_');  // Example format change
+
+    const res = await fetch(`${baseURL}/info/${encodeURIComponent(formattedMangaId)}`);
     const data = await res.json();
 
-    // Check if data and data.chapters exist before using forEach
     if (data && data.chapters && Array.isArray(data.chapters)) {
       chaptersDiv.innerHTML = "";
       data.chapters.forEach(chapter => {
