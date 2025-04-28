@@ -4,115 +4,94 @@
     <meta charset="UTF-8">
     <title>Manga Chapter Fetcher (Comick API)</title>
     <style>
-        body {
-            background-color: #121212;
-            color: #f0f0f0;
-            font-family: Arial, sans-serif;
-            text-align: center;
-            padding: 20px;
-        }
-        input, button {
-            padding: 10px;
-            margin: 5px;
-            font-size: 16px;
-        }
-        #results {
-            margin-top: 20px;
-            text-align: left;
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
-        .chapter {
-            padding: 10px;
-            border-bottom: 1px solid #333;
-        }
+        body { font-family: Arial, sans-serif; background: #121212; color: #fff; padding: 20px; }
+        input, button { padding: 8px; margin: 5px; }
+        #results { margin-top: 20px; }
+        .manga { padding: 10px; margin: 5px; background: #1f1f1f; border-radius: 5px; }
     </style>
 </head>
 <body>
-
-    <h1>Manga Chapter Fetcher</h1>
-    <input type="text" id="searchInput" placeholder="Enter manga title...">
+    <h1>Fetch Manga Chapters - Comick API</h1>
+    <input type="text" id="searchInput" placeholder="Enter manga title (e.g. solo leveling)">
     <button onclick="searchManga()">Search</button>
 
     <div id="results"></div>
 
     <script>
         async function searchManga() {
-            const title = document.getElementById("searchInput").value.trim();
-            const resultsDiv = document.getElementById("results");
-            resultsDiv.innerHTML = "";
+            const title = document.getElementById('searchInput').value.trim();
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = "Loading...";
 
             if (!title) {
-                alert("Please enter a manga title!");
+                resultsDiv.innerHTML = "Please enter a manga title.";
                 return;
             }
 
             try {
-                // Using CORS proxy to avoid browser block
-                const proxyUrl = "https://corsproxy.io/?";
+                const proxyUrl = "https://thingproxy.freeboard.io/fetch/";
                 const apiUrl = `https://api.comick.fun/v1.0/search?q=${encodeURIComponent(title)}`;
-                const fullUrl = proxyUrl + encodeURIComponent(apiUrl);
+                const fullUrl = proxyUrl + apiUrl;
 
-                resultsDiv.innerHTML = "<p>Searching manga...</p>";
+                const response = await fetch(fullUrl);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch");
+                }
+                const data = await response.json();
 
-                const searchResponse = await fetch(fullUrl);
-                const searchData = await searchResponse.json();
-
-                if (!searchData.data || searchData.data.length === 0) {
-                    resultsDiv.innerHTML = "<p>No manga found.</p>";
+                if (!data || !data.length) {
+                    resultsDiv.innerHTML = "No manga found!";
                     return;
                 }
 
-                const manga = searchData.data[0];
-                const mangaHID = manga.hid;
+                resultsDiv.innerHTML = "";
+                data.forEach(manga => {
+                    const mangaDiv = document.createElement('div');
+                    mangaDiv.className = "manga";
 
-                resultsDiv.innerHTML = `<h2>Found Manga: ${manga.title}</h2><p>Fetching chapters...</p>`;
-
-                // Fetch chapters
-                let chapters = [];
-                let page = 1;
-                let hasMore = true;
-
-                while (hasMore) {
-                    const chaptersUrl = `https://api.comick.fun/v1.0/chapter?oid=${mangaHID}&limit=100&page=${page}&order=asc`;
-                    const fullChaptersUrl = proxyUrl + encodeURIComponent(chaptersUrl);
-
-                    const chapterResponse = await fetch(fullChaptersUrl);
-                    const chapterData = await chapterResponse.json();
-
-                    if (chapterData.chapters && chapterData.chapters.length > 0) {
-                        chapters = chapters.concat(chapterData.chapters);
-                        page++;
-                    } else {
-                        hasMore = false;
-                    }
-                }
-
-                if (!chapters.length) {
-                    resultsDiv.innerHTML += "<p>No chapters found.</p>";
-                    return;
-                }
-
-                resultsDiv.innerHTML += `<p>Total Chapters: ${chapters.length}</p>`;
-
-                chapters.forEach(chapter => {
-                    const chapterDiv = document.createElement("div");
-                    chapterDiv.className = "chapter";
-                    chapterDiv.innerHTML = `
-                        <strong>Chapter ${chapter.chap ? chapter.chap : "?"}</strong> - ${chapter.title ? chapter.title : "No title"}
-                        <br>
-                        <small>Chapter ID: ${chapter.hid}</small>
+                    mangaDiv.innerHTML = `
+                        <h3>${manga.title || manga.slug}</h3>
+                        <p><b>Slug:</b> ${manga.slug}</p>
+                        <button onclick="fetchChapters('${manga.slug}')">Get Chapters</button>
+                        <div id="chapters-${manga.slug}"></div>
                     `;
-                    resultsDiv.appendChild(chapterDiv);
-                });
 
-            } catch (error) {
-                console.error(error);
-                resultsDiv.innerHTML = "<p>Error fetching manga data. Check console for details.</p>";
+                    resultsDiv.appendChild(mangaDiv);
+                });
+            } catch (err) {
+                console.error(err);
+                resultsDiv.innerHTML = "Error fetching manga.";
+            }
+        }
+
+        async function fetchChapters(slug) {
+            const chaptersDiv = document.getElementById(`chapters-${slug}`);
+            chaptersDiv.innerHTML = "Loading chapters...";
+
+            try {
+                const proxyUrl = "https://thingproxy.freeboard.io/fetch/";
+                const apiUrl = `https://api.comick.fun/v1.0/chapter?slug=${encodeURIComponent(slug)}`;
+                const fullUrl = proxyUrl + apiUrl;
+
+                const response = await fetch(fullUrl);
+                if (!response.ok) {
+                    throw new Error("Failed to fetch chapters");
+                }
+                const data = await response.json();
+
+                if (!data || !data.chapters || !data.chapters.length) {
+                    chaptersDiv.innerHTML = "No chapters found!";
+                    return;
+                }
+
+                chaptersDiv.innerHTML = "<ul>" +
+                    data.chapters.map(ch => `<li>Chapter ${ch.chapter} - ${ch.title || ''}</li>`).join('') +
+                    "</ul>";
+            } catch (err) {
+                console.error(err);
+                chaptersDiv.innerHTML = "Error fetching chapters.";
             }
         }
     </script>
-
 </body>
 </html>
