@@ -116,17 +116,23 @@ async function loadChapters(mangaId) {
   pagesDiv.innerHTML = "";
 
   try {
+    // Ensure the mangaId is properly encoded
     const res = await fetch(`${baseURL}/info/${encodeURIComponent(mangaId)}`);
     const data = await res.json();
 
-    chaptersDiv.innerHTML = "";
-    data.chapters.forEach(chapter => {
-      const chapterDiv = document.createElement('div');
-      chapterDiv.className = 'chapter';
-      chapterDiv.textContent = chapter.title;
-      chapterDiv.addEventListener('click', () => loadPages(chapter.id));
-      chaptersDiv.appendChild(chapterDiv);
-    });
+    // Check if data and data.chapters exist before using forEach
+    if (data && data.chapters && Array.isArray(data.chapters)) {
+      chaptersDiv.innerHTML = "";
+      data.chapters.forEach(chapter => {
+        const chapterDiv = document.createElement('div');
+        chapterDiv.className = 'chapter';
+        chapterDiv.textContent = chapter.title;
+        chapterDiv.addEventListener('click', () => loadPages(chapter.id));
+        chaptersDiv.appendChild(chapterDiv);
+      });
+    } else {
+      chaptersDiv.innerHTML = "No chapters found.";
+    }
   } catch (error) {
     console.error(error);
     chaptersDiv.innerHTML = "An error occurred loading chapters.";
@@ -142,12 +148,16 @@ async function loadPages(chapterId) {
     const data = await res.json();
 
     pagesDiv.innerHTML = "";
-    data.pages.forEach(page => {
-      const pageDiv = document.createElement('div');
-      pageDiv.className = 'page';
-      pageDiv.innerHTML = `<img src="${page}" alt="Page">`;
-      pagesDiv.appendChild(pageDiv);
-    });
+    if (data && Array.isArray(data.pages)) {
+      data.pages.forEach(page => {
+        const pageDiv = document.createElement('div');
+        pageDiv.className = 'page';
+        pageDiv.innerHTML = `<img src="${page}" alt="Page">`;
+        pagesDiv.appendChild(pageDiv);
+      });
+    } else {
+      pagesDiv.innerHTML = "No pages found.";
+    }
   } catch (error) {
     console.error(error);
     pagesDiv.innerHTML = "An error occurred loading pages.";
