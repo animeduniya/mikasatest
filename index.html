@@ -1,97 +1,133 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Manga Chapter Fetcher (Comick API)</title>
-    <style>
-        body { font-family: Arial, sans-serif; background: #121212; color: #fff; padding: 20px; }
-        input, button { padding: 8px; margin: 5px; }
-        #results { margin-top: 20px; }
-        .manga { padding: 10px; margin: 5px; background: #1f1f1f; border-radius: 5px; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manga Reader</title>
+  <style>
+    body {
+      background: #1e1e1e;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+    }
+    input, button {
+      padding: 10px;
+      margin: 5px 0;
+      width: 100%;
+      font-size: 16px;
+    }
+    img {
+      max-width: 100%;
+      margin-top: 10px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+    .chapter-images img {
+      margin-bottom: 20px;
+    }
+    .cover {
+      width: 200px;
+      margin-top: 20px;
+      border-radius: 8px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Fetch Manga Chapters - Comick API</h1>
-    <input type="text" id="searchInput" placeholder="Enter manga title (e.g. solo leveling)">
-    <button onclick="searchManga()">Search</button>
+  <div class="container">
+    <h1>Manga Reader</h1>
+    <input type="text" id="mangaName" placeholder="Enter Manga Name (ex: One Piece)">
+    <input type="text" id="chapterId" placeholder="Enter Chapter CID (ex: dd6ab2dd-115b-4ee5-bf9f-d2f210e4e5a4)">
+    <button onclick="loadManga()">Load Manga Details & Chapter</button>
 
-    <div id="results"></div>
+    <div id="mangaDetails"></div>
+    <h2>Chapter Pages</h2>
+    <div id="chapterPages" class="chapter-images"></div>
+  </div>
 
-    <script>
-        async function searchManga() {
-            const title = document.getElementById('searchInput').value.trim();
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.innerHTML = "Loading...";
+  <script>
+    async function loadManga() {
+      const mangaName = document.getElementById('mangaName').value.trim();
+      const chapterId = document.getElementById('chapterId').value.trim();
 
-            if (!title) {
-                resultsDiv.innerHTML = "Please enter a manga title.";
-                return;
+      if (!mangaName || !chapterId) {
+        alert('Please enter both Manga Name and Chapter ID.');
+        return;
+      }
+
+      document.getElementById('mangaDetails').innerHTML = 'Loading manga info...';
+      document.getElementById('chapterPages').innerHTML = '';
+
+      // Fetch manga info from AniList
+      try {
+        const anilistQuery = `
+          query ($search: String) {
+            Media(search: $search, type: MANGA) {
+              id
+              title {
+                romaji
+                english
+                native
+              }
+              description(asHtml: false)
+              coverImage {
+                large
+              }
             }
+          }
+        `;
 
-            try {
-                const proxyUrl = "https://thingproxy.freeboard.io/fetch/";
-                const apiUrl = `https://api.comick.fun/v1.0/search?q=${encodeURIComponent(title)}`;
-                const fullUrl = proxyUrl + apiUrl;
+        const anilistResponse = await fetch('https://graphql.anilist.co', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: anilistQuery,
+            variables: { search: mangaName }
+          })
+        });
 
-                const response = await fetch(fullUrl);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch");
-                }
-                const data = await response.json();
+        const anilistData = await anilistResponse.json();
+        const manga = anilistData.data.Media;
 
-                if (!data || !data.length) {
-                    resultsDiv.innerHTML = "No manga found!";
-                    return;
-                }
-
-                resultsDiv.innerHTML = "";
-                data.forEach(manga => {
-                    const mangaDiv = document.createElement('div');
-                    mangaDiv.className = "manga";
-
-                    mangaDiv.innerHTML = `
-                        <h3>${manga.title || manga.slug}</h3>
-                        <p><b>Slug:</b> ${manga.slug}</p>
-                        <button onclick="fetchChapters('${manga.slug}')">Get Chapters</button>
-                        <div id="chapters-${manga.slug}"></div>
-                    `;
-
-                    resultsDiv.appendChild(mangaDiv);
-                });
-            } catch (err) {
-                console.error(err);
-                resultsDiv.innerHTML = "Error fetching manga.";
-            }
+        if (!manga) {
+          document.getElementById('mangaDetails').innerHTML = '<p>Manga not found!</p>';
+          return;
         }
 
-        async function fetchChapters(slug) {
-            const chaptersDiv = document.getElementById(`chapters-${slug}`);
-            chaptersDiv.innerHTML = "Loading chapters...";
+        document.getElementById('mangaDetails').innerHTML = `
+          <h2>${manga.title.romaji || manga.title.english || manga.title.native}</h2>
+          <img class="cover" src="${manga.coverImage.large}" alt="Manga Cover">
+          <p>${manga.description || 'No description available.'}</p>
+        `;
+      } catch (error) {
+        console.error('AniList fetch error:', error);
+        document.getElementById('mangaDetails').innerHTML = '<p>Error loading manga info.</p>';
+      }
 
-            try {
-                const proxyUrl = "https://thingproxy.freeboard.io/fetch/";
-                const apiUrl = `https://api.comick.fun/v1.0/chapter?slug=${encodeURIComponent(slug)}`;
-                const fullUrl = proxyUrl + apiUrl;
+      // Fetch chapter pages from Jimov API
+      try {
+        const chapterResponse = await fetch(`https://jimov-api.vercel.app/manga/inmanga/chapter/${encodeURIComponent(mangaName)}?cid=${encodeURIComponent(chapterId)}`);
+        const chapterData = await chapterResponse.json();
 
-                const response = await fetch(fullUrl);
-                if (!response.ok) {
-                    throw new Error("Failed to fetch chapters");
-                }
-                const data = await response.json();
-
-                if (!data || !data.chapters || !data.chapters.length) {
-                    chaptersDiv.innerHTML = "No chapters found!";
-                    return;
-                }
-
-                chaptersDiv.innerHTML = "<ul>" +
-                    data.chapters.map(ch => `<li>Chapter ${ch.chapter} - ${ch.title || ''}</li>`).join('') +
-                    "</ul>";
-            } catch (err) {
-                console.error(err);
-                chaptersDiv.innerHTML = "Error fetching chapters.";
-            }
+        if (!chapterData.images || chapterData.images.length === 0) {
+          document.getElementById('chapterPages').innerHTML = '<p>No images found for this chapter.</p>';
+          return;
         }
-    </script>
+
+        chapterData.images.forEach(image => {
+          const img = document.createElement('img');
+          img.src = image.url;
+          document.getElementById('chapterPages').appendChild(img);
+        });
+      } catch (error) {
+        console.error('Chapter fetch error:', error);
+        document.getElementById('chapterPages').innerHTML = '<p>Error loading chapter pages.</p>';
+      }
+    }
+  </script>
 </body>
 </html>
